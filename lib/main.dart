@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Raven',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primaryColor: Color.fromRGBO(194, 222, 232, 1.0)),
+      theme: ThemeData(primaryColor: Color.fromRGBO(63, 163, 199, 1.0)),
       home: Conversations(),
     );
   }
