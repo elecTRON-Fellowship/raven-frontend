@@ -24,12 +24,13 @@ class ConversationCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Padding(
-                padding: EdgeInsets.only(left: 8.0),
-                child: Icon(
-                  Icons.account_circle_outlined,
-                  size: 55,
-                  color: Colors.blueGrey,
-                )),
+              padding: EdgeInsets.only(left: 8.0),
+              child: Icon(
+                Icons.account_circle_outlined,
+                size: 55,
+                color: Colors.blueGrey,
+              ),
+            ),
             Column(
               // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,

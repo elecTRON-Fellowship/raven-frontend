@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/conversation_card.dart';
 
-class Conversations extends StatelessWidget {
+class ConversationsScreen extends StatelessWidget {
   // const Conversations({Key? key}) : super(key: key);
 
   final List<Map<String, Object>> _conversations = [
@@ -60,7 +60,6 @@ class Conversations extends StatelessWidget {
         preferredSize: Size.fromHeight(100),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             AppBar(
               elevation: 0.0,
@@ -85,21 +84,20 @@ class Conversations extends StatelessWidget {
                   icon: Icon(Icons.add_rounded),
                   iconSize: 34.5,
                   color: Theme.of(context).primaryColor,
-                )
+                ),
               ],
             ),
           ],
         ),
       ),
       body: Container(
-        child: ListView(
-          children: _conversations
-              .map((item) => ConversationCard(
-                  (item['name'] as String),
-                  (item['lastText'] as String),
-                  (item['unreadTexts'] as int),
-                  (item['time'] as String)))
-              .toList(),
+        child: ListView.builder(
+          itemCount: _conversations.length,
+          itemBuilder: (ctx, index) => ConversationCard(
+              (_conversations[index]['name'] as String),
+              (_conversations[index]['lastText'] as String),
+              (_conversations[index]['unreadTexts'] as int),
+              (_conversations[index]['time'] as String)),
         ),
       ),
       bottomNavigationBar: Container(
