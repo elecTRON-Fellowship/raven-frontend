@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'screens/conversations.dart';
-import 'screens/chat.dart';
+// import 'screens/chat.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'Raven',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: Color.fromRGBO(63, 163, 199, 1.0)),
-      home: ChatScreen(),
+      home: ConversationsScreen(),
     );
   }
 }
