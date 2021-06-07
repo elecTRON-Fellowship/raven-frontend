@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'screens/conversations.dart';
+// import 'screens/chat.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -9,10 +12,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Raven',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(primaryColor: Color.fromRGBO(63, 163, 199, 1.0)),
+      home: ConversationsScreen(),
     );
   }
 }
@@ -24,9 +26,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Raven'),
       ),
-      body: Center(
-        child: Text('Hello World'),
-      ),
+      body: Text('Hello World'),
     );
   }
 }
