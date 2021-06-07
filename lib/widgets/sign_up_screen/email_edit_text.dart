@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-class PhoneNumberTextField extends StatefulWidget {
+class EmailEditText extends StatefulWidget {
   @override
-  _PhoneNumberTextFieldState createState() => _PhoneNumberTextFieldState();
+  _EmailEditTextState createState() => _EmailEditTextState();
 }
 
-class _PhoneNumberTextFieldState extends State<PhoneNumberTextField> {
-  final _phoneNumberController = TextEditingController();
+class _EmailEditTextState extends State<EmailEditText> {
+  final _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.65,
       child: TextField(
-        controller: _phoneNumberController,
-        keyboardType: TextInputType.phone,
+        controller: _emailController,
+        keyboardType: TextInputType.emailAddress,
         textInputAction: TextInputAction.next,
         style: TextStyle(
           fontSize: 16,
@@ -37,7 +37,7 @@ class _PhoneNumberTextFieldState extends State<PhoneNumberTextField> {
             ),
           ),
           //errorText: "Please check the username",
-          labelText: "Phone No",
+          labelText: "Email",
           labelStyle: TextStyle(
             color: Theme.of(context).primaryColorDark,
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:raven/screens/sign_up.dart';
 import './screens/login.dart';
 
 // import 'screens/chat.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
         primaryColorDark: Color.fromRGBO(63, 163, 199, 1),
         fontFamily: "Poppins",
       ),
-      home: LoginScreen(),
+      home: SignUpScreen(),
     );
   }
 }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
-class PhoneNumberTextField extends StatefulWidget {
+class PhoneNumberTextFieldSignUp extends StatefulWidget {
   @override
-  _PhoneNumberTextFieldState createState() => _PhoneNumberTextFieldState();
+  _PhoneNumberTextFieldSignUpState createState() =>
+      _PhoneNumberTextFieldSignUpState();
 }
 
-class _PhoneNumberTextFieldState extends State<PhoneNumberTextField> {
+class _PhoneNumberTextFieldSignUpState
+    extends State<PhoneNumberTextFieldSignUp> {
   final _phoneNumberController = TextEditingController();
 
   @override
