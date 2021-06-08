@@ -8,35 +8,37 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColorLight,
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Stack(
-          alignment: Alignment.topLeft,
-          children: [
-            Positioned(
-              child: TopBackground(),
-              top: 0,
-              left: 0,
-            ),
-            Positioned(
-              top: MediaQuery.of(context).size.height * 0.09,
-              left: MediaQuery.of(context).size.width * 0.10,
-              child: Container(
-                child: HeaderTextSignUp(),
-                height: MediaQuery.of(context).size.height * 0.25,
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Stack(
+            alignment: Alignment.topLeft,
+            children: [
+              Positioned(
+                child: TopBackground(),
+                top: 0,
+                left: 0,
               ),
-            ),
-            Positioned(
-              top: MediaQuery.of(context).size.height * 0.33,
-              left: MediaQuery.of(context).size.width * 0.075,
-              child: Container(
-                child: MainCardSignUp(),
-                height: MediaQuery.of(context).size.height * 0.6,
-                width: MediaQuery.of(context).size.width * 0.85,
+              Positioned(
+                top: MediaQuery.of(context).size.height * 0.09,
+                left: MediaQuery.of(context).size.width * 0.10,
+                child: Container(
+                  child: HeaderTextSignUp(),
+                  height: MediaQuery.of(context).size.height * 0.25,
+                ),
               ),
-            ),
-          ],
+              Positioned(
+                top: MediaQuery.of(context).size.height * 0.33,
+                left: MediaQuery.of(context).size.width * 0.075,
+                child: Container(
+                  child: MainCardSignUp(),
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  width: MediaQuery.of(context).size.width * 0.85,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

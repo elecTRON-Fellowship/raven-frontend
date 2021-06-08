@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         primaryColorDark: Color.fromRGBO(63, 163, 199, 1),
         fontFamily: "Poppins",
       ),
-      home: UserInfoScreen(),
+      home: LoginScreen(),
     );
   }
 }
