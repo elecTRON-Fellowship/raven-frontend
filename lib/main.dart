@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:raven/screens/sign_up.dart';
+import 'package:raven/screens/user_info.dart';
+import './screens/login.dart';
 
-import 'screens/conversations.dart';
 // import 'screens/chat.dart';
 
 void main() {
@@ -13,8 +15,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Raven',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primaryColor: Color.fromRGBO(63, 163, 199, 1.0)),
-      home: ConversationsScreen(),
+      theme: ThemeData(
+        primaryColorLight: Color.fromRGBO(194, 222, 232, 1),
+        primaryColor: Color.fromRGBO(103, 186, 216, 1),
+        primaryColorDark: Color.fromRGBO(63, 163, 199, 1),
+        fontFamily: "Poppins",
+      ),
+      home: LoginScreen(),
     );
   }
 }
