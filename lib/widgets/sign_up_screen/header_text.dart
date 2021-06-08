@@ -20,7 +20,7 @@ class HeaderTextSignUp extends StatelessWidget {
             ),
           ),
           Text(
-            "back to",
+            "to",
             style: GoogleFonts.poppins(
               textStyle: TextStyle(
                 color: Theme.of(context).primaryColorLight,

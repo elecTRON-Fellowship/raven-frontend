@@ -52,7 +52,7 @@ class _PasswordEditTextState extends State<PasswordEditText> {
             ),
           ),
         ),
-        obscureText: _isPasswordVisible,
+        obscureText: !_isPasswordVisible,
         //onSubmitted: (String) {}, //Run login method
       ),
     );

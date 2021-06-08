@@ -13,6 +13,7 @@ class _LastNameEditTextState extends State<LastNameEditText> {
     return Container(
       width: MediaQuery.of(context).size.width * 0.65,
       child: TextField(
+        textCapitalization: TextCapitalization.words,
         controller: _lastNameController,
         keyboardType: TextInputType.name,
         textInputAction: TextInputAction.next,

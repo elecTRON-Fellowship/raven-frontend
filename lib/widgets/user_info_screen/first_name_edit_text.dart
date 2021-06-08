@@ -13,6 +13,7 @@ class _FirstNameEditTextState extends State<FirstNameEditText> {
     return Container(
       width: MediaQuery.of(context).size.width * 0.65,
       child: TextField(
+        textCapitalization: TextCapitalization.words,
         controller: _firstNameController,
         keyboardType: TextInputType.name,
         textInputAction: TextInputAction.next,
