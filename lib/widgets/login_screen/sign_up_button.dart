@@ -5,7 +5,9 @@ class SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.of(context).pushNamed('/signup');
+      },
       child: Text(
         "Sign Up",
         style: GoogleFonts.poppins(

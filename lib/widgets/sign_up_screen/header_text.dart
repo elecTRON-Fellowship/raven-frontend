@@ -10,7 +10,7 @@ class HeaderTextSignUp extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
-            "Welcome",
+            "Hey there,",
             style: GoogleFonts.poppins(
               textStyle: TextStyle(
                 color: Theme.of(context).primaryColorLight,
@@ -20,7 +20,7 @@ class HeaderTextSignUp extends StatelessWidget {
             ),
           ),
           Text(
-            "to",
+            "Welcome To",
             style: GoogleFonts.poppins(
               textStyle: TextStyle(
                 color: Theme.of(context).primaryColorLight,

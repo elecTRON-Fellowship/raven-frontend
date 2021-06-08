@@ -21,7 +21,14 @@ class MyApp extends StatelessWidget {
         primaryColorDark: Color.fromRGBO(63, 163, 199, 1),
         fontFamily: "Poppins",
       ),
-      home: ChatScreen(),
+      home: LoginScreen(),
+      routes: {
+        '/login': (ctx) => LoginScreen(),
+        '/signup': (ctx) => SignUpScreen(),
+        '/user-info': (ctx) => UserInfoScreen(),
+        '/conversations': (ctx) => ConversationsScreen(),
+        '/chat': (ctx) => ChatScreen()
+      },
     );
   }
 }
