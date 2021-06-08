@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:raven/screens/chat.dart';
+import 'package:raven/screens/conversations.dart';
 import 'package:raven/screens/sign_up.dart';
 import 'package:raven/screens/user_info.dart';
-import './screens/login.dart';
-
-// import 'screens/chat.dart';
+import 'package:raven/screens/login.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         primaryColorDark: Color.fromRGBO(63, 163, 199, 1),
         fontFamily: "Poppins",
       ),
-      home: LoginScreen(),
+      home: ChatScreen(),
     );
   }
 }

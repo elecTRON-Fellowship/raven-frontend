@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../widgets/conversation_card.dart';
+import '../widgets/conversations_screen/conversation_card.dart';
 
 class ConversationsScreen extends StatelessWidget {
   // const Conversations({Key? key}) : super(key: key);
@@ -70,20 +70,20 @@ class ConversationsScreen extends StatelessWidget {
                     textStyle: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 26,
-                        color: Theme.of(context).primaryColor)),
+                        color: Theme.of(context).primaryColorDark)),
               ),
               actions: [
                 IconButton(
                   onPressed: () {},
                   icon: Icon(Icons.search_rounded),
                   iconSize: 30,
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).primaryColorDark,
                 ),
                 IconButton(
                   onPressed: () {},
                   icon: Icon(Icons.add_rounded),
                   iconSize: 34.5,
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).primaryColorDark,
                 ),
               ],
             ),
@@ -107,7 +107,7 @@ class ConversationsScreen extends StatelessWidget {
           child: BottomNavigationBar(
             showSelectedLabels: false,
             showUnselectedLabels: false,
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).primaryColorDark,
             type: BottomNavigationBarType.fixed,
             items: [
               BottomNavigationBarItem(
