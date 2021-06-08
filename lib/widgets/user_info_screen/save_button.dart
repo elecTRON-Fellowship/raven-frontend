@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoginButton extends StatelessWidget {
+class SaveButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {},
       child: Text(
-        "Login",
+        "Save",
         style: GoogleFonts.poppins(
           textStyle: TextStyle(
             fontWeight: FontWeight.bold,

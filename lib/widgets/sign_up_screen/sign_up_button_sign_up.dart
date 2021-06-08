@@ -18,7 +18,7 @@ class SignUpButtonSignUp extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         minimumSize: Size(
           MediaQuery.of(context).size.width * 0.65,
-          50,
+          MediaQuery.of(context).size.height * 0.07,
         ),
         onPrimary: Colors.white,
         primary: Theme.of(context).primaryColor,
