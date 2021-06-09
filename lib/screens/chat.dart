@@ -112,6 +112,10 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //route arguments
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: PreferredSize(
@@ -124,16 +128,18 @@ class ChatScreen extends StatelessWidget {
               elevation: 0.0,
               backgroundColor: Colors.transparent,
               leading: IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.search_rounded),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: Icon(Icons.arrow_back_rounded),
                 iconSize: 30,
                 color: Color.fromRGBO(17, 128, 168, 1.0),
               ),
               actions: [
                 IconButton(
                   onPressed: () {},
-                  icon: Icon(Icons.add_rounded),
-                  iconSize: 34.5,
+                  icon: Icon(Icons.credit_card_rounded),
+                  iconSize: 30,
                   color: Color.fromRGBO(17, 128, 168, 1.0),
                 )
               ],
@@ -161,7 +167,7 @@ class ChatScreen extends StatelessWidget {
                   width: 15,
                 ),
                 Text(
-                  'Mizan Ali',
+                  ((args['name']) as String),
                   textAlign: TextAlign.start,
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(
