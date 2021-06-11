@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 
-class LastNameEditText extends StatefulWidget {
-  @override
-  _LastNameEditTextState createState() => _LastNameEditTextState();
-}
+class LastNameEditText extends StatelessWidget {
+  final lastNameController;
 
-class _LastNameEditTextState extends State<LastNameEditText> {
-  final _lastNameController = TextEditingController();
+  LastNameEditText(this.lastNameController);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +11,7 @@ class _LastNameEditTextState extends State<LastNameEditText> {
       width: MediaQuery.of(context).size.width * 0.65,
       child: TextField(
         textCapitalization: TextCapitalization.words,
-        controller: _lastNameController,
+        controller: this.lastNameController,
         keyboardType: TextInputType.name,
         textInputAction: TextInputAction.next,
         style: TextStyle(

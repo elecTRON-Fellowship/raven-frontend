@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:raven/providers/user.dart';
 import 'package:raven/widgets/user_info_screen/header_text_user_info.dart';
 import 'package:raven/widgets/user_info_screen/main_card_user_info.dart';
 import 'package:raven/widgets/user_info_screen/top_bg_user_info.dart';
@@ -6,6 +8,8 @@ import 'package:raven/widgets/user_info_screen/top_bg_user_info.dart';
 class UserInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var args = ModalRoute.of(context)!.settings.arguments;
+
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       body: SingleChildScrollView(
@@ -32,7 +36,9 @@ class UserInfoScreen extends StatelessWidget {
                 top: MediaQuery.of(context).size.height * 0.33,
                 left: MediaQuery.of(context).size.width * 0.075,
                 child: Container(
-                  child: MainCardUserInfo(),
+                  child: Consumer<User>(
+                      builder: (context, value, child) =>
+                          MainCardUserInfo(signUpCredentials: args)),
                   height: MediaQuery.of(context).size.height * 0.6,
                   width: MediaQuery.of(context).size.width * 0.85,
                 ),

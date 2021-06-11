@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 
-class UsernameEditText extends StatefulWidget {
-  @override
-  _UsernameEditTextState createState() => _UsernameEditTextState();
-}
+class UsernameEditText extends StatelessWidget {
+  final usernameController;
 
-class _UsernameEditTextState extends State<UsernameEditText> {
-  final _usernameController = TextEditingController();
+  UsernameEditText(this.usernameController);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.65,
       child: TextField(
-        controller: _usernameController,
+        controller: this.usernameController,
         keyboardType: TextInputType.text,
         textInputAction: TextInputAction.next,
         style: TextStyle(
