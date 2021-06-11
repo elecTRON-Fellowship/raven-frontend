@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 
-class PhoneNumberTextField extends StatefulWidget {
-  @override
-  _PhoneNumberTextFieldState createState() => _PhoneNumberTextFieldState();
-}
+class PhoneNumberTextField extends StatelessWidget {
+  final phoneNumberController;
 
-class _PhoneNumberTextFieldState extends State<PhoneNumberTextField> {
-  final _phoneNumberController = TextEditingController();
+  PhoneNumberTextField(this.phoneNumberController);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.65,
       child: TextField(
-        controller: _phoneNumberController,
+        controller: this.phoneNumberController,
         keyboardType: TextInputType.phone,
         textInputAction: TextInputAction.next,
         style: TextStyle(

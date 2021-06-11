@@ -5,7 +5,24 @@ import 'package:raven/widgets/sign_up_screen/password_edit_text_sign_up.dart';
 import 'package:raven/widgets/sign_up_screen/phone_number_edit_text_sign_up.dart';
 import 'package:raven/widgets/sign_up_screen/sign_up_button_sign_up.dart';
 
-class MainCardSignUp extends StatelessWidget {
+class MainCardSignUp extends StatefulWidget {
+  @override
+  _MainCardSignUpState createState() => _MainCardSignUpState();
+}
+
+class _MainCardSignUpState extends State<MainCardSignUp> {
+  final _phoneNumberController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  void _onSignUpButtonPressed() {
+    Navigator.of(context).pushNamed('/user-info', arguments: {
+      'phoneNumber': _phoneNumberController.text,
+      'email': _emailController.text,
+      'password': _passwordController.text,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -15,10 +32,10 @@ class MainCardSignUp extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          PhoneNumberTextFieldSignUp(),
-          EmailEditText(),
-          PasswordEditTextSignUp(),
-          SignUpButtonSignUp(),
+          PhoneNumberTextFieldSignUp(_phoneNumberController),
+          EmailEditText(_emailController),
+          PasswordEditTextSignUp(_passwordController),
+          SignUpButtonSignUp(_onSignUpButtonPressed),
         ],
       ),
     );

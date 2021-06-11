@@ -2,18 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SaveButton extends StatelessWidget {
-  void saveUser(BuildContext context) {
-    //communicate with backend
-    //validate user input
-    //if successfully signed up
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/conversations', (r) => false);
-  }
+  final Function saveUser;
+
+  SaveButton(this.saveUser);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () => saveUser(context),
+      onPressed: () => this.saveUser(),
       child: Text(
         "Save",
         style: GoogleFonts.poppins(
