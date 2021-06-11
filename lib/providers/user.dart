@@ -60,4 +60,28 @@ class User with ChangeNotifier {
       throw err;
     });
   }
+
+  Future<void> login(String phoneNumber, String password) async {
+    var url = Uri.parse('http://10.0.2.2:8000/login');
+
+    http
+        .post(url,
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode({"phone_no": phoneNumber, "password": password}))
+        .then((res) {
+      final data = json.decode(res.body);
+      _authToken = data['accessToken'];
+      _id = data['data']['id'].toString();
+      _firstName = data['data']['first_name'];
+      _lastName = data['data']['last_name'];
+      _username = data['data']['user_name'];
+      _email = data['data']['email'];
+      _phoneNumber = data['data']['phone_no'];
+      _createdAt = data['data']['created_at'];
+
+      notifyListeners();
+    }).catchError((err) {
+      throw err;
+    });
+  }
 }

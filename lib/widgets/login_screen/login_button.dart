@@ -2,18 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginButton extends StatelessWidget {
-  void loginUser(BuildContext context) {
-    //communicate with backend
-    //validate user input
-    //if successfully signed in
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/conversations', (r) => false);
-  }
+  final Function loginUser;
+
+  LoginButton(this.loginUser);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () => loginUser(context),
+      onPressed: () => loginUser(),
       child: Text(
         "Login",
         style: GoogleFonts.poppins(

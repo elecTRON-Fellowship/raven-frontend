@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 class PasswordEditText extends StatefulWidget {
+  final passwordController;
+
+  PasswordEditText(this.passwordController);
+
   @override
   _PasswordEditTextState createState() => _PasswordEditTextState();
 }
 
 class _PasswordEditTextState extends State<PasswordEditText> {
-  final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
   @override
@@ -14,7 +17,7 @@ class _PasswordEditTextState extends State<PasswordEditText> {
     return Container(
       width: MediaQuery.of(context).size.width * 0.65,
       child: TextField(
-        controller: _passwordController,
+        controller: widget.passwordController,
         style: TextStyle(
           fontSize: 16,
           height: 1,
