@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class User with ChangeNotifier {
   String? _authToken;
@@ -13,7 +14,7 @@ class User with ChangeNotifier {
   String? _phoneNumber;
   String? _createdAt;
 
-  Map<String, String?> get user {
+  Map<String, String?> get getUser {
     return {
       "authToken": _authToken,
       "id": _id,
@@ -56,6 +57,20 @@ class User with ChangeNotifier {
       _createdAt = data['data']['created_at'];
 
       notifyListeners();
+
+      SharedPreferences.getInstance().then((prefs) {
+        final userData = json.encode({
+          "auth_token": data['accessToken'],
+          "id": data['data']['id'].toString(),
+          "first_name": data['data']['first_name'],
+          "last_name": data['data']['last_name'],
+          "user_name": data['data']['user_name'],
+          "email": data['data']['email'],
+          "phone_no": data['data']['phone_no'],
+          "created_at": data['data']['created_at']
+        });
+        prefs.setString('userData', userData);
+      });
     }).catchError((err) {
       throw err;
     });
@@ -80,8 +95,58 @@ class User with ChangeNotifier {
       _createdAt = data['data']['created_at'];
 
       notifyListeners();
+
+      SharedPreferences.getInstance().then((prefs) {
+        final userData = json.encode({
+          "auth_token": data['accessToken'],
+          "id": data['data']['id'].toString(),
+          "first_name": data['data']['first_name'],
+          "last_name": data['data']['last_name'],
+          "user_name": data['data']['user_name'],
+          "email": data['data']['email'],
+          "phone_no": data['data']['phone_no'],
+          "created_at": data['data']['created_at']
+        });
+
+        prefs.setString('userData', userData);
+      });
     }).catchError((err) {
       throw err;
     });
+  }
+
+  Future<bool> tryAutoLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('userData')) {
+      return false;
+    }
+
+    final extractedUserData =
+        json.decode(prefs.getString('userData') as String);
+    _authToken = extractedUserData['auth_token'];
+    _id = extractedUserData['id'];
+    _firstName = extractedUserData['first_name'];
+    _lastName = extractedUserData['last_name'];
+    _username = extractedUserData['user_name'];
+    _email = extractedUserData['email'];
+    _phoneNumber = extractedUserData['phone_no'];
+    _createdAt = extractedUserData['created_at'];
+
+    notifyListeners();
+    return true;
+  }
+
+  Future<void> logout() async {
+    _authToken = null;
+    _id = null;
+    _firstName = null;
+    _lastName = null;
+    _username = null;
+    _email = null;
+    _phoneNumber = null;
+    _createdAt = null;
+
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 }
