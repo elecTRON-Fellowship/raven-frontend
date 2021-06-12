@@ -19,7 +19,7 @@ class FriendTicketIcon extends StatelessWidget {
           'Jamie',
           style: GoogleFonts.poppins(
             textStyle: TextStyle(
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
               fontSize: 14,
               color: Color.fromRGBO(17, 128, 168, 1.0),
             ),

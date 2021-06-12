@@ -12,22 +12,14 @@ class TicketsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: PreferredSize(
-        preferredSize:
-            Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
+        preferredSize: Size.fromHeight(100),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AppBar(
               elevation: 0.0,
               backgroundColor: Colors.transparent,
-              leading: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: Icon(Icons.arrow_back_rounded),
-                iconSize: 30,
-                color: Color.fromRGBO(17, 128, 168, 1.0),
-              ),
+              automaticallyImplyLeading: false,
               title: Text(
                 'Tickets',
                 style: GoogleFonts.poppins(
@@ -41,7 +33,7 @@ class TicketsScreen extends StatelessWidget {
               actions: [
                 IconButton(
                   onPressed: () {},
-                  icon: Icon(Icons.credit_card_rounded),
+                  icon: Icon(Icons.add_circle_outline_rounded),
                   iconSize: 30,
                   color: Color.fromRGBO(17, 128, 168, 1.0),
                 )
@@ -54,7 +46,8 @@ class TicketsScreen extends StatelessWidget {
         children: [
           CarouselSlider.builder(
             options: CarouselOptions(
-              height: MediaQuery.of(context).size.height * 0.2,
+              height: MediaQuery.of(context).size.height * 0.26,
+              viewportFraction: 0.9,
               initialPage: 0,
               enableInfiniteScroll: false,
               reverse: false,
@@ -85,14 +78,13 @@ class TicketsScreen extends StatelessWidget {
                   topRight: Radius.circular(30),
                 ),
                 child: GridView.builder(
-                  itemCount: 12,
-                  padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15),
+                  itemCount: 24,
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    mainAxisSpacing: 20,
-                    crossAxisSpacing: 20,
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 0,
+                    crossAxisSpacing: 18,
                     childAspectRatio: 1,
-                    mainAxisExtent: 110,
                   ),
                   itemBuilder: (context, index) {
                     return FriendTicketIcon();
@@ -107,17 +99,16 @@ class TicketsScreen extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(15),
               child: BottomNavigationBar(
+                currentIndex: 1,
+                onTap: (index) {
+                  if (index == 0) Navigator.of(context).pop();
+                },
                 showSelectedLabels: false,
                 showUnselectedLabels: false,
                 backgroundColor: Theme.of(context).primaryColorDark,
                 type: BottomNavigationBarType.fixed,
                 items: [
                   BottomNavigationBarItem(
-                    activeIcon: Icon(
-                      Icons.message_rounded,
-                      size: 30,
-                      color: Colors.white,
-                    ),
                     icon: Icon(
                       Icons.message_rounded,
                       size: 30,
@@ -126,6 +117,11 @@ class TicketsScreen extends StatelessWidget {
                     label: 'Conversations',
                   ),
                   BottomNavigationBarItem(
+                    activeIcon: Icon(
+                      Icons.account_balance_wallet_rounded,
+                      size: 30,
+                      color: Colors.white,
+                    ),
                     icon: Icon(
                       Icons.account_balance_wallet_rounded,
                       size: 30,

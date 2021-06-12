@@ -28,22 +28,22 @@ class MyApp extends StatelessWidget {
             primaryColorDark: Color.fromRGBO(63, 163, 199, 1),
             fontFamily: "Poppins",
           ),
-          // home: user.getUser['authToken'] != null
-          //     ? ConversationsScreen()
-          //     : FutureBuilder(
-          //         future: user.tryAutoLogin(),
-          //         builder: (context, snapshot) =>
-          //             snapshot.connectionState == ConnectionState.waiting
-          //                 ? SplashScreen()
-          //                 : LoginScreen(),
-          //       ),
-          home: TicketsScreen(),
+          home: user.getUser['authToken'] != null
+              ? ConversationsScreen()
+              : FutureBuilder(
+                  future: user.tryAutoLogin(),
+                  builder: (context, snapshot) =>
+                      snapshot.connectionState == ConnectionState.waiting
+                          ? SplashScreen()
+                          : LoginScreen(),
+                ),
           routes: {
             '/login': (ctx) => LoginScreen(),
             '/signup': (ctx) => SignUpScreen(),
             '/user-info': (ctx) => UserInfoScreen(),
             '/conversations': (ctx) => ConversationsScreen(),
-            '/chat': (ctx) => ChatScreen()
+            '/chat': (ctx) => ChatScreen(),
+            '/tickets': (ctx) => TicketsScreen(),
           },
         ),
       ),

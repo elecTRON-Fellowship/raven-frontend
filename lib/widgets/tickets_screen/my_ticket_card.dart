@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/widgets/tickets_screen/my_ticket_contributor_card.dart';
 
 class MyTicketCard extends StatelessWidget {
   const MyTicketCard({Key? key}) : super(key: key);
@@ -7,11 +8,13 @@ class MyTicketCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
       elevation: 3.0,
       color: Theme.of(context).primaryColorLight,
       child: Padding(
-        padding: EdgeInsets.all(12.5),
+        padding: EdgeInsets.symmetric(vertical: 13, horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -20,24 +23,24 @@ class MyTicketCard extends StatelessWidget {
               style: GoogleFonts.poppins(
                 textStyle: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 22,
+                    fontSize: 23,
                     color: Colors.black),
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 13,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
+                  width: MediaQuery.of(context).size.width * 0.43,
                   child: Text(
                     'Need money to buy tickets for Abu Dhabi GP.',
                     style: GoogleFonts.poppins(
                       textStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
                         color: Color.fromRGBO(17, 128, 168, 1.0),
                       ),
                     ),
@@ -56,22 +59,9 @@ class MyTicketCard extends StatelessWidget {
               ],
             ),
             SizedBox(
-              height: 10,
+              height: 13,
             ),
-            Container(
-              width: double.infinity,
-              child: Text(
-                '*contributors here*',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                  textStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Color.fromRGBO(17, 128, 168, 1.0),
-                  ),
-                ),
-              ),
-            ),
+            MyTicketContributorCard(),
           ],
         ),
       ),
