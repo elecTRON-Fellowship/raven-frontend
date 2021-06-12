@@ -9,18 +9,20 @@ class FriendTicketIcon extends StatelessWidget {
     return Column(
       children: [
         CircleAvatar(
-          child: Icon(Icons.account_circle),
-          maxRadius: 30,
+          backgroundImage: NetworkImage(
+            'https://upload.wikimedia.org/wikipedia/commons/a/a0/Arh-avatar.jpg',
+          ),
+          radius: 33,
         ),
         SizedBox(
-          height: 8.0,
+          height: 2.0,
         ),
         Text(
           'Jamie',
           style: GoogleFonts.poppins(
             textStyle: TextStyle(
               fontWeight: FontWeight.w500,
-              fontSize: 14,
+              fontSize: 15,
               color: Color.fromRGBO(17, 128, 168, 1.0),
             ),
           ),

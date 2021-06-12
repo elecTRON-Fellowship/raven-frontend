@@ -3,7 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_contributor_card.dart';
 
 class MyTicketCard extends StatelessWidget {
-  const MyTicketCard({Key? key}) : super(key: key);
+  final Function contributorCardOnTap;
+
+  MyTicketCard({required this.contributorCardOnTap});
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +63,9 @@ class MyTicketCard extends StatelessWidget {
             SizedBox(
               height: 13,
             ),
-            MyTicketContributorCard(),
+            MyTicketContributorCard(
+                backgroundColor: Color.fromRGBO(212, 230, 237, 1.0),
+                onTap: this.contributorCardOnTap),
           ],
         ),
       ),

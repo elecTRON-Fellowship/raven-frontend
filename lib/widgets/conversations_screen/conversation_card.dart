@@ -33,10 +33,11 @@ class ConversationCard extends StatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsets.only(left: 8.0),
-                child: Icon(
-                  Icons.account_circle_outlined,
-                  size: 55,
-                  color: Colors.blueGrey,
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    'https://upload.wikimedia.org/wikipedia/commons/a/a0/Arh-avatar.jpg',
+                  ),
+                  radius: 30,
                 ),
               ),
               Column(

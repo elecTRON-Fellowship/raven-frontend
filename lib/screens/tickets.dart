@@ -3,9 +3,29 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/widgets/tickets_screen/friend_ticket_icon.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_card.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:raven/widgets/tickets_screen/my_ticket_contributors.dart';
 
-class TicketsScreen extends StatelessWidget {
+class TicketsScreen extends StatefulWidget {
   const TicketsScreen({Key? key}) : super(key: key);
+
+  @override
+  _TicketsScreenState createState() => _TicketsScreenState();
+}
+
+class _TicketsScreenState extends State<TicketsScreen> {
+  bool _showContributors = false;
+
+  void _setShowContributorsToTrue() {
+    setState(() {
+      _showContributors = true;
+    });
+  }
+
+  void _setShowContributorsToFalse() {
+    setState(() {
+      _showContributors = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,114 +62,128 @@ class TicketsScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          CarouselSlider.builder(
-            options: CarouselOptions(
-              height: MediaQuery.of(context).size.height * 0.26,
-              viewportFraction: 0.9,
-              initialPage: 0,
-              enableInfiniteScroll: false,
-              reverse: false,
-              autoPlay: false,
-              enlargeCenterPage: false,
-              scrollDirection: Axis.horizontal,
-            ),
-            itemCount: 5,
-            itemBuilder: (BuildContext context, int itemIndex, _) =>
-                MyTicketCard(),
-          ),
-          SizedBox(
-            height: 20.0,
-          ),
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.only(top: 15),
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(212, 230, 237, 1.0),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
+          GestureDetector(
+            onTap: _setShowContributorsToFalse,
+            child: Column(
+              children: [
+                CarouselSlider.builder(
+                  options: CarouselOptions(
+                    height: MediaQuery.of(context).size.height * 0.27,
+                    viewportFraction: 0.9,
+                    initialPage: 0,
+                    enableInfiniteScroll: false,
+                    reverse: false,
+                    autoPlay: false,
+                    enlargeCenterPage: false,
+                    scrollDirection: Axis.horizontal,
+                  ),
+                  itemCount: 5,
+                  itemBuilder: (BuildContext context, int itemIndex, _) =>
+                      MyTicketCard(
+                    contributorCardOnTap: _setShowContributorsToTrue,
+                  ),
                 ),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
+                SizedBox(
+                  height: 13.0,
                 ),
-                child: GridView.builder(
-                  itemCount: 24,
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 0,
-                    crossAxisSpacing: 18,
-                    childAspectRatio: 1,
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 15),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColorLight,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30),
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30),
+                      ),
+                      child: GridView.builder(
+                        itemCount: 24,
+                        padding:
+                            EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          mainAxisSpacing: 0,
+                          crossAxisSpacing: 15,
+                          childAspectRatio: 1,
+                        ),
+                        itemBuilder: (context, index) {
+                          return FriendTicketIcon();
+                        },
+                      ),
+                    ),
                   ),
-                  itemBuilder: (context, index) {
-                    return FriendTicketIcon();
-                  },
                 ),
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-            color: Color.fromRGBO(212, 230, 237, 1.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: BottomNavigationBar(
-                currentIndex: 1,
-                onTap: (index) {
-                  if (index == 0) Navigator.of(context).pop();
-                },
-                showSelectedLabels: false,
-                showUnselectedLabels: false,
-                backgroundColor: Theme.of(context).primaryColorDark,
-                type: BottomNavigationBarType.fixed,
-                items: [
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.message_rounded,
-                      size: 30,
-                      color: Color.fromRGBO(194, 222, 232, 1.0),
-                    ),
-                    label: 'Conversations',
-                  ),
-                  BottomNavigationBarItem(
-                    activeIcon: Icon(
-                      Icons.account_balance_wallet_rounded,
-                      size: 30,
-                      color: Colors.white,
-                    ),
-                    icon: Icon(
-                      Icons.account_balance_wallet_rounded,
-                      size: 30,
-                      color: Color.fromRGBO(194, 222, 232, 1.0),
-                    ),
-                    label: 'Tickets',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.local_taxi_rounded,
-                      size: 30,
-                      color: Color.fromRGBO(194, 222, 232, 1.0),
-                    ),
-                    label: 'Uber',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.settings_rounded,
-                      size: 30,
-                      color: Color.fromRGBO(194, 222, 232, 1.0),
-                    ),
-                    label: 'Settings',
-                  ),
-                ],
-              ),
+              ],
             ),
           ),
+          if (_showContributors)
+            Center(
+              child: MyTicketContributors(),
+            ),
         ],
+      ),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+        color: Theme.of(context).primaryColorLight,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: BottomNavigationBar(
+            currentIndex: 1,
+            onTap: (index) {
+              if (index == 0) Navigator.of(context).pop();
+            },
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+            backgroundColor: Theme.of(context).primaryColorDark,
+            type: BottomNavigationBarType.fixed,
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.message_rounded,
+                  size: 30,
+                  color: Color.fromRGBO(194, 222, 232, 1.0),
+                ),
+                label: 'Conversations',
+              ),
+              BottomNavigationBarItem(
+                activeIcon: Icon(
+                  Icons.account_balance_wallet_rounded,
+                  size: 30,
+                  color: Colors.white,
+                ),
+                icon: Icon(
+                  Icons.account_balance_wallet_rounded,
+                  size: 30,
+                  color: Color.fromRGBO(194, 222, 232, 1.0),
+                ),
+                label: 'Tickets',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.local_taxi_rounded,
+                  size: 30,
+                  color: Color.fromRGBO(194, 222, 232, 1.0),
+                ),
+                label: 'Uber',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.settings_rounded,
+                  size: 30,
+                  color: Color.fromRGBO(194, 222, 232, 1.0),
+                ),
+                label: 'Settings',
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
