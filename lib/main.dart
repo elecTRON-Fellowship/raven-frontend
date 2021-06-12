@@ -5,6 +5,7 @@ import 'package:raven/screens/chat.dart';
 import 'package:raven/screens/conversations.dart';
 import 'package:raven/screens/sign_up.dart';
 import 'package:raven/screens/splash_screen.dart';
+import 'package:raven/screens/tickets.dart';
 import 'package:raven/screens/user_info.dart';
 import 'package:raven/screens/login.dart';
 
@@ -27,15 +28,16 @@ class MyApp extends StatelessWidget {
             primaryColorDark: Color.fromRGBO(63, 163, 199, 1),
             fontFamily: "Poppins",
           ),
-          home: user.getUser['authToken'] != null
-              ? ConversationsScreen()
-              : FutureBuilder(
-                  future: user.tryAutoLogin(),
-                  builder: (context, snapshot) =>
-                      snapshot.connectionState == ConnectionState.waiting
-                          ? SplashScreen()
-                          : LoginScreen(),
-                ),
+          // home: user.getUser['authToken'] != null
+          //     ? ConversationsScreen()
+          //     : FutureBuilder(
+          //         future: user.tryAutoLogin(),
+          //         builder: (context, snapshot) =>
+          //             snapshot.connectionState == ConnectionState.waiting
+          //                 ? SplashScreen()
+          //                 : LoginScreen(),
+          //       ),
+          home: TicketsScreen(),
           routes: {
             '/login': (ctx) => LoginScreen(),
             '/signup': (ctx) => SignUpScreen(),
