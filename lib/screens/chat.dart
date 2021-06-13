@@ -186,7 +186,7 @@ class ChatScreen extends StatelessWidget {
               child: Container(
                 margin: EdgeInsets.only(top: 15),
                 decoration: BoxDecoration(
-                  color: Color.fromRGBO(212, 230, 237, 1.0),
+                  color: Theme.of(context).backgroundColor,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
@@ -211,7 +211,7 @@ class ChatScreen extends StatelessWidget {
             ),
             Container(
               padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-              color: Color.fromRGBO(212, 230, 237, 1.0),
+              color: Theme.of(context).backgroundColor,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

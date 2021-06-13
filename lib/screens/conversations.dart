@@ -85,7 +85,9 @@ class ConversationsScreen extends StatelessWidget {
                   color: Theme.of(context).primaryColorDark,
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/contacts');
+                  },
                   icon: Icon(Icons.add_circle_outline_rounded),
                   iconSize: 30,
                   color: Theme.of(context).primaryColorDark,

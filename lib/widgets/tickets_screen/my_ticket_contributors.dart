@@ -16,7 +16,7 @@ class MyTicketContributors extends StatelessWidget {
         width: 330,
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         decoration: BoxDecoration(
-          color: Color.fromRGBO(212, 230, 237, 1.0),
+          color: Theme.of(context).backgroundColor,
           borderRadius: BorderRadius.circular(15),
         ),
         child: ListView.builder(

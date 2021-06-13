@@ -64,7 +64,7 @@ class MyTicketCard extends StatelessWidget {
               height: 13,
             ),
             MyTicketContributorCard(
-                backgroundColor: Color.fromRGBO(212, 230, 237, 1.0),
+                backgroundColor: Theme.of(context).backgroundColor,
                 onTap: this.contributorCardOnTap),
           ],
         ),

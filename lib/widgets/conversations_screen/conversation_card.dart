@@ -21,7 +21,7 @@ class ConversationCard extends StatelessWidget {
       width: double.infinity,
       height: 88,
       child: Card(
-        color: Color.fromRGBO(212, 230, 237, 1.0),
+        color: Theme.of(context).backgroundColor,
         elevation: 2.5,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: InkWell(

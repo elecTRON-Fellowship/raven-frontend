@@ -18,7 +18,15 @@ class FriendTransactionsScreen extends StatelessWidget {
             AppBar(
               elevation: 0.0,
               backgroundColor: Colors.transparent,
-              automaticallyImplyLeading: false,
+              titleSpacing: 0,
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: Icon(Icons.arrow_back_rounded),
+                iconSize: 30,
+                color: Color.fromRGBO(17, 128, 168, 1.0),
+              ),
               title: Text(
                 'Transactions',
                 style: GoogleFonts.poppins(
