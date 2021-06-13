@@ -2,12 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FriendTransactionCard extends StatelessWidget {
-  const FriendTransactionCard({Key? key}) : super(key: key);
+  final String status;
+  final String description;
+  final String date;
+  final double amount;
+
+  FriendTransactionCard(
+      {required this.amount,
+      required this.date,
+      required this.description,
+      required this.status});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 88,
+      height: 82,
       width: double.infinity,
       child: Card(
         color: Theme.of(context).backgroundColor,
@@ -22,19 +31,19 @@ class FriendTransactionCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Sent',
+                    this.status,
                     style: GoogleFonts.poppins(
                       textStyle: TextStyle(
-                        fontSize: 15,
+                        fontSize: 14,
                         color: Theme.of(context).primaryColorDark,
                       ),
                     ),
                   ),
                   Text(
-                    '12/06/2021',
+                    this.date,
                     style: GoogleFonts.poppins(
                       textStyle: TextStyle(
-                        fontSize: 15,
+                        fontSize: 14,
                         color: Theme.of(context).primaryColorDark,
                       ),
                     ),
@@ -45,21 +54,21 @@ class FriendTransactionCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'For paying for dinner',
+                    this.description,
                     style: GoogleFonts.poppins(
                       textStyle: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 18,
+                        fontSize: 15,
                         color: Theme.of(context).primaryColorDark,
                       ),
                     ),
                   ),
                   Text(
-                    '200',
+                    '₹${this.amount.toStringAsFixed(2)}',
                     style: GoogleFonts.poppins(
                       textStyle: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 20,
+                        fontSize: 18,
                         color: Theme.of(context).primaryColorDark,
                       ),
                     ),

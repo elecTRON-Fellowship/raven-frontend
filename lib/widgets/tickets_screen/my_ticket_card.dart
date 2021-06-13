@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:raven/providers/user.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_contributor_card.dart';
 
 class MyTicketCard extends StatelessWidget {
   final Function contributorCardOnTap;
+  final String description;
+  final double amountRaised;
+  final double totalAmount;
 
-  MyTicketCard({required this.contributorCardOnTap});
+  MyTicketCard(
+      {required this.contributorCardOnTap,
+      required this.amountRaised,
+      required this.description,
+      required this.totalAmount});
 
   @override
   Widget build(BuildContext context) {
+    final userData = Provider.of<User>(context).getUser;
+
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
@@ -16,11 +27,12 @@ class MyTicketCard extends StatelessWidget {
       elevation: 3.0,
       color: Theme.of(context).primaryColorLight,
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 13, horizontal: 20),
+        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
+              // '${userData['firstName'] as String} ${userData['lastName'] as String}',
               'Mizan Ali',
               style: GoogleFonts.poppins(
                 textStyle: TextStyle(
@@ -38,23 +50,23 @@ class MyTicketCard extends StatelessWidget {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.43,
                   child: Text(
-                    'Need money to buy tickets for Abu Dhabi GP.',
+                    this.description,
                     style: GoogleFonts.poppins(
                       textStyle: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 15,
-                        color: Color.fromRGBO(17, 128, 168, 1.0),
+                        fontSize: 15.5,
+                        color: Theme.of(context).primaryColorDark,
                       ),
                     ),
                   ),
                 ),
                 Text(
-                  '90/100',
+                  '₹${this.amountRaised.toStringAsFixed(2)}/\n₹${this.totalAmount.toStringAsFixed(2)}',
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
-                      color: Color.fromRGBO(17, 128, 168, 1.0),
+                      color: Theme.of(context).primaryColorDark,
                     ),
                   ),
                 ),
@@ -64,6 +76,8 @@ class MyTicketCard extends StatelessWidget {
               height: 13,
             ),
             MyTicketContributorCard(
+                contributorName: 'Zaid Sheikh',
+                amountContributed: 200,
                 backgroundColor: Theme.of(context).backgroundColor,
                 onTap: this.contributorCardOnTap),
           ],

@@ -67,8 +67,14 @@ class _TicketsScreenState extends State<TicketsScreen> {
             onTap: _setShowContributorsToFalse,
             child: Column(
               children: [
-                MyTicketCard(
-                  contributorCardOnTap: _setShowContributorsToTrue,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: MyTicketCard(
+                    description: 'Lorem impsum',
+                    amountRaised: 800,
+                    totalAmount: 1000,
+                    contributorCardOnTap: _setShowContributorsToTrue,
+                  ),
                 ),
                 SizedBox(
                   height: 13.0,
@@ -99,7 +105,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                           childAspectRatio: 1,
                         ),
                         itemBuilder: (context, index) {
-                          return FriendTicketIcon();
+                          return FriendTicketIcon(name: 'Jamie');
                         },
                       ),
                     ),

@@ -22,6 +22,8 @@ class MyTicketContributors extends StatelessWidget {
         child: ListView.builder(
           itemCount: 15,
           itemBuilder: (context, index) => MyTicketContributorCard(
+            contributorName: 'Zaid Sheikh',
+            amountContributed: 300,
             backgroundColor: Theme.of(context).primaryColorLight,
             onTap: () {},
           ),

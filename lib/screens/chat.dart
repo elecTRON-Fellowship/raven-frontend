@@ -138,7 +138,8 @@ class ChatScreen extends StatelessWidget {
               actions: [
                 IconButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed('/friend-transactions');
+                    Navigator.of(context).pushNamed('/friend-transactions',
+                        arguments: {'friendName': args['name'] as String});
                   },
                   icon: Icon(Icons.credit_card_rounded),
                   iconSize: 30,

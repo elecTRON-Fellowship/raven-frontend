@@ -8,6 +8,9 @@ class FriendTransactionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: PreferredSize(
@@ -51,7 +54,15 @@ class FriendTransactionsScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          FriendTicketCard(),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FriendTicketCard(
+              friendName: args['friendName'] as String,
+              description: 'Lorem ipsum',
+              amountRaised: 100,
+              totalAmount: 1000,
+            ),
+          ),
           SizedBox(
             height: 13.0,
           ),
@@ -74,7 +85,12 @@ class FriendTransactionsScreen extends StatelessWidget {
                   padding: EdgeInsets.all(10),
                   itemCount: 10,
                   itemBuilder: (context, index) {
-                    return FriendTransactionCard();
+                    return FriendTransactionCard(
+                      status: 'Sent',
+                      description: 'Lorem ipsum',
+                      amount: 200,
+                      date: '20/06/2021',
+                    );
                   },
                 ),
               ),
