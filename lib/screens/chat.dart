@@ -157,10 +157,11 @@ class ChatScreen extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 18.0),
-                  child: Icon(
-                    Icons.account_circle,
-                    size: 55,
-                    color: Colors.white,
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      'https://upload.wikimedia.org/wikipedia/commons/a/a0/Arh-avatar.jpg',
+                    ),
+                    radius: 30,
                   ),
                 ),
                 SizedBox(

@@ -5,6 +5,7 @@ import 'package:raven/screens/chat.dart';
 import 'package:raven/screens/conversations.dart';
 import 'package:raven/screens/sign_up.dart';
 import 'package:raven/screens/splash_screen.dart';
+import 'package:raven/screens/tickets.dart';
 import 'package:raven/screens/user_info.dart';
 import 'package:raven/screens/login.dart';
 
@@ -41,7 +42,8 @@ class MyApp extends StatelessWidget {
             '/signup': (ctx) => SignUpScreen(),
             '/user-info': (ctx) => UserInfoScreen(),
             '/conversations': (ctx) => ConversationsScreen(),
-            '/chat': (ctx) => ChatScreen()
+            '/chat': (ctx) => ChatScreen(),
+            '/tickets': (ctx) => TicketsScreen(),
           },
         ),
       ),

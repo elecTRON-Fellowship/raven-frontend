@@ -81,8 +81,8 @@ class ConversationsScreen extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: () {},
-                  icon: Icon(Icons.add_rounded),
-                  iconSize: 34.5,
+                  icon: Icon(Icons.add_circle_outline_rounded),
+                  iconSize: 30,
                   color: Theme.of(context).primaryColorDark,
                 ),
               ],
@@ -105,6 +105,10 @@ class ConversationsScreen extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(15),
           child: BottomNavigationBar(
+            currentIndex: 0,
+            onTap: (index) {
+              if (index == 1) Navigator.of(context).pushNamed('/tickets');
+            },
             showSelectedLabels: false,
             showUnselectedLabels: false,
             backgroundColor: Theme.of(context).primaryColorDark,
