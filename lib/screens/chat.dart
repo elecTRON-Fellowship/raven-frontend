@@ -137,7 +137,9 @@ class ChatScreen extends StatelessWidget {
               ),
               actions: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/friend-transactions');
+                  },
                   icon: Icon(Icons.credit_card_rounded),
                   iconSize: 30,
                   color: Color.fromRGBO(17, 128, 168, 1.0),

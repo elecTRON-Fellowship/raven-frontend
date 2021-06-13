@@ -8,11 +8,16 @@ class FriendTicketIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CircleAvatar(
-          backgroundImage: NetworkImage(
-            'https://upload.wikimedia.org/wikipedia/commons/a/a0/Arh-avatar.jpg',
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed('/friend-transactions');
+          },
+          child: CircleAvatar(
+            backgroundImage: NetworkImage(
+              'https://upload.wikimedia.org/wikipedia/commons/a/a0/Arh-avatar.jpg',
+            ),
+            radius: 33,
           ),
-          radius: 33,
         ),
         SizedBox(
           height: 2.0,

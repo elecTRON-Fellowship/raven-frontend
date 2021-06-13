@@ -146,6 +146,8 @@ class User with ChangeNotifier {
     _phoneNumber = null;
     _createdAt = null;
 
+    notifyListeners();
+
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
   }
