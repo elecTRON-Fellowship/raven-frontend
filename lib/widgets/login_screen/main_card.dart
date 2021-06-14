@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:raven/providers/user.dart';
@@ -18,22 +20,24 @@ class _MainCardState extends State<MainCard> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  void onLoginButtonPressed(BuildContext context) {
-    Provider.of<User>(context, listen: false)
-        .login(
+  void onLoginButtonPressed(BuildContext context) async {
+    final loginResult = await Provider.of<User>(context, listen: false).login(
       _phoneNumberController.text.toString(),
       _passwordController.text.toString(),
-    )
-        .then((res) {
-      if (res) {
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil('/conversations', (route) => false);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: const Text("There was an error")),
-        );
-      }
-    });
+    );
+
+    if (loginResult.statusCode == 200) {
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/conversations', (route) => false);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            json.decode(loginResult.body)['error'].toString(),
+          ),
+        ),
+      );
+    }
   }
 
   @override

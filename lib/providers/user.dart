@@ -27,97 +27,48 @@ class User with ChangeNotifier {
     };
   }
 
-  Future<bool> register(String firstName, String lastName, String username,
-      String email, String password, String phoneNumber) async {
+  Future<http.Response> register(
+      String firstName,
+      String lastName,
+      String username,
+      String email,
+      String password,
+      String phoneNumber) async {
     var url = Uri.parse('http://10.0.2.2:8000/register');
 
     // var url = Uri.parse('http://192.168.0.107:8000/register');
     // var url = Uri.https('localhost:8000', '/register');
 
-    http
-        .post(url,
-            headers: {'Content-Type': 'application/json'},
-            body: json.encode({
-              "first_name": firstName,
-              "last_name": lastName,
-              "user_name": username,
-              "email": email,
-              "password": password,
-              "phone_no": phoneNumber
-            }))
-        .then((res) {
-      final data = json.decode(res.body);
-      _authToken = data['accessToken'];
-      _id = data['data']['id'].toString();
-      _firstName = data['data']['first_name'];
-      _lastName = data['data']['last_name'];
-      _username = data['data']['user_name'];
-      _email = data['data']['email'];
-      _phoneNumber = data['data']['phone_no'];
-      _createdAt = data['data']['created_at'];
+    final res = await http.post(url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          "first_name": firstName,
+          "last_name": lastName,
+          "user_name": username,
+          "email": email,
+          "password": password,
+          "phone_no": phoneNumber
+        }));
 
-      notifyListeners();
+    if (res.statusCode == 200) {
+      updateUserData(json.decode(res.body));
+    }
 
-      SharedPreferences.getInstance().then((prefs) {
-        final userData = json.encode({
-          "auth_token": data['accessToken'],
-          "id": data['data']['id'].toString(),
-          "first_name": data['data']['first_name'],
-          "last_name": data['data']['last_name'],
-          "user_name": data['data']['user_name'],
-          "email": data['data']['email'],
-          "phone_no": data['data']['phone_no'],
-          "created_at": data['data']['created_at']
-        });
-        prefs.setString('userData', userData);
-        return true;
-      });
-    }).catchError((err) {
-      throw err;
-    });
-    return false;
+    return res;
   }
 
-  Future<bool> login(String phoneNumber, String password) async {
+  Future<http.Response> login(String phoneNumber, String password) async {
     var url = Uri.parse('http://10.0.2.2:8000/login');
 
-    http
-        .post(url,
-            headers: {'Content-Type': 'application/json'},
-            body: json.encode({"phone_no": phoneNumber, "password": password}))
-        .then((res) {
-      final data = json.decode(res.body);
-      _authToken = data['accessToken'];
-      _id = data['data']['id'].toString();
-      _firstName = data['data']['first_name'];
-      _lastName = data['data']['last_name'];
-      _username = data['data']['user_name'];
-      _email = data['data']['email'];
-      _phoneNumber = data['data']['phone_no'];
-      _createdAt = data['data']['created_at'];
+    final res = await http.post(url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({"phone_no": phoneNumber, "password": password}));
 
-      notifyListeners();
+    if (res.statusCode == 200) {
+      updateUserData(json.decode(res.body));
+    }
 
-      SharedPreferences.getInstance().then((prefs) {
-        final userData = json.encode({
-          "auth_token": data['accessToken'],
-          "id": data['data']['id'].toString(),
-          "first_name": data['data']['first_name'],
-          "last_name": data['data']['last_name'],
-          "user_name": data['data']['user_name'],
-          "email": data['data']['email'],
-          "phone_no": data['data']['phone_no'],
-          "created_at": data['data']['created_at']
-        });
-
-        prefs.setString('userData', userData);
-      });
-
-      return true;
-    }).catchError((err) {
-      throw err;
-    });
-    return false;
+    return res;
   }
 
   Future<bool> tryAutoLogin() async {
@@ -155,5 +106,33 @@ class User with ChangeNotifier {
 
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
+  }
+
+  void updateUserData(data) {
+    _authToken = data['accessToken'];
+    _id = data['data']['id'].toString();
+    _firstName = data['data']['first_name'];
+    _lastName = data['data']['last_name'];
+    _username = data['data']['user_name'];
+    _email = data['data']['email'];
+    _phoneNumber = data['data']['phone_no'];
+    _createdAt = data['data']['created_at'];
+
+    notifyListeners();
+
+    SharedPreferences.getInstance().then((prefs) {
+      final userData = json.encode({
+        "auth_token": data['accessToken'],
+        "id": data['data']['id'].toString(),
+        "first_name": data['data']['first_name'],
+        "last_name": data['data']['last_name'],
+        "user_name": data['data']['user_name'],
+        "email": data['data']['email'],
+        "phone_no": data['data']['phone_no'],
+        "created_at": data['data']['created_at']
+      });
+
+      prefs.setString('userData', userData);
+    });
   }
 }

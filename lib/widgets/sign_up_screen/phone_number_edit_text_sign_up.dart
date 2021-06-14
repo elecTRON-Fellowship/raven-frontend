@@ -41,14 +41,14 @@ class PhoneNumberTextFieldSignUp extends StatelessWidget {
             color: Theme.of(context).primaryColorDark,
           ),
         ),
-        validator: (value) {
-          var isValid =
-              Fzregex.hasMatch(value!, FzPattern.phone); //Hard coded +91
-          if (!isValid) {
-            return "Invalid phone number";
-          }
-          return null;
-        },
+        // validator: (value) {
+        //   var isValid =
+        //       Fzregex.hasMatch(value!, FzPattern.phone); //Hard coded +91
+        //   if (!isValid) {
+        //     return "Invalid phone number";
+        //   }
+        //   return null;
+        // },
       ),
     );
   }

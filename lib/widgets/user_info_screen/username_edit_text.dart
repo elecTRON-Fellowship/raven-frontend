@@ -41,14 +41,14 @@ class UsernameEditText extends StatelessWidget {
             color: Theme.of(context).primaryColorDark,
           ),
         ),
-        validator: (value) {
-          var isValid = Fzregex.hasMatch(value!, FzPattern.name);
-          if (!isValid) {
-            return "Invalid username";
-          }
-          //add checks for special characters
-          return null;
-        },
+        // validator: (value) {
+        //   var isValid = Fzregex.hasMatch(value!, FzPattern.name);
+        //   if (!isValid) {
+        //     return "Invalid username";
+        //   }
+        //   //add checks for special characters
+        //   return null;
+        // },
       ),
     );
   }

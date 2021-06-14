@@ -60,13 +60,13 @@ class _PasswordEditTextState extends State<PasswordEditText> {
         ),
         obscureText: !_isPasswordVisible,
         //onSubmitted: (String) {}, //Run login method
-        validator: (value) {
-          var isValidPassword =
-              Fzregex.hasMatch(value!, FzPattern.passwordNormal1);
-          if (!isValidPassword) {
-            return "Invalid/Weak password";
-          }
-        },
+        // validator: (value) {
+        //   var isValidPassword =
+        //       Fzregex.hasMatch(value!, FzPattern.passwordNormal1);
+        //   if (!isValidPassword) {
+        //     return "Invalid/Weak password";
+        //   }
+        // },
       ),
     );
   }

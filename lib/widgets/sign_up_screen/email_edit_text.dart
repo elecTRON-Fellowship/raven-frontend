@@ -41,13 +41,13 @@ class EmailEditText extends StatelessWidget {
             color: Theme.of(context).primaryColorDark,
           ),
         ),
-        validator: (value) {
-          var isValid = Fzregex.hasMatch(value!, FzPattern.email);
-          if (!isValid) {
-            return "Invalid email";
-          }
-          return null;
-        },
+        // validator: (value) {
+        //   var isValid = Fzregex.hasMatch(value!, FzPattern.email);
+        //   if (!isValid) {
+        //     return "Invalid email";
+        //   }
+        //   return null;
+        // },
       ),
     );
   }

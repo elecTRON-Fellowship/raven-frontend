@@ -113,8 +113,13 @@ class ConversationsScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           child: BottomNavigationBar(
             currentIndex: 0,
-            onTap: (index) {
+            onTap: (index) async {
               if (index == 1) Navigator.of(context).pushNamed('/tickets');
+              if (index == 3) {
+                await Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/login', (route) => false);
+                Provider.of<User>(context).logout();
+              }
             },
             showSelectedLabels: false,
             showUnselectedLabels: false,
