@@ -60,17 +60,17 @@ class _PasswordEditTextSignUpState extends State<PasswordEditTextSignUp> {
         ),
         obscureText: !_isPasswordVisible,
         //onSubmitted: (String) {}, //Run login method
-        validator: (value) {
-          // if (value!.trim().isEmpty) {
-          //   return "Please enter a password";
-          // }
-          var isValidPassword =
-              Fzregex.hasMatch(value!, FzPattern.passwordNormal1);
-          if (!isValidPassword) {
-            return "Invalid/Weak password";
-          }
-          return null;
-        },
+        // validator: (value) {
+        //   // if (value!.trim().isEmpty) {
+        //   //   return "Please enter a password";
+        //   // }
+        //   var isValidPassword =
+        //       Fzregex.hasMatch(value!, FzPattern.passwordNormal1);
+        //   if (!isValidPassword) {
+        //     return "Invalid/Weak password";
+        //   }
+        //   return null;
+        // },
       ),
     );
   }

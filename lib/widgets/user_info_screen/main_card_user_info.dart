@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:raven/providers/user.dart';
@@ -21,25 +23,28 @@ class _MainCardUserInfoState extends State<MainCardUserInfo> {
   final _usernameController = TextEditingController();
   final _saveFormKey = GlobalKey<FormState>();
 
-  void onSaveButtonPressed(BuildContext context) {
-    Provider.of<User>(context, listen: false)
+  void onSaveButtonPressed(BuildContext context) async {
+    final signUpResult = await Provider.of<User>(context, listen: false)
         .register(
             _firstNameController.text.toString(),
             _lastNameController.text.toString(),
             _usernameController.text.toString(),
             widget.signUpCredentials['email'].toString(),
             widget.signUpCredentials['password'].toString(),
-            widget.signUpCredentials['phoneNumber'].toString())
-        .then((res) {
-      if (res) {
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil('/conversations', (route) => false);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: const Text("There was an error")),
-        );
-      }
-    });
+            widget.signUpCredentials['phoneNumber'].toString());
+
+    if (signUpResult.statusCode == 200) {
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/conversations', (route) => false);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            json.decode(signUpResult.body)['error'].toString(),
+          ),
+        ),
+      );
+    }
   }
 
   @override
