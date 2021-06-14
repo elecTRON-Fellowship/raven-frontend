@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fzregex/utils/fzregex.dart';
+import 'package:fzregex/utils/pattern.dart';
 
 class UsernameEditText extends StatelessWidget {
   final usernameController;
@@ -9,7 +11,7 @@ class UsernameEditText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.65,
-      child: TextField(
+      child: TextFormField(
         controller: this.usernameController,
         keyboardType: TextInputType.text,
         textInputAction: TextInputAction.next,
@@ -39,6 +41,14 @@ class UsernameEditText extends StatelessWidget {
             color: Theme.of(context).primaryColorDark,
           ),
         ),
+        validator: (value) {
+          var isValid = Fzregex.hasMatch(value!, FzPattern.name);
+          if (!isValid) {
+            return "Invalid username";
+          }
+          //add checks for special characters
+          return null;
+        },
       ),
     );
   }

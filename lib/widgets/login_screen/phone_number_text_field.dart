@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fzregex/utils/fzregex.dart';
+import 'package:fzregex/utils/pattern.dart';
 
 class PhoneNumberTextField extends StatelessWidget {
   final phoneNumberController;
@@ -9,7 +11,7 @@ class PhoneNumberTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.65,
-      child: TextField(
+      child: TextFormField(
         controller: this.phoneNumberController,
         keyboardType: TextInputType.phone,
         textInputAction: TextInputAction.next,
@@ -39,6 +41,14 @@ class PhoneNumberTextField extends StatelessWidget {
             color: Theme.of(context).primaryColorDark,
           ),
         ),
+        validator: (value) {
+          var isValid =
+              Fzregex.hasMatch(value!, FzPattern.phone); //Hard coded +91
+          if (!isValid) {
+            return "Invalid phone number";
+          }
+          return null;
+        },
       ),
     );
   }

@@ -3,13 +3,19 @@ import 'package:google_fonts/google_fonts.dart';
 
 class SaveButton extends StatelessWidget {
   final Function saveUser;
+  final GlobalKey<FormState> _saveFormKey;
 
-  SaveButton(this.saveUser);
+  SaveButton(this.saveUser, this._saveFormKey);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () => this.saveUser(),
+      //onPressed: () => this.saveUser(),
+      onPressed: () {
+        if (_saveFormKey.currentState!.validate()) {
+          this.saveUser();
+        }
+      },
       child: Text(
         "Save",
         style: GoogleFonts.poppins(

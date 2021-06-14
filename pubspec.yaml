@@ -33,6 +33,7 @@ dependencies:
   http: ^0.13.3
   shared_preferences: ^2.0.6
   contacts_service: ^0.6.1
+  fzregex: ^2.0.0
 
 dev_dependencies:
   flutter_test:
