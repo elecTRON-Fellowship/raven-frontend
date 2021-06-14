@@ -8,6 +8,7 @@ import 'package:raven/screens/friend_transactions.dart';
 import 'package:raven/screens/sign_up.dart';
 import 'package:raven/screens/splash_screen.dart';
 import 'package:raven/screens/tickets.dart';
+import 'package:raven/screens/timed_chat.dart';
 import 'package:raven/screens/user_info.dart';
 import 'package:raven/screens/login.dart';
 
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
             '/conversations': (ctx) => ConversationsScreen(),
             '/contacts': (ctx) => ContactsScreen(),
             '/chat': (ctx) => ChatScreen(),
+            '/timed-chat': (ctx) => TimedChatScreen(),
             '/tickets': (ctx) => TicketsScreen(),
             '/friend-transactions': (ctx) => FriendTransactionsScreen()
           },

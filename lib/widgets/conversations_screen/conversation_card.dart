@@ -95,12 +95,14 @@ class ConversationCard extends StatelessWidget {
                       CircleAvatar(
                         radius: 14,
                         backgroundColor: Theme.of(context).primaryColor,
-                        child: Text(
-                          this.unreadTexts.toString(),
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                              textStyle:
-                                  TextStyle(fontSize: 12, color: Colors.white)),
+                        child: FittedBox(
+                          child: Text(
+                            this.unreadTexts.toString(),
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                    fontSize: 12, color: Colors.white)),
+                          ),
                         ),
                       ),
                   ],

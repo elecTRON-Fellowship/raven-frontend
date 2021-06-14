@@ -252,7 +252,17 @@ class ChatScreen extends StatelessWidget {
                     color: Theme.of(context).primaryColorDark,
                     iconSize: 30.0,
                     padding: EdgeInsets.only(left: 15),
-                  )
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/timed-chat',
+                          arguments: {'name': args['name'] as String});
+                    },
+                    icon: Icon(Icons.timer_rounded),
+                    color: Theme.of(context).primaryColorDark,
+                    iconSize: 30.0,
+                    padding: EdgeInsets.only(left: 15),
+                  ),
                 ],
               ),
             ),
