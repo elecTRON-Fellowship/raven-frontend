@@ -2,28 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FriendTicketIcon extends StatelessWidget {
-  const FriendTicketIcon({Key? key}) : super(key: key);
+  final String name;
+
+  FriendTicketIcon({required this.name});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CircleAvatar(
-          backgroundImage: NetworkImage(
-            'https://upload.wikimedia.org/wikipedia/commons/a/a0/Arh-avatar.jpg',
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed('/friend-transactions',
+                arguments: {'friendName': this.name});
+          },
+          child: CircleAvatar(
+            backgroundImage: NetworkImage(
+              'https://upload.wikimedia.org/wikipedia/commons/a/a0/Arh-avatar.jpg',
+            ),
+            radius: 33,
           ),
-          radius: 33,
         ),
         SizedBox(
           height: 2.0,
         ),
         Text(
-          'Jamie',
+          this.name,
           style: GoogleFonts.poppins(
             textStyle: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 15,
-              color: Color.fromRGBO(17, 128, 168, 1.0),
+              color: Theme.of(context).primaryColorDark,
             ),
           ),
         ),

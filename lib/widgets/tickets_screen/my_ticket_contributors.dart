@@ -16,12 +16,14 @@ class MyTicketContributors extends StatelessWidget {
         width: 330,
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         decoration: BoxDecoration(
-          color: Color.fromRGBO(212, 230, 237, 1.0),
+          color: Theme.of(context).backgroundColor,
           borderRadius: BorderRadius.circular(15),
         ),
         child: ListView.builder(
           itemCount: 15,
           itemBuilder: (context, index) => MyTicketContributorCard(
+            contributorName: 'Zaid Sheikh',
+            amountContributed: 300,
             backgroundColor: Theme.of(context).primaryColorLight,
             onTap: () {},
           ),

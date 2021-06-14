@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:raven/providers/user.dart';
 
 import '../widgets/conversations_screen/conversation_card.dart';
 
@@ -53,6 +55,9 @@ class ConversationsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //to check if user was actually signed in
+    print('Auth Token: ${Provider.of<User>(context).getUser['authToken']}');
+
     return Scaffold(
       backgroundColor: Color.fromRGBO(194, 222, 232, 1.0),
       // extendBodyBehindAppBar: true,
@@ -80,7 +85,9 @@ class ConversationsScreen extends StatelessWidget {
                   color: Theme.of(context).primaryColorDark,
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/contacts');
+                  },
                   icon: Icon(Icons.add_circle_outline_rounded),
                   iconSize: 30,
                   color: Theme.of(context).primaryColorDark,

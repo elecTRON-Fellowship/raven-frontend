@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:raven/providers/user.dart';
-import 'package:raven/widgets/tickets_screen/my_ticket_contributor_card.dart';
 
-class MyTicketCard extends StatelessWidget {
-  final Function contributorCardOnTap;
+class FriendTicketCard extends StatelessWidget {
+  final String friendName;
   final String description;
   final double amountRaised;
   final double totalAmount;
 
-  MyTicketCard(
-      {required this.contributorCardOnTap,
-      required this.amountRaised,
+  FriendTicketCard(
+      {required this.friendName,
       required this.description,
+      required this.amountRaised,
       required this.totalAmount});
 
   @override
   Widget build(BuildContext context) {
-    final userData = Provider.of<User>(context).getUser;
-
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
@@ -32,8 +27,7 @@ class MyTicketCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              // '${userData['firstName'] as String} ${userData['lastName'] as String}',
-              'Mizan Ali',
+              this.friendName,
               style: GoogleFonts.poppins(
                 textStyle: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -75,11 +69,44 @@ class MyTicketCard extends StatelessWidget {
             SizedBox(
               height: 13,
             ),
-            MyTicketContributorCard(
-                contributorName: 'Zaid Sheikh',
-                amountContributed: 200,
-                backgroundColor: Theme.of(context).backgroundColor,
-                onTap: this.contributorCardOnTap),
+            Container(
+              width: double.infinity,
+              child: ElevatedButton(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add_circle_outline_rounded),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                      'Contribute',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                style: ButtonStyle(
+                  padding: MaterialStateProperty.all(
+                      EdgeInsets.symmetric(vertical: 10)),
+                  foregroundColor: MaterialStateProperty.all(
+                      Theme.of(context).primaryColorDark),
+                  backgroundColor: MaterialStateProperty.all(
+                    Theme.of(context).backgroundColor,
+                  ),
+                  shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                ),
+                onPressed: () {},
+              ),
+            )
           ],
         ),
       ),

@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyTicketContributorCard extends StatelessWidget {
+  final String contributorName;
+  final double amountContributed;
   final Color backgroundColor;
   final Function onTap;
 
-  MyTicketContributorCard({required this.backgroundColor, required this.onTap});
+  MyTicketContributorCard(
+      {required this.contributorName,
+      required this.amountContributed,
+      required this.backgroundColor,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -39,26 +45,26 @@ class MyTicketContributorCard extends StatelessWidget {
                       width: 10,
                     ),
                     Text(
-                      'Zaid Sheikh',
+                      this.contributorName,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                         textStyle: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
-                          color: Color.fromRGBO(17, 128, 168, 1.0),
+                          color: Theme.of(context).primaryColorDark,
                         ),
                       ),
                     ),
                   ],
                 ),
                 Text(
-                  '+ 200',
+                  '₹${this.amountContributed.toStringAsFixed(2)}',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
-                      color: Color.fromRGBO(17, 128, 168, 1.0),
+                      color: Theme.of(context).primaryColorDark,
                     ),
                   ),
                 ),

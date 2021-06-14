@@ -137,7 +137,10 @@ class ChatScreen extends StatelessWidget {
               ),
               actions: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/friend-transactions',
+                        arguments: {'friendName': args['name'] as String});
+                  },
                   icon: Icon(Icons.credit_card_rounded),
                   iconSize: 30,
                   color: Color.fromRGBO(17, 128, 168, 1.0),
@@ -184,7 +187,7 @@ class ChatScreen extends StatelessWidget {
               child: Container(
                 margin: EdgeInsets.only(top: 15),
                 decoration: BoxDecoration(
-                  color: Color.fromRGBO(212, 230, 237, 1.0),
+                  color: Theme.of(context).backgroundColor,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
@@ -209,7 +212,7 @@ class ChatScreen extends StatelessWidget {
             ),
             Container(
               padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-              color: Color.fromRGBO(212, 230, 237, 1.0),
+              color: Theme.of(context).backgroundColor,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -249,7 +252,17 @@ class ChatScreen extends StatelessWidget {
                     color: Theme.of(context).primaryColorDark,
                     iconSize: 30.0,
                     padding: EdgeInsets.only(left: 15),
-                  )
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/timed-chat',
+                          arguments: {'name': args['name'] as String});
+                    },
+                    icon: Icon(Icons.timer_rounded),
+                    color: Theme.of(context).primaryColorDark,
+                    iconSize: 30.0,
+                    padding: EdgeInsets.only(left: 15),
+                  ),
                 ],
               ),
             ),
