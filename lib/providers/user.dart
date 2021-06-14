@@ -27,7 +27,7 @@ class User with ChangeNotifier {
     };
   }
 
-  Future<void> register(String firstName, String lastName, String username,
+  Future<bool> register(String firstName, String lastName, String username,
       String email, String password, String phoneNumber) async {
     var url = Uri.parse('http://10.0.2.2:8000/register');
 
@@ -70,13 +70,15 @@ class User with ChangeNotifier {
           "created_at": data['data']['created_at']
         });
         prefs.setString('userData', userData);
+        return true;
       });
     }).catchError((err) {
       throw err;
     });
+    return false;
   }
 
-  Future<void> login(String phoneNumber, String password) async {
+  Future<bool> login(String phoneNumber, String password) async {
     var url = Uri.parse('http://10.0.2.2:8000/login');
 
     http
@@ -110,9 +112,12 @@ class User with ChangeNotifier {
 
         prefs.setString('userData', userData);
       });
+
+      return true;
     }).catchError((err) {
       throw err;
     });
+    return false;
   }
 
   Future<bool> tryAutoLogin() async {

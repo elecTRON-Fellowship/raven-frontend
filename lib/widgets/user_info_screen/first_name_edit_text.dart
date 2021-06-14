@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fzregex/utils/fzregex.dart';
+import 'package:fzregex/utils/pattern.dart';
 
 class FirstNameEditText extends StatelessWidget {
   final firstNameController;
@@ -9,7 +11,7 @@ class FirstNameEditText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.65,
-      child: TextField(
+      child: TextFormField(
         textCapitalization: TextCapitalization.words,
         controller: this.firstNameController,
         keyboardType: TextInputType.name,
@@ -40,6 +42,13 @@ class FirstNameEditText extends StatelessWidget {
             color: Theme.of(context).primaryColorDark,
           ),
         ),
+        validator: (value) {
+          var isValid = Fzregex.hasMatch(value!, FzPattern.name);
+          if (!isValid) {
+            return "Invalid name";
+          }
+          return null;
+        },
       ),
     );
   }

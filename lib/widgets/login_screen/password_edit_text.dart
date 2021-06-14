@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fzregex/fzregex.dart';
+import 'package:fzregex/utils/pattern.dart';
 
 class PasswordEditText extends StatefulWidget {
   final passwordController;
@@ -16,13 +18,14 @@ class _PasswordEditTextState extends State<PasswordEditText> {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.65,
-      child: TextField(
+      child: TextFormField(
         controller: widget.passwordController,
         style: TextStyle(
           fontSize: 16,
           height: 1,
           color: Colors.black,
         ),
+        keyboardType: TextInputType.visiblePassword,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.all(10),
           //errorText: "Please check the Password",
@@ -57,6 +60,13 @@ class _PasswordEditTextState extends State<PasswordEditText> {
         ),
         obscureText: !_isPasswordVisible,
         //onSubmitted: (String) {}, //Run login method
+        validator: (value) {
+          var isValidPassword =
+              Fzregex.hasMatch(value!, FzPattern.passwordNormal1);
+          if (!isValidPassword) {
+            return "Invalid/Weak password";
+          }
+        },
       ),
     );
   }

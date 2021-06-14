@@ -16,6 +16,7 @@ class MainCard extends StatefulWidget {
 class _MainCardState extends State<MainCard> {
   final _phoneNumberController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   void onLoginButtonPressed(BuildContext context) {
     Provider.of<User>(context, listen: false)
@@ -24,8 +25,14 @@ class _MainCardState extends State<MainCard> {
       _passwordController.text.toString(),
     )
         .then((res) {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil('/conversations', (route) => false);
+      if (res) {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/conversations', (route) => false);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: const Text("There was an error")),
+        );
+      }
     });
   }
 
@@ -35,15 +42,18 @@ class _MainCardState extends State<MainCard> {
       color: Theme.of(context).primaryColorLight,
       elevation: 3.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40.0)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          PhoneNumberTextField(_phoneNumberController),
-          PasswordEditText(_passwordController),
-          TextButtonsCustom(),
-          LoginButton(() => onLoginButtonPressed(context)),
-          SignUpButton(),
-        ],
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            PhoneNumberTextField(_phoneNumberController),
+            PasswordEditText(_passwordController),
+            TextButtonsCustom(),
+            LoginButton(() => onLoginButtonPressed(context), _formKey),
+            SignUpButton(),
+          ],
+        ),
       ),
     );
   }
