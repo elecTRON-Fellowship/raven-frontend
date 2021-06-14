@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fzregex/fzregex.dart';
+import 'package:fzregex/utils/pattern.dart';
 
 class EmailEditText extends StatelessWidget {
   final emailController;
@@ -9,7 +11,7 @@ class EmailEditText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.65,
-      child: TextField(
+      child: TextFormField(
         controller: this.emailController,
         keyboardType: TextInputType.emailAddress,
         textInputAction: TextInputAction.next,
@@ -39,6 +41,13 @@ class EmailEditText extends StatelessWidget {
             color: Theme.of(context).primaryColorDark,
           ),
         ),
+        validator: (value) {
+          var isValid = Fzregex.hasMatch(value!, FzPattern.email);
+          if (!isValid) {
+            return "Invalid email";
+          }
+          return null;
+        },
       ),
     );
   }

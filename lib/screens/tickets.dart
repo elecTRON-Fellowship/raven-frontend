@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/widgets/tickets_screen/friend_ticket_icon.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_card.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+//import 'package:carousel_slider/carousel_slider.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_contributors.dart';
 
 class TicketsScreen extends StatefulWidget {
@@ -68,23 +68,23 @@ class _TicketsScreenState extends State<TicketsScreen> {
             onTap: _setShowContributorsToFalse,
             child: Column(
               children: [
-                CarouselSlider.builder(
-                  options: CarouselOptions(
-                    height: MediaQuery.of(context).size.height * 0.27,
-                    viewportFraction: 0.9,
-                    initialPage: 0,
-                    enableInfiniteScroll: false,
-                    reverse: false,
-                    autoPlay: false,
-                    enlargeCenterPage: false,
-                    scrollDirection: Axis.horizontal,
-                  ),
-                  itemCount: 5,
-                  itemBuilder: (BuildContext context, int itemIndex, _) =>
-                      MyTicketCard(
-                    contributorCardOnTap: _setShowContributorsToTrue,
-                  ),
-                ),
+                // CarouselSlider.builder(
+                //   options: CarouselOptions(
+                //     height: MediaQuery.of(context).size.height * 0.27,
+                //     viewportFraction: 0.9,
+                //     initialPage: 0,
+                //     enableInfiniteScroll: false,
+                //     reverse: false,
+                //     autoPlay: false,
+                //     enlargeCenterPage: false,
+                //     scrollDirection: Axis.horizontal,
+                //   ),
+                //   itemCount: 5,
+                //   itemBuilder: (BuildContext context, int itemIndex, _) =>
+                //       MyTicketCard(
+                //     contributorCardOnTap: _setShowContributorsToTrue,
+                //   ),
+                // ),
                 SizedBox(
                   height: 13.0,
                 ),

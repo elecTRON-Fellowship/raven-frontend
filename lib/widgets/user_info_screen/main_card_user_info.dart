@@ -19,6 +19,7 @@ class _MainCardUserInfoState extends State<MainCardUserInfo> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _usernameController = TextEditingController();
+  final _saveFormKey = GlobalKey<FormState>();
 
   void onSaveButtonPressed(BuildContext context) {
     Provider.of<User>(context, listen: false)
@@ -30,8 +31,14 @@ class _MainCardUserInfoState extends State<MainCardUserInfo> {
             widget.signUpCredentials['password'].toString(),
             widget.signUpCredentials['phoneNumber'].toString())
         .then((res) {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil('/conversations', (route) => false);
+      if (res) {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/conversations', (route) => false);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: const Text("There was an error")),
+        );
+      }
     });
   }
 
@@ -41,14 +48,17 @@ class _MainCardUserInfoState extends State<MainCardUserInfo> {
       color: Theme.of(context).primaryColorLight,
       elevation: 3.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40.0)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          FirstNameEditText(_firstNameController),
-          LastNameEditText(_lastNameController),
-          UsernameEditText(_usernameController),
-          SaveButton(() => onSaveButtonPressed(context)),
-        ],
+      child: Form(
+        key: _saveFormKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            FirstNameEditText(_firstNameController),
+            LastNameEditText(_lastNameController),
+            UsernameEditText(_usernameController),
+            SaveButton(() => onSaveButtonPressed(context), _saveFormKey),
+          ],
+        ),
       ),
     );
   }

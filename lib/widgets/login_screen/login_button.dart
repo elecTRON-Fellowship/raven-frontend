@@ -3,13 +3,19 @@ import 'package:google_fonts/google_fonts.dart';
 
 class LoginButton extends StatelessWidget {
   final Function loginUser;
+  final GlobalKey<FormState> _formkey;
 
-  LoginButton(this.loginUser);
+  LoginButton(this.loginUser, this._formkey);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () => loginUser(),
+      //onPressed: () => loginUser(),
+      onPressed: () {
+        if (_formkey.currentState!.validate()) {
+          loginUser();
+        }
+      },
       child: Text(
         "Login",
         style: GoogleFonts.poppins(
