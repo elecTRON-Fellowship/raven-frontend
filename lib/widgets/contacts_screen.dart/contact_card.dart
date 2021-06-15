@@ -1,13 +1,69 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ContactCard extends StatelessWidget {
-  String name;
-  String number;
-  String initials;
+enum ContactRegisteredStatus {
+  REGISTERED,
+  NOT_REGISTERED,
+}
 
-  ContactCard(
-      {required this.name, required this.number, required this.initials});
+class ContactCard extends StatefulWidget {
+  final String name;
+  final String number;
+
+  ContactCard({required this.name, required this.number});
+
+  @override
+  _ContactCardState createState() => _ContactCardState();
+}
+
+class _ContactCardState extends State<ContactCard> {
+  CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection('users');
+
+  bool showLoading = true;
+
+  ContactRegisteredStatus status = ContactRegisteredStatus.NOT_REGISTERED;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchRegisteredStatus();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void fetchRegisteredStatus() async {
+    String numberToQuery = widget.number.replaceAll(new RegExp(r"\s+"), "");
+
+    if (!numberToQuery.startsWith('+91')) {
+      numberToQuery = '+91$numberToQuery';
+    }
+
+    final snapshot = await _userCollection
+        .where('phoneNumber', isEqualTo: numberToQuery)
+        .get();
+
+    if (snapshot.size > 0) {
+      setState(() {
+        showLoading = false;
+        status = ContactRegisteredStatus.REGISTERED;
+      });
+    } else {
+      setState(() {
+        showLoading = false;
+        status = ContactRegisteredStatus.NOT_REGISTERED;
+      });
+    }
+  }
+
+  void startConversation() {
+    Navigator.of(context)
+        .pushReplacementNamed('/chat', arguments: {'name': widget.name});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +85,14 @@ class ContactCard extends StatelessWidget {
                       child: CircleAvatar(
                         backgroundColor: Theme.of(context).primaryColorDark,
                         child: Text(
-                          this.initials,
+                          this
+                              .widget
+                              .name
+                              .trim()
+                              .split(' ')
+                              .map((l) => l[0])
+                              .take(2)
+                              .join(),
                           style: GoogleFonts.poppins(
                               textStyle: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -48,7 +111,7 @@ class ContactCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            this.name,
+                            this.widget.name,
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.poppins(
                                 textStyle: TextStyle(
@@ -58,7 +121,7 @@ class ContactCard extends StatelessWidget {
                             )),
                           ),
                           Text(
-                            this.number,
+                            this.widget.number,
                             style: GoogleFonts.poppins(
                                 textStyle: TextStyle(
                               fontWeight: FontWeight.w500,
@@ -71,18 +134,27 @@ class ContactCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Invite',
-                    style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: Theme.of(context).primaryColorDark,
-                    )),
-                  ),
-                ),
+                showLoading
+                    ? CircularProgressIndicator(
+                        color: Theme.of(context).primaryColorDark,
+                      )
+                    : status == ContactRegisteredStatus.REGISTERED
+                        ? IconButton(
+                            onPressed: () => startConversation(),
+                            icon: Icon(Icons.message_rounded),
+                          )
+                        : TextButton(
+                            onPressed: () {},
+                            child: Text(
+                              'Invite',
+                              style: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: Theme.of(context).primaryColorDark,
+                              )),
+                            ),
+                          ),
               ],
             ),
           ),

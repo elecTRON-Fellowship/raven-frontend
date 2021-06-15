@@ -1,13 +1,38 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ConversationCard extends StatelessWidget {
-  final String name;
+class ConversationCard extends StatefulWidget {
+  final String userId;
   final String lastText;
   final int unreadTexts;
   final String time;
 
-  ConversationCard(this.name, this.lastText, this.unreadTexts, this.time);
+  ConversationCard(this.userId, this.lastText, this.unreadTexts, this.time);
+
+  @override
+  _ConversationCardState createState() => _ConversationCardState();
+}
+
+class _ConversationCardState extends State<ConversationCard> {
+  CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection('users');
+
+  String fetchedName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchContactName();
+  }
+
+  fetchContactName() async {
+    final snapshot = await _userCollection.doc(widget.userId).get();
+    final data = snapshot.data() as Map<String, dynamic>;
+    setState(() {
+      fetchedName = "${data['firstName']} ${data['lastName']}";
+    });
+  }
 
   void selectConversation(BuildContext context, String name) {
     Navigator.of(context).pushNamed('/chat', arguments: {'name': name});
@@ -16,7 +41,6 @@ class ConversationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // margin: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
       margin: EdgeInsets.only(bottom: 4, left: 10, right: 10),
       width: double.infinity,
       height: 88,
@@ -25,7 +49,7 @@ class ConversationCard extends StatelessWidget {
         elevation: 2.5,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: InkWell(
-          onTap: () => selectConversation(context, this.name),
+          onTap: () => selectConversation(context, this.fetchedName),
           borderRadius: BorderRadius.circular(15),
           splashColor: Theme.of(context).primaryColorLight,
           child: Row(
@@ -48,7 +72,7 @@ class ConversationCard extends StatelessWidget {
                     height: 13,
                   ),
                   Text(
-                    this.name,
+                    this.fetchedName,
                     textAlign: TextAlign.start,
                     style: GoogleFonts.poppins(
                         textStyle: TextStyle(
@@ -62,7 +86,7 @@ class ConversationCard extends StatelessWidget {
                   Container(
                     width: MediaQuery.of(context).size.width * 0.575,
                     child: Text(
-                      this.lastText,
+                      this.widget.lastText,
                       textAlign: TextAlign.start,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.poppins(
@@ -82,7 +106,7 @@ class ConversationCard extends StatelessWidget {
                       height: 13,
                     ),
                     Text(
-                      this.time,
+                      this.widget.time,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                           textStyle:
@@ -91,13 +115,13 @@ class ConversationCard extends StatelessWidget {
                     SizedBox(
                       height: 3,
                     ),
-                    if (this.unreadTexts != 0)
+                    if (this.widget.unreadTexts != 0)
                       CircleAvatar(
                         radius: 14,
                         backgroundColor: Theme.of(context).primaryColor,
                         child: FittedBox(
                           child: Text(
-                            this.unreadTexts.toString(),
+                            this.widget.unreadTexts.toString(),
                             textAlign: TextAlign.center,
                             style: GoogleFonts.poppins(
                                 textStyle: TextStyle(
