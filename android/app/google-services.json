@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "613474836306",
+    "project_id": "raven-939c8",
+    "storage_bucket": "raven-939c8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:613474836306:android:ef192b2cf1edcc9eae248b",
+        "android_client_info": {
+          "package_name": "com.electron.raven"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "613474836306-sr9f7d0fuip9ka8r3hiueppq23tp8c05.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWMUu_a22DKEJO8lxnU1txIdahFj04V9Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "613474836306-sr9f7d0fuip9ka8r3hiueppq23tp8c05.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
