@@ -1,13 +1,43 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class UserInfoScreen extends StatefulWidget {
   @override
   _UserInfoScreenState createState() => _UserInfoScreenState();
+
+  String userUid;
+
+  UserInfoScreen(this.userUid);
 }
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
   final _signUpFormKey = GlobalKey<FormState>();
+
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+
+  bool showLoading = false;
+
+  CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection('users');
+
+  void storeUserDetails() async {
+    setState(() {
+      showLoading = true;
+    });
+    await _userCollection.doc(widget.userUid.toString()).update({
+      'firstName': firstNameController.text,
+      'lastName': lastNameController.text
+    });
+    setState(() {
+      showLoading = false;
+    });
+
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/conversations', (route) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -27,11 +57,17 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             top: size.height * 0.3,
             left: 0,
           ),
-          Positioned(
-            child: mainForm(context, size, theme, _signUpFormKey),
-            top: size.height * 0.3,
-            left: size.width * 0.075,
-          ),
+          showLoading
+              ? Center(
+                  child: CircularProgressIndicator(
+                    color: theme.primaryColorDark,
+                  ),
+                )
+              : Positioned(
+                  child: mainForm(context, size, theme, _signUpFormKey),
+                  top: size.height * 0.3,
+                  left: size.width * 0.075,
+                ),
         ],
       ),
     );
@@ -108,7 +144,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               Container(
                 width: size.width * 0.8,
                 child: Text(
-                  "Sign Up",
+                  "Tell us about yourself",
                   style: GoogleFonts.poppins(
                       textStyle: TextStyle(
                     fontSize: 28,
@@ -121,6 +157,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 height: size.height * 0.04,
               ),
               TextFormField(
+                textCapitalization: TextCapitalization.words,
+                controller: firstNameController,
                 keyboardType: TextInputType.name,
                 textInputAction: TextInputAction.next,
                 style: TextStyle(
@@ -164,6 +202,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 height: size.height * 0.04,
               ),
               TextFormField(
+                textCapitalization: TextCapitalization.words,
+                controller: lastNameController,
                 keyboardType: TextInputType.name,
                 textInputAction: TextInputAction.next,
                 style: TextStyle(
@@ -209,7 +249,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               ElevatedButton(
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    Navigator.of(context).pushNamed('/otp');
+                    storeUserDetails();
                   }
                 },
                 child: Text(

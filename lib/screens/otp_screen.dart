@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/screens/user_info.dart';
 
 class OTPScreen extends StatefulWidget {
   @override
@@ -15,6 +17,9 @@ class OTPScreen extends StatefulWidget {
 
 class _OTPScreenState extends State<OTPScreen> {
   final otpController = TextEditingController();
+
+  CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection('users');
 
   bool showLoading = false;
 
@@ -31,8 +36,27 @@ class _OTPScreenState extends State<OTPScreen> {
       });
 
       if (userCredential.user != null) {
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil('/conversations', (route) => false);
+        var user = userCredential.user;
+
+        final snapshot = await _userCollection.doc(user!.uid.toString()).get();
+        final data = snapshot.data();
+
+        if (data == null) {
+          await _userCollection.doc(user.uid.toString()).set({
+            'phoneNumber': user.phoneNumber.toString(),
+            'firstName': '',
+            'lastName': ''
+          });
+
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => UserInfoScreen(user.uid),
+            ),
+          );
+        } else {
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil('/conversations', (route) => false);
+        }
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
