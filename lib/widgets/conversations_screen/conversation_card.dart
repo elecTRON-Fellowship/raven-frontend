@@ -36,18 +36,6 @@ class _ConversationCardState extends State<ConversationCard> {
     _messagesCollection = FirebaseFirestore.instance
         .collection('conversations/${widget.conversationId}/messages');
     fetchContactName();
-    fetchLastMessageDetails();
-  }
-
-  fetchLastMessageDetails() async {
-    final query = await _messagesCollection.orderBy('time').limit(1).get();
-    final snapshot = query.docs[0];
-    final data = snapshot.data() as Map<String, dynamic>;
-    setState(() {
-      fetchedLastText = data['text'];
-      fetchedLastTextTime = DateFormat.Hm()
-          .format(DateTime.parse(data['time'].toDate().toString()));
-    });
   }
 
   fetchContactName() async {
@@ -59,14 +47,16 @@ class _ConversationCardState extends State<ConversationCard> {
   }
 
   void selectConversation(BuildContext context, String name) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => ChatScreen(
-          conversationId: widget.conversationId,
-          friendName: fetchedName,
-        ),
-      ),
-    );
+    Navigator.of(context)
+        .push(
+          MaterialPageRoute(
+            builder: (_) => ChatScreen(
+              conversationId: widget.conversationId,
+              friendName: fetchedName,
+            ),
+          ),
+        )
+        .then((_) => setState(() {}));
   }
 
   @override
@@ -130,13 +120,38 @@ class _ConversationCardState extends State<ConversationCard> {
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width * 0.575,
-                    child: Text(
-                      fetchedLastText,
-                      textAlign: TextAlign.start,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.poppins(
-                          textStyle:
-                              TextStyle(fontSize: 14, color: Colors.grey)),
+                    child: StreamBuilder<QuerySnapshot>(
+                      stream: _messagesCollection
+                          .orderBy('time', descending: true)
+                          .limit(1)
+                          .get()
+                          .asStream(),
+                      builder:
+                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Something went wrong');
+                        }
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Text('');
+                        }
+                        if (snapshot.hasData) {
+                          final documents = (snapshot.data)!.docs;
+                          final data =
+                              documents[0].data() as Map<String, dynamic>;
+                          String lastText = data['text'];
+                          return Text(
+                            lastText,
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                    fontSize: 14, color: Colors.grey)),
+                          );
+                        } else {
+                          return Text('');
+                        }
+                      },
                     ),
                   ),
                 ],
@@ -150,12 +165,41 @@ class _ConversationCardState extends State<ConversationCard> {
                     SizedBox(
                       height: 13,
                     ),
-                    Text(
-                      fetchedLastTextTime,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                          textStyle:
-                              TextStyle(fontSize: 14, color: Colors.blueGrey)),
+                    Container(
+                      child: StreamBuilder<QuerySnapshot>(
+                        stream: _messagesCollection
+                            .orderBy('time', descending: true)
+                            .limit(1)
+                            .get()
+                            .asStream(),
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasError) {
+                            return Text('Something went wrong');
+                          }
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Text('');
+                          }
+                          if (snapshot.hasData) {
+                            final documents = (snapshot.data)!.docs;
+                            final data =
+                                documents[0].data() as Map<String, dynamic>;
+                            String lastTextTime = DateFormat.Hm().format(
+                                DateTime.parse(
+                                    data['time'].toDate().toString()));
+                            return Text(
+                              lastTextTime,
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                      fontSize: 14, color: Colors.blueGrey)),
+                            );
+                          } else {
+                            return Text('');
+                          }
+                        },
+                      ),
                     ),
                     SizedBox(
                       height: 3,
