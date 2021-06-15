@@ -5,12 +5,12 @@ import 'package:raven/screens/chat.dart';
 import 'package:raven/screens/contacts.dart';
 import 'package:raven/screens/conversations.dart';
 import 'package:raven/screens/friend_transactions.dart';
-import 'package:raven/screens/sign_up.dart';
+import 'package:raven/screens/login_new.dart';
+import 'package:raven/screens/otp_screen.dart';
+import 'package:raven/screens/sign_up_new.dart';
 import 'package:raven/screens/splash_screen.dart';
 import 'package:raven/screens/tickets.dart';
 import 'package:raven/screens/timed_chat.dart';
-import 'package:raven/screens/user_info.dart';
-import 'package:raven/screens/login.dart';
 
 void main() {
   runApp(MyApp());
@@ -26,10 +26,10 @@ class MyApp extends StatelessWidget {
           title: 'Raven',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            backgroundColor: Color.fromRGBO(212, 230, 237, 1),
-            primaryColorLight: Color.fromRGBO(194, 222, 232, 1),
-            primaryColor: Color.fromRGBO(103, 186, 216, 1),
-            primaryColorDark: Color.fromRGBO(63, 163, 199, 1),
+            backgroundColor: Color.fromRGBO(255, 255, 254, 1),
+            accentColor: Color.fromRGBO(61, 169, 252, 1),
+            primaryColor: Color.fromRGBO(144, 180, 206, 1),
+            primaryColorDark: Color.fromRGBO(9, 64, 103, 1),
             fontFamily: "Poppins",
           ),
           home: user.getUser['authToken'] != null
@@ -39,12 +39,12 @@ class MyApp extends StatelessWidget {
                   builder: (context, snapshot) =>
                       snapshot.connectionState == ConnectionState.waiting
                           ? SplashScreen()
-                          : LoginScreen(),
+                          : LoginScreenNew(),
                 ),
           routes: {
-            '/login': (ctx) => LoginScreen(),
-            '/signup': (ctx) => SignUpScreen(),
-            '/user-info': (ctx) => UserInfoScreen(),
+            '/login': (ctx) => LoginScreenNew(),
+            '/signup': (ctx) => SignUpScreenNew(),
+            '/otp': (ctx) => OTPScreen(),
             '/conversations': (ctx) => ConversationsScreen(),
             '/contacts': (ctx) => ContactsScreen(),
             '/chat': (ctx) => ChatScreen(),
