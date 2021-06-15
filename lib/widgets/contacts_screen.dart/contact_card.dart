@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/screens/chat.dart';
 
 enum ContactRegisteredStatus {
   REGISTERED,
@@ -18,8 +20,13 @@ class ContactCard extends StatefulWidget {
 }
 
 class _ContactCardState extends State<ContactCard> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
   CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('users');
+
+  CollectionReference _conversationsCollection =
+      FirebaseFirestore.instance.collection('conversations');
 
   bool showLoading = true;
 
@@ -60,9 +67,30 @@ class _ContactCardState extends State<ContactCard> {
     }
   }
 
-  void startConversation() {
-    Navigator.of(context)
-        .pushReplacementNamed('/chat', arguments: {'name': widget.name});
+  void startConversation() async {
+    String numberToQuery = widget.number.replaceAll(new RegExp(r"\s+"), "");
+
+    if (!numberToQuery.startsWith('+91')) {
+      numberToQuery = '+91$numberToQuery';
+    }
+
+    final snapshot = await _userCollection
+        .where('phoneNumber', isEqualTo: numberToQuery)
+        .get();
+
+    final newConversationDocument = await _conversationsCollection.add({
+      'members': [_auth.currentUser!.uid, snapshot.docs[0].id],
+      'unreadTexts': 0
+    });
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) => ChatScreen(
+          conversationId: newConversationDocument.id,
+          friendName: widget.name,
+        ),
+      ),
+    );
   }
 
   @override

@@ -1,14 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:raven/screens/chat.dart';
 
 class ConversationCard extends StatefulWidget {
-  final String userId;
-  final String lastText;
-  final int unreadTexts;
-  final String time;
+  final String friendUserId;
 
-  ConversationCard(this.userId, this.lastText, this.unreadTexts, this.time);
+  final int unreadTexts;
+
+  final String conversationId;
+
+  ConversationCard(
+      {required this.friendUserId,
+      required this.unreadTexts,
+      required this.conversationId});
 
   @override
   _ConversationCardState createState() => _ConversationCardState();
@@ -18,16 +24,34 @@ class _ConversationCardState extends State<ConversationCard> {
   CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('users');
 
+  late CollectionReference _messagesCollection;
+
   String fetchedName = '';
+  String fetchedLastText = '';
+  String fetchedLastTextTime = '';
 
   @override
   void initState() {
     super.initState();
+    _messagesCollection = FirebaseFirestore.instance
+        .collection('conversations/${widget.conversationId}/messages');
     fetchContactName();
+    fetchLastMessageDetails();
+  }
+
+  fetchLastMessageDetails() async {
+    final query = await _messagesCollection.orderBy('time').limit(1).get();
+    final snapshot = query.docs[0];
+    final data = snapshot.data() as Map<String, dynamic>;
+    setState(() {
+      fetchedLastText = data['text'];
+      fetchedLastTextTime = DateFormat.Hm()
+          .format(DateTime.parse(data['time'].toDate().toString()));
+    });
   }
 
   fetchContactName() async {
-    final snapshot = await _userCollection.doc(widget.userId).get();
+    final snapshot = await _userCollection.doc(widget.friendUserId).get();
     final data = snapshot.data() as Map<String, dynamic>;
     setState(() {
       fetchedName = "${data['firstName']} ${data['lastName']}";
@@ -35,7 +59,14 @@ class _ConversationCardState extends State<ConversationCard> {
   }
 
   void selectConversation(BuildContext context, String name) {
-    Navigator.of(context).pushNamed('/chat', arguments: {'name': name});
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ChatScreen(
+          conversationId: widget.conversationId,
+          friendName: fetchedName,
+        ),
+      ),
+    );
   }
 
   @override
@@ -58,10 +89,22 @@ class _ConversationCardState extends State<ConversationCard> {
               Padding(
                 padding: EdgeInsets.only(left: 8.0),
                 child: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    'https://upload.wikimedia.org/wikipedia/commons/a/a0/Arh-avatar.jpg',
+                  backgroundColor: Theme.of(context).primaryColorDark,
+                  child: Text(
+                    fetchedName
+                        .trim()
+                        .split(' ')
+                        .map((l) => l[0])
+                        .take(2)
+                        .join(),
+                    style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.white,
+                    )),
                   ),
-                  radius: 30,
+                  radius: 24,
                 ),
               ),
               Column(
@@ -86,7 +129,7 @@ class _ConversationCardState extends State<ConversationCard> {
                   Container(
                     width: MediaQuery.of(context).size.width * 0.575,
                     child: Text(
-                      this.widget.lastText,
+                      fetchedLastText,
                       textAlign: TextAlign.start,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.poppins(
@@ -106,7 +149,7 @@ class _ConversationCardState extends State<ConversationCard> {
                       height: 13,
                     ),
                     Text(
-                      this.widget.time,
+                      fetchedLastTextTime,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                           textStyle:

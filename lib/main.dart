@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
         '/auth': (ctx) => AuthScreen(),
         '/conversations': (ctx) => ConversationsScreen(),
         '/contacts': (ctx) => ContactsScreen(),
-        '/chat': (ctx) => ChatScreen(),
+        // '/chat': (ctx) => ChatScreen(),
         '/timed-chat': (ctx) => TimedChatScreen(),
         '/tickets': (ctx) => TicketsScreen(),
         '/friend-transactions': (ctx) => FriendTransactionsScreen()

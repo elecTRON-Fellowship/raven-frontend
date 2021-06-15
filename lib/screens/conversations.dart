@@ -18,51 +18,6 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
 
   bool showLoading = false;
 
-  // final List<Map<String, Object>> _conversations = [
-  //   {
-  //     'name': 'Zaid Sheikh',
-  //     'lastText': 'Call me back ASAP. ASAP. ASAP.',
-  //     'unreadTexts': 0,
-  //     'time': '13:15'
-  //   },
-  //   {
-  //     'name': 'Mizan Ali',
-  //     'lastText': "Let's hang out soon!",
-  //     'unreadTexts': 2,
-  //     'time': '13:15'
-  //   },
-  //   {
-  //     'name': 'Neel Modi',
-  //     'lastText': "What's up bro?",
-  //     'unreadTexts': 21,
-  //     'time': '13:15'
-  //   },
-  //   {
-  //     'name': 'Max Verstappen',
-  //     'lastText': "I'm moving to Ferrari next season.",
-  //     'unreadTexts': 45,
-  //     'time': '13:15'
-  //   },
-  //   {
-  //     'name': 'Charles Leclerc',
-  //     'lastText': "Pole position this week. Watch.",
-  //     'unreadTexts': 12,
-  //     'time': '13:15'
-  //   },
-  //   {
-  //     'name': 'Sebastian Vettel',
-  //     'lastText': 'I hate my team. No cap.',
-  //     'unreadTexts': 2,
-  //     'time': '13:15'
-  //   },
-  //   {
-  //     'name': 'Lewis Hamilton',
-  //     'lastText': 'Lunch tomorrow?.',
-  //     'unreadTexts': 0,
-  //     'time': '13:15'
-  //   },
-  // ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,49 +60,32 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
         ),
       ),
       body: Container(
-        // child: ListView.builder(
-        //   itemCount: _conversations.length,
-        //   itemBuilder: (ctx, index) => ConversationCard(
-        //       (_conversations[index]['name'] as String),
-        //       (_conversations[index]['lastText'] as String),
-        //       (_conversations[index]['unreadTexts'] as int),
-        //       (_conversations[index]['time'] as String)),
-        // ),
         child: StreamBuilder<QuerySnapshot>(
           stream: _conversationsCollection
               .where('members', arrayContains: _auth.currentUser!.uid)
               .get()
               .asStream(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError) {
+              return Text('Something went wrong');
+            }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              Center(child: CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator());
             }
             if (snapshot.hasData) {
               final documents = (snapshot.data)!.docs;
               return ListView.builder(
                 itemCount: documents.length,
                 itemBuilder: (context, index) => ConversationCard(
-                  documents[index]['members'][0] == _auth.currentUser!.uid
-                      ? documents[index]['members'][1]
-                      : documents[index]['members'][0],
-                  documents[index]['lastText'],
-                  int.parse(documents[index]['unreadTexts']),
-                  documents[index]['time'],
+                  friendUserId:
+                      documents[index]['members'][0] == _auth.currentUser!.uid
+                          ? documents[index]['members'][1]
+                          : documents[index]['members'][0],
+                  unreadTexts: documents[index]['unreadTexts'],
+                  conversationId: documents[index].id,
                 ),
               );
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Something went wrong.',
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColorDark,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14),
-                  ),
-                  backgroundColor: Theme.of(context).primaryColor,
-                ),
-              );
               return Container();
             }
           },
