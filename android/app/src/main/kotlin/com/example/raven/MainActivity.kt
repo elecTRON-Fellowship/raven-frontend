@@ -1,4 +1,4 @@
-package com.example.raven
+package com.electron.raven
 
 import io.flutter.embedding.android.FlutterActivity
 

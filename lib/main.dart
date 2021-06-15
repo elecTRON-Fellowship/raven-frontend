@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:raven/providers/user.dart';
@@ -12,7 +13,9 @@ import 'package:raven/screens/timed_chat.dart';
 import 'package:raven/screens/user_info.dart';
 import 'package:raven/screens/login.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
