@@ -1,12 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:raven/providers/user.dart';
 
 import '../widgets/conversations_screen/conversation_card.dart';
 
 class ConversationsScreen extends StatelessWidget {
   // const Conversations({Key? key}) : super(key: key);
+
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
   final List<Map<String, Object>> _conversations = [
     {
@@ -56,7 +59,7 @@ class ConversationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //to check if user was actually signed in
-    print('Auth Token: ${Provider.of<User>(context).getUser['authToken']}');
+    // print('Auth Token: ${Provider.of<User>(context).getUser['authToken']}');
 
     return Scaffold(
       backgroundColor: Color.fromRGBO(194, 222, 232, 1.0),
@@ -116,9 +119,9 @@ class ConversationsScreen extends StatelessWidget {
             onTap: (index) async {
               if (index == 1) Navigator.of(context).pushNamed('/tickets');
               if (index == 3) {
-                await Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/login', (route) => false);
-                Provider.of<User>(context).logout();
+                await _auth.signOut();
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/auth', (route) => false);
               }
             },
             showSelectedLabels: false,

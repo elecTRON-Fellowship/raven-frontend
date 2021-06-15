@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SignUpScreenNew extends StatefulWidget {
+class UserInfoScreen extends StatefulWidget {
   @override
-  _SignUpScreenNewState createState() => _SignUpScreenNewState();
+  _UserInfoScreenState createState() => _UserInfoScreenState();
 }
 
-class _SignUpScreenNewState extends State<SignUpScreenNew> {
+class _UserInfoScreenState extends State<UserInfoScreen> {
   final _signUpFormKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
