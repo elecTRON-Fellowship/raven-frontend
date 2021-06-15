@@ -19,7 +19,8 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   FirebaseAuth _auth = FirebaseAuth.instance;
 
-  TextEditingController textController = new TextEditingController();
+  final TextEditingController textController = new TextEditingController();
+  final ScrollController scrollController = ScrollController();
 
   _buildMessage(
       String sender, String text, DateTime time, BuildContext context) {
@@ -73,7 +74,10 @@ class _ChatScreenState extends State<ChatScreen> {
       'sender': _auth.currentUser!.uid,
       'text': textController.text,
     });
+    FocusScope.of(context).unfocus();
     textController.clear();
+    scrollController.animateTo(scrollController.position.minScrollExtent,
+        duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
   }
 
   @override
@@ -132,14 +136,16 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: CircleAvatar(
                     backgroundColor: Theme.of(context).primaryColorDark,
                     child: Text(
-                      this
-                          .widget
-                          .friendName
-                          .trim()
-                          .split(' ')
-                          .map((l) => l[0])
-                          .take(2)
-                          .join(),
+                      this.widget.friendName.isNotEmpty
+                          ? this
+                              .widget
+                              .friendName
+                              .trim()
+                              .split(' ')
+                              .map((l) => l[0])
+                              .take(2)
+                              .join()
+                          : '',
                       style: GoogleFonts.poppins(
                           textStyle: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -183,15 +189,18 @@ class _ChatScreenState extends State<ChatScreen> {
                     topRight: Radius.circular(30),
                   ),
                   child: StreamBuilder(
-                    stream:
-                        _messagesCollection.orderBy('time').get().asStream(),
+                    stream: _messagesCollection
+                        .orderBy('time', descending: true)
+                        .get()
+                        .asStream(),
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      }
+                      // if (snapshot.connectionState == ConnectionState.waiting) {
+                      //   return Center(child: CircularProgressIndicator());
+                      // }
                       final documents = (snapshot.data)!.docs;
                       return ListView.builder(
-                        // reverse: true,
+                        controller: scrollController,
+                        reverse: true,
                         itemCount: documents.length,
                         itemBuilder: (context, index) => _buildMessage(
                           documents[index]['sender'],

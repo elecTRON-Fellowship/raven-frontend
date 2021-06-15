@@ -91,12 +91,14 @@ class _ConversationCardState extends State<ConversationCard> {
                 child: CircleAvatar(
                   backgroundColor: Theme.of(context).primaryColorDark,
                   child: Text(
-                    fetchedName
-                        .trim()
-                        .split(' ')
-                        .map((l) => l[0])
-                        .take(2)
-                        .join(),
+                    fetchedName.isNotEmpty
+                        ? fetchedName
+                            .trim()
+                            .split(' ')
+                            .map((l) => l[0])
+                            .take(2)
+                            .join()
+                        : '',
                     style: GoogleFonts.poppins(
                         textStyle: TextStyle(
                       fontWeight: FontWeight.bold,

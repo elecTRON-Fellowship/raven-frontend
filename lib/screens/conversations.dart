@@ -81,7 +81,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
                       documents[index]['members'][0] == _auth.currentUser!.uid
                           ? documents[index]['members'][1]
                           : documents[index]['members'][0],
-                  unreadTexts: documents[index]['unreadTexts'],
+                  unreadTexts: documents[index]['unreadTexts'] as int,
                   conversationId: documents[index].id,
                 ),
               );

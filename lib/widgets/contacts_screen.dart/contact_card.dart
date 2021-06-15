@@ -113,14 +113,16 @@ class _ContactCardState extends State<ContactCard> {
                       child: CircleAvatar(
                         backgroundColor: Theme.of(context).primaryColorDark,
                         child: Text(
-                          this
-                              .widget
-                              .name
-                              .trim()
-                              .split(' ')
-                              .map((l) => l[0])
-                              .take(2)
-                              .join(),
+                          this.widget.name.isNotEmpty
+                              ? this
+                                  .widget
+                                  .name
+                                  .trim()
+                                  .split(' ')
+                                  .map((l) => l[0])
+                                  .take(2)
+                                  .join()
+                              : '',
                           style: GoogleFonts.poppins(
                               textStyle: TextStyle(
                             fontWeight: FontWeight.bold,
