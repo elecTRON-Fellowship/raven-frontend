@@ -30,15 +30,6 @@ class MyApp extends StatelessWidget {
         primaryColorDark: Color.fromRGBO(9, 64, 103, 1),
         fontFamily: "Poppins",
       ),
-      // home: user.getUser['authToken'] != null
-      //     ? ConversationsScreen()
-      //     : FutureBuilder(
-      //         future: user.tryAutoLogin(),
-      //         builder: (context, snapshot) =>
-      //             snapshot.connectionState == ConnectionState.waiting
-      //                 ? SplashScreen()
-      //                 : LoginScreenNew(),
-      //       ),
       home: HomePageRedirect(),
       routes: {
         '/auth': (ctx) => AuthScreen(),

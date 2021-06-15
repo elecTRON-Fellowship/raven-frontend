@@ -7,8 +7,6 @@ import 'package:provider/provider.dart';
 import '../widgets/conversations_screen/conversation_card.dart';
 
 class ConversationsScreen extends StatelessWidget {
-  // const Conversations({Key? key}) : super(key: key);
-
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   final List<Map<String, Object>> _conversations = [
@@ -58,9 +56,6 @@ class ConversationsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //to check if user was actually signed in
-    // print('Auth Token: ${Provider.of<User>(context).getUser['authToken']}');
-
     return Scaffold(
       backgroundColor: Color.fromRGBO(194, 222, 232, 1.0),
       // extendBodyBehindAppBar: true,

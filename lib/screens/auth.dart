@@ -39,7 +39,9 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
           showLoading
               ? Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(
+                    color: theme.primaryColorDark,
+                  ),
                 )
               : Positioned(
                   child: mainForm(context, size, theme, _formKey),

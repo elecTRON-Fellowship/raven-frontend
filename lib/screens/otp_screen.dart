@@ -126,7 +126,9 @@ class _OTPScreenState extends State<OTPScreen> {
             ),
             showLoading
                 ? Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(
+                      color: theme.primaryColorDark,
+                    ),
                   )
                 : Column(
                     children: [
