@@ -36,8 +36,8 @@ dependencies:
   cloud_firestore: ^2.2.2
   permission_handler: ^8.1.1
   intl: ^0.17.0
-  flutter_svg: ^0.22.0
   flutter_native_splash: ^1.2.0
+  flutter_svg: ^0.22.0
 
 dev_dependencies:
   flutter_test:
@@ -54,16 +54,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-flutter_native_splash:
-  color: "#90b4ce"
-  image: assets/images/logo.png
-  android: true
-  ios: true 
-
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/vectors/raven_logo.svg
-  #   - images/a_dot_ham.jpeg
+    - assets/vectors/
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

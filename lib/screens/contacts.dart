@@ -32,12 +32,14 @@ class _ContactsScreenState extends State<ContactsScreen> {
 
     List<Contact> _contacts = contactsIterable.toList();
 
-    List<Contact> _validContacts = _contacts
-        .where((item) =>
-            item.displayName!.isNotEmpty &&
+    List<Contact> _validContacts = _contacts.where((item) {
+      if (item.displayName != null && item.phones != null) {
+        return (item.displayName!.isNotEmpty &&
             item.phones!.length > 0 &&
-            item.phones!.elementAt(0).value!.length >= 10)
-        .toList();
+            item.phones!.elementAt(0).value!.length >= 10);
+      }
+      return false;
+    }).toList();
 
     setState(() {
       contacts = _validContacts;

@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/screens/otp_screen.dart';
 
-const String logo = "assets/vectors/raven_logo.svg";
+final String logo = "assets/vectors/raven_logo.svg";
 
 class AuthScreen extends StatefulWidget {
   @override
@@ -127,7 +127,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 keyboardType: TextInputType.phone,
                 textInputAction: TextInputAction.done,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 15,
                   height: 1,
                   color: theme.accentColor,
                 ),

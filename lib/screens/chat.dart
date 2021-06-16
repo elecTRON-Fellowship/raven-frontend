@@ -194,22 +194,26 @@ class _ChatScreenState extends State<ChatScreen> {
                         .get()
                         .asStream(),
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      // if (snapshot.connectionState == ConnectionState.waiting) {
-                      //   return Center(child: CircularProgressIndicator());
-                      // }
-                      final documents = (snapshot.data)!.docs;
-                      return ListView.builder(
-                        controller: scrollController,
-                        reverse: true,
-                        itemCount: documents.length,
-                        itemBuilder: (context, index) => _buildMessage(
-                          documents[index]['sender'],
-                          documents[index]['text'],
-                          DateTime.parse(
-                              documents[index]['time'].toDate().toString()),
-                          context,
-                        ),
-                      );
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      if (snapshot.hasData) {
+                        final documents = (snapshot.data)!.docs;
+                        return ListView.builder(
+                          controller: scrollController,
+                          reverse: true,
+                          itemCount: documents.length,
+                          itemBuilder: (context, index) => _buildMessage(
+                            documents[index]['sender'],
+                            documents[index]['text'],
+                            DateTime.parse(
+                                documents[index]['time'].toDate().toString()),
+                            context,
+                          ),
+                        );
+                      } else {
+                        return Container();
+                      }
                     },
                   ),
                 ),
