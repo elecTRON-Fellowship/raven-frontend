@@ -1,18 +1,23 @@
-import 'package:flutter/gestures.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/screens/otp_screen.dart';
 
-class LoginScreenNew extends StatefulWidget {
+class AuthScreen extends StatefulWidget {
   @override
-  _LoginScreenNewState createState() => _LoginScreenNewState();
+  _AuthScreenState createState() => _AuthScreenState();
 }
 
-class _LoginScreenNewState extends State<LoginScreenNew> {
+class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
-  // final TapGestureRecognizer _gestureRecognizer = TapGestureRecognizer()
-  //   ..onTap = () {
-  //     Navigator.of(context).pushNamed('/otp');
-  //   };
+
+  final phoneController = TextEditingController();
+
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String verificationId = '';
+  bool showLoading = false;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -32,11 +37,17 @@ class _LoginScreenNewState extends State<LoginScreenNew> {
             top: size.height * 0.4,
             left: 0,
           ),
-          Positioned(
-            child: mainForm(context, size, theme, _formKey),
-            top: size.height * 0.4,
-            left: size.width * 0.075,
-          ),
+          showLoading
+              ? Center(
+                  child: CircularProgressIndicator(
+                    color: theme.primaryColorDark,
+                  ),
+                )
+              : Positioned(
+                  child: mainForm(context, size, theme, _formKey),
+                  top: size.height * 0.4,
+                  left: size.width * 0.075,
+                ),
         ],
       ),
     );
@@ -50,21 +61,21 @@ class _LoginScreenNewState extends State<LoginScreenNew> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
-            "Welcome",
+            "Hey there!",
             style: GoogleFonts.poppins(
               textStyle: TextStyle(
                 color: theme.backgroundColor,
-                fontSize: 30,
+                fontSize: 28,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
           Text(
-            "back to",
+            "Welcome back to",
             style: GoogleFonts.poppins(
               textStyle: TextStyle(
                 color: theme.backgroundColor,
-                fontSize: 30,
+                fontSize: 28,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -110,7 +121,7 @@ class _LoginScreenNewState extends State<LoginScreenNew> {
           Container(
             width: size.width * 0.8,
             child: Text(
-              "Login",
+              "Get Started",
               style: GoogleFonts.poppins(
                   textStyle: TextStyle(
                 fontSize: 34,
@@ -126,6 +137,7 @@ class _LoginScreenNewState extends State<LoginScreenNew> {
             key: formKey,
             child: Container(
               child: TextFormField(
+                controller: phoneController,
                 keyboardType: TextInputType.phone,
                 textInputAction: TextInputAction.done,
                 style: TextStyle(
@@ -134,6 +146,7 @@ class _LoginScreenNewState extends State<LoginScreenNew> {
                   color: theme.accentColor,
                 ),
                 decoration: InputDecoration(
+                  prefixText: '+91 ',
                   //contentPadding: EdgeInsets.all(10),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
@@ -174,28 +187,56 @@ class _LoginScreenNewState extends State<LoginScreenNew> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                TextButton(
-                  child: Text(
-                    "or Sign Up",
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
-                        color: Theme.of(context).primaryColorDark,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/signup');
-                  },
-                ),
-                SizedBox(
-                  height: size.height * 0.03,
-                ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (formKey.currentState!.validate()) {
-                      Navigator.of(context).pushNamed('/otp');
+                      setState(() {
+                        showLoading = true;
+                      });
+
+                      await _auth.verifyPhoneNumber(
+                        phoneNumber: '+91${phoneController.text}',
+                        verificationCompleted:
+                            (PhoneAuthCredential credential) async {
+                          setState(() {
+                            showLoading = false;
+                          });
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/conversations', (route) => false);
+                        },
+                        verificationFailed: (FirebaseAuthException e) {
+                          showLoading = false;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                e.message.toString(),
+                                style: TextStyle(
+                                    color: theme.primaryColorDark,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14),
+                              ),
+                              backgroundColor: theme.primaryColor,
+                            ),
+                          );
+                        },
+                        codeSent:
+                            (String verificationId, int? resendToken) async {
+                          setState(() {
+                            showLoading = false;
+                            this.verificationId = verificationId;
+
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => OTPScreen(
+                                    _auth,
+                                    this.verificationId,
+                                    '+91 ${phoneController.text}'),
+                              ),
+                            );
+                          });
+                        },
+                        codeAutoRetrievalTimeout: (String verificationId) {},
+                      );
                     }
                   },
                   child: Text(

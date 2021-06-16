@@ -2,6 +2,7 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/widgets/contacts_screen.dart/contact_card.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ContactsScreen extends StatefulWidget {
   const ContactsScreen({Key? key}) : super(key: key);
@@ -56,7 +57,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
       });
 
       setState(() {
-        filteredContacts = _contacts;
+        filteredContacts = [..._contacts];
       });
     }
   }
@@ -179,8 +180,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                       String number =
                           contact.phones!.elementAt(0).value as String;
                       String initials = contact.initials();
-                      return ContactCard(
-                          name: name, number: number, initials: initials);
+                      return ContactCard(name: name, number: number);
                     },
                   ),
                 ),

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:raven/providers/user.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_contributor_card.dart';
 
 class MyTicketCard extends StatelessWidget {
@@ -18,8 +16,6 @@ class MyTicketCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userData = Provider.of<User>(context).getUser;
-
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),

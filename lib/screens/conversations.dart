@@ -1,63 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:raven/providers/user.dart';
 
 import '../widgets/conversations_screen/conversation_card.dart';
 
-class ConversationsScreen extends StatelessWidget {
-  // const Conversations({Key? key}) : super(key: key);
+class ConversationsScreen extends StatefulWidget {
+  @override
+  _ConversationsScreenState createState() => _ConversationsScreenState();
+}
 
-  final List<Map<String, Object>> _conversations = [
-    {
-      'name': 'Zaid Sheikh',
-      'lastText': 'Call me back ASAP. ASAP. ASAP.',
-      'unreadTexts': 0,
-      'time': '13:15'
-    },
-    {
-      'name': 'Mizan Ali',
-      'lastText': "Let's hang out soon!",
-      'unreadTexts': 2,
-      'time': '13:15'
-    },
-    {
-      'name': 'Neel Modi',
-      'lastText': "What's up bro?",
-      'unreadTexts': 21,
-      'time': '13:15'
-    },
-    {
-      'name': 'Max Verstappen',
-      'lastText': "I'm moving to Ferrari next season.",
-      'unreadTexts': 45,
-      'time': '13:15'
-    },
-    {
-      'name': 'Charles Leclerc',
-      'lastText': "Pole position this week. Watch.",
-      'unreadTexts': 12,
-      'time': '13:15'
-    },
-    {
-      'name': 'Sebastian Vettel',
-      'lastText': 'I hate my team. No cap.',
-      'unreadTexts': 2,
-      'time': '13:15'
-    },
-    {
-      'name': 'Lewis Hamilton',
-      'lastText': 'Lunch tomorrow?.',
-      'unreadTexts': 0,
-      'time': '13:15'
-    },
-  ];
+class _ConversationsScreenState extends State<ConversationsScreen> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  CollectionReference _conversationsCollection =
+      FirebaseFirestore.instance.collection('conversations');
+
+  bool showLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    //to check if user was actually signed in
-    print('Auth Token: ${Provider.of<User>(context).getUser['authToken']}');
-
     return Scaffold(
       backgroundColor: Color.fromRGBO(194, 222, 232, 1.0),
       // extendBodyBehindAppBar: true,
@@ -98,13 +60,35 @@ class ConversationsScreen extends StatelessWidget {
         ),
       ),
       body: Container(
-        child: ListView.builder(
-          itemCount: _conversations.length,
-          itemBuilder: (ctx, index) => ConversationCard(
-              (_conversations[index]['name'] as String),
-              (_conversations[index]['lastText'] as String),
-              (_conversations[index]['unreadTexts'] as int),
-              (_conversations[index]['time'] as String)),
+        child: StreamBuilder<QuerySnapshot>(
+          stream: _conversationsCollection
+              .where('members', arrayContains: _auth.currentUser!.uid)
+              .get()
+              .asStream(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError) {
+              return Center(child: Text('Something went wrong'));
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasData) {
+              final documents = (snapshot.data)!.docs;
+              return ListView.builder(
+                itemCount: documents.length,
+                itemBuilder: (context, index) => ConversationCard(
+                  friendUserId:
+                      documents[index]['members'][0] == _auth.currentUser!.uid
+                          ? documents[index]['members'][1]
+                          : documents[index]['members'][0],
+                  unreadTexts: documents[index]['unreadTexts'] as int,
+                  conversationId: documents[index].id,
+                ),
+              );
+            } else {
+              return Container();
+            }
+          },
         ),
       ),
       bottomNavigationBar: Container(
@@ -116,9 +100,9 @@ class ConversationsScreen extends StatelessWidget {
             onTap: (index) async {
               if (index == 1) Navigator.of(context).pushNamed('/tickets');
               if (index == 3) {
-                await Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/login', (route) => false);
-                Provider.of<User>(context).logout();
+                await _auth.signOut();
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/auth', (route) => false);
               }
             },
             showSelectedLabels: false,

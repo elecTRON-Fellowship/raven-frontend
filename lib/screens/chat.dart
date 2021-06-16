@@ -1,74 +1,30 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
   // const ChatScreen({ Key? key }) : super(key: key);
 
-  final List<Map<String, Object>> _messages = [
-    {
-      'type': 'received',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'received',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'sent',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'received',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'sent',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'sent',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'received',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'received',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'sent',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'received',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'sent',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'sent',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-  ];
+  String conversationId;
+  String friendName;
 
-  _buildMessage(Map<String, Object> message, BuildContext context) {
-    bool isSent = message['type'] == 'sent';
+  ChatScreen({required this.conversationId, required this.friendName});
+
+  @override
+  _ChatScreenState createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
+  final TextEditingController textController = new TextEditingController();
+  final ScrollController scrollController = ScrollController();
+
+  _buildMessage(
+      String sender, String text, DateTime time, BuildContext context) {
+    bool isSent = sender == _auth.currentUser!.uid;
     return Container(
       margin: isSent
           ? EdgeInsets.only(top: 8.0, bottom: 8.0, left: 80.0)
@@ -95,12 +51,12 @@ class ChatScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              (message['time'] as String),
+              DateFormat.Hm().format(time),
               style: GoogleFonts.poppins(
                   textStyle: TextStyle(fontSize: 14, color: Colors.grey[800])),
             ),
             Text(
-              (message['text'] as String),
+              text,
               style: GoogleFonts.poppins(
                   textStyle: TextStyle(fontSize: 14, color: Colors.black)),
             ),
@@ -110,12 +66,29 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
+  late CollectionReference _messagesCollection;
+
+  void sendMessage() async {
+    await _messagesCollection.add({
+      'time': DateTime.now(),
+      'sender': _auth.currentUser!.uid,
+      'text': textController.text,
+    });
+    FocusScope.of(context).unfocus();
+    textController.clear();
+    scrollController.animateTo(scrollController.position.minScrollExtent,
+        duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _messagesCollection = FirebaseFirestore.instance
+        .collection('conversations/${widget.conversationId}/messages');
+  }
+
   @override
   Widget build(BuildContext context) {
-    //route arguments
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
-
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: PreferredSize(
@@ -139,7 +112,7 @@ class ChatScreen extends StatelessWidget {
                 IconButton(
                   onPressed: () {
                     Navigator.of(context).pushNamed('/friend-transactions',
-                        arguments: {'friendName': args['name'] as String});
+                        arguments: {'friendName': widget.friendName});
                   },
                   icon: Icon(Icons.credit_card_rounded),
                   iconSize: 30,
@@ -161,8 +134,24 @@ class ChatScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 18.0),
                   child: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      'https://upload.wikimedia.org/wikipedia/commons/a/a0/Arh-avatar.jpg',
+                    backgroundColor: Theme.of(context).primaryColorDark,
+                    child: Text(
+                      this.widget.friendName.isNotEmpty
+                          ? this
+                              .widget
+                              .friendName
+                              .trim()
+                              .split(' ')
+                              .map((l) => l[0])
+                              .take(2)
+                              .join()
+                          : '',
+                      style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                        color: Colors.white,
+                      )),
                     ),
                     radius: 30,
                   ),
@@ -171,12 +160,12 @@ class ChatScreen extends StatelessWidget {
                   width: 15,
                 ),
                 Text(
-                  ((args['name']) as String),
+                  widget.friendName,
                   textAlign: TextAlign.start,
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 26,
+                      fontSize: 24,
                       color: Colors.white,
                     ),
                   ),
@@ -186,6 +175,7 @@ class ChatScreen extends StatelessWidget {
             Expanded(
               child: Container(
                 margin: EdgeInsets.only(top: 15),
+                padding: EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   color: Theme.of(context).backgroundColor,
                   borderRadius: BorderRadius.only(
@@ -198,13 +188,28 @@ class ChatScreen extends StatelessWidget {
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
                   ),
-                  child: ListView.builder(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 12.5, horizontal: 15),
-                    itemCount: _messages.length,
-                    itemBuilder: (ctx, index) {
-                      Map<String, Object> message = _messages[index];
-                      return _buildMessage(message, context);
+                  child: StreamBuilder(
+                    stream: _messagesCollection
+                        .orderBy('time', descending: true)
+                        .get()
+                        .asStream(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      // if (snapshot.connectionState == ConnectionState.waiting) {
+                      //   return Center(child: CircularProgressIndicator());
+                      // }
+                      final documents = (snapshot.data)!.docs;
+                      return ListView.builder(
+                        controller: scrollController,
+                        reverse: true,
+                        itemCount: documents.length,
+                        itemBuilder: (context, index) => _buildMessage(
+                          documents[index]['sender'],
+                          documents[index]['text'],
+                          DateTime.parse(
+                              documents[index]['time'].toDate().toString()),
+                          context,
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -218,6 +223,7 @@ class ChatScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextField(
+                      controller: textController,
                       textInputAction: TextInputAction.newline,
                       minLines: 1,
                       maxLines: 5,
@@ -247,7 +253,7 @@ class ChatScreen extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () => sendMessage(),
                     icon: Icon(Icons.send_rounded),
                     color: Theme.of(context).primaryColorDark,
                     iconSize: 30.0,
@@ -256,7 +262,7 @@ class ChatScreen extends StatelessWidget {
                   IconButton(
                     onPressed: () {
                       Navigator.of(context).pushNamed('/timed-chat',
-                          arguments: {'name': args['name'] as String});
+                          arguments: {'name': widget.friendName});
                     },
                     icon: Icon(Icons.timer_rounded),
                     color: Theme.of(context).primaryColorDark,
