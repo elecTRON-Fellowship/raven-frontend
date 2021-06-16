@@ -31,8 +31,8 @@ class _ChatScreenState extends State<ChatScreen> {
           : EdgeInsets.only(top: 8.0, bottom: 8.0, right: 80.0),
       decoration: BoxDecoration(
         color: isSent
-            ? Color.fromRGBO(61, 169, 252, 0.5)
-            : Color.fromRGBO(144, 180, 206, 1.0),
+            ? Color.fromRGBO(61, 169, 252, 1.0)
+            : Color.fromRGBO(144, 180, 206, 0.5),
         borderRadius: isSent
             ? BorderRadius.only(
                 topLeft: Radius.circular(15),
@@ -57,8 +57,11 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             Text(
               text,
-              style: GoogleFonts.poppins(
-                  textStyle: TextStyle(fontSize: 14, color: Colors.black)),
+              style: isSent
+                  ? GoogleFonts.poppins(
+                      textStyle: TextStyle(fontSize: 14, color: Colors.white))
+                  : GoogleFonts.poppins(
+                      textStyle: TextStyle(fontSize: 14, color: Colors.black)),
             ),
           ],
         ),
@@ -69,12 +72,12 @@ class _ChatScreenState extends State<ChatScreen> {
   late CollectionReference _messagesCollection;
 
   void sendMessage() async {
+    FocusScope.of(context).unfocus();
     await _messagesCollection.add({
       'time': DateTime.now(),
       'sender': _auth.currentUser!.uid,
       'text': textController.text,
     });
-    FocusScope.of(context).unfocus();
     textController.clear();
     scrollController.animateTo(scrollController.position.minScrollExtent,
         duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
