@@ -20,45 +20,41 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Color.fromRGBO(194, 222, 232, 1.0),
+      backgroundColor: theme.backgroundColor,
       // extendBodyBehindAppBar: true,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AppBar(
-              elevation: 0.0,
-              backgroundColor: Colors.transparent,
-              title: Text(
-                'Conversations',
-                style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 26,
-                        color: Theme.of(context).primaryColorDark)),
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.search_rounded),
-                  iconSize: 30,
-                  color: Theme.of(context).primaryColorDark,
-                ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/contacts');
-                  },
-                  icon: Icon(Icons.add_circle_outline_rounded),
-                  iconSize: 30,
-                  color: Theme.of(context).primaryColorDark,
-                ),
-              ],
-            ),
-          ],
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        title: Text(
+          'Conversations',
+          style: GoogleFonts.poppins(
+              textStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 26,
+                  color: Theme.of(context).primaryColorDark)),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.search_rounded),
+            iconSize: 30,
+            color: Theme.of(context).primaryColorDark,
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .pushNamed('/contacts')
+                  .then((_) => setState(() {}));
+            },
+            icon: Icon(Icons.add_circle_outline_rounded),
+            iconSize: 30,
+            color: Theme.of(context).primaryColorDark,
+          ),
+        ],
       ),
+
       body: Container(
         child: StreamBuilder<QuerySnapshot>(
           stream: _conversationsCollection

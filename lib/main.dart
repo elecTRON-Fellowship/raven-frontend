@@ -6,7 +6,8 @@ import 'package:raven/screens/contacts.dart';
 import 'package:raven/screens/conversations.dart';
 import 'package:raven/screens/friend_transactions.dart';
 import 'package:raven/screens/auth.dart';
-import 'package:raven/screens/splash_screen.dart';
+import 'package:raven/screens/otp_screen.dart';
+
 import 'package:raven/screens/tickets.dart';
 import 'package:raven/screens/timed_chat.dart';
 
@@ -64,9 +65,6 @@ class _HomePageRedirectState extends State<HomePageRedirect> {
   }
 
   @override
-  Widget build(BuildContext context) => _isLoading
-      ? SplashScreen()
-      : _user == null
-          ? AuthScreen()
-          : ConversationsScreen();
+  Widget build(BuildContext context) =>
+      _user == null ? AuthScreen() : ConversationsScreen();
 }

@@ -95,99 +95,73 @@ class _ContactCardState extends State<ContactCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: 80,
-        width: double.infinity,
-        child: Card(
-          color: Theme.of(context).primaryColorLight,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      child: CircleAvatar(
-                        backgroundColor: Theme.of(context).primaryColorDark,
-                        child: Text(
-                          this.widget.name.isNotEmpty
-                              ? this
-                                  .widget
-                                  .name
-                                  .trim()
-                                  .split(' ')
-                                  .map((l) => l[0])
-                                  .take(2)
-                                  .join()
-                              : '',
-                          style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.white,
-                          )),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            this.widget.name,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.poppins(
-                                textStyle: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Theme.of(context).primaryColorDark,
-                            )),
-                          ),
-                          Text(
-                            this.widget.number,
-                            style: GoogleFonts.poppins(
-                                textStyle: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                              color: Theme.of(context).primaryColorDark,
-                            )),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                showLoading
-                    ? CircularProgressIndicator(
-                        color: Theme.of(context).primaryColorDark,
-                      )
-                    : status == ContactRegisteredStatus.REGISTERED
-                        ? IconButton(
-                            onPressed: () => startConversation(),
-                            icon: Icon(Icons.message_rounded),
-                          )
-                        : TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              'Invite',
-                              style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Theme.of(context).primaryColorDark,
-                              )),
-                            ),
-                          ),
-              ],
+    return Card(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+            side: BorderSide(color: Theme.of(context).primaryColor)),
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: Theme.of(context).accentColor,
+            child: Text(
+              this.widget.name.isNotEmpty
+                  ? this
+                      .widget
+                      .name
+                      .trim()
+                      .split(' ')
+                      .map((l) => l[0])
+                      .take(2)
+                      .join()
+                  : '',
+              style: GoogleFonts.poppins(
+                  textStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Colors.white,
+              )),
             ),
           ),
+          title: Text(
+            this.widget.name,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Theme.of(context).primaryColorDark,
+            )),
+          ),
+          subtitle: Text(
+            this.widget.number,
+            style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+              color: Theme.of(context).primaryColor,
+            )),
+          ),
+          trailing: showLoading
+              ? CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor,
+                )
+              : status == ContactRegisteredStatus.REGISTERED
+                  ? IconButton(
+                      onPressed: () => startConversation(),
+                      icon: Icon(Icons.message_rounded),
+                      color: Theme.of(context).primaryColor,
+                    )
+                  : TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        'Invite',
+                        style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          color: Theme.of(context).primaryColor,
+                        )),
+                      ),
+                    ),
         ));
   }
 }
