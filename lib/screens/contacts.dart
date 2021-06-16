@@ -65,46 +65,39 @@ class _ContactsScreenState extends State<ContactsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColorLight,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AppBar(
-              leading: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: Icon(Icons.arrow_back_rounded),
-                iconSize: 30,
-                color: Theme.of(context).primaryColorDark,
-              ),
-              elevation: 0.0,
-              backgroundColor: Theme.of(context).primaryColorLight,
-              automaticallyImplyLeading: false,
-              titleSpacing: 0,
-              title: Text(
-                'Contacts',
-                style: GoogleFonts.poppins(
-                  textStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 26,
-                    color: Theme.of(context).primaryColorDark,
-                  ),
-                ),
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () => fetchContacts(),
-                  icon: Icon(Icons.sync_rounded),
-                  iconSize: 30,
-                  color: Theme.of(context).primaryColorDark,
-                )
-              ],
-            ),
-          ],
+      backgroundColor: Theme.of(context).primaryColor,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back_rounded),
+          iconSize: 30,
+          color: Theme.of(context).primaryColorDark,
         ),
+        elevation: 0.0,
+        backgroundColor: Theme.of(context).primaryColor,
+        automaticallyImplyLeading: false,
+        titleSpacing: 0,
+        title: Text(
+          'Contacts',
+          style: GoogleFonts.poppins(
+            textStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+              color: Theme.of(context).primaryColorDark,
+            ),
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () => fetchContacts(),
+            icon: Icon(Icons.sync_rounded),
+            iconSize: 30,
+            color: Theme.of(context).primaryColorDark,
+          )
+        ],
       ),
       body: GestureDetector(
         onTap: () {
@@ -129,13 +122,13 @@ class _ContactsScreenState extends State<ContactsScreen> {
                   filled: true,
                   contentPadding: EdgeInsets.all(13),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(20),
                     borderSide: BorderSide(
                       color: Colors.transparent,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(20),
                     borderSide: BorderSide(
                       color: Theme.of(context).primaryColor,
                       width: 2,

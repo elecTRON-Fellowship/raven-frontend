@@ -99,9 +99,12 @@ class _ContactCardState extends State<ContactCard> {
         height: 80,
         width: double.infinity,
         child: Card(
-          color: Theme.of(context).primaryColorLight,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          color: Theme.of(context).backgroundColor,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+              side: BorderSide(
+                color: Theme.of(context).primaryColor,
+              )),
           child: Padding(
             padding: const EdgeInsets.all(10),
             child: Row(
@@ -111,7 +114,7 @@ class _ContactCardState extends State<ContactCard> {
                   children: [
                     Container(
                       child: CircleAvatar(
-                        backgroundColor: Theme.of(context).primaryColorDark,
+                        backgroundColor: Theme.of(context).accentColor,
                         child: Text(
                           this.widget.name.isNotEmpty
                               ? this

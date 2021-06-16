@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/screens/otp_screen.dart';
+
+const String logo = "assets/vectors/raven_logo.svg";
 
 class AuthScreen extends StatefulWidget {
   @override
@@ -28,9 +31,23 @@ class _AuthScreenState extends State<AuthScreen> {
         alignment: Alignment.topLeft,
         children: [
           Positioned(
-            child: headertext(context, theme),
-            top: size.height * 0.11,
-            left: size.width * 0.10,
+            child: headerLogo(context, theme, size),
+            top: size.height * 0.07,
+            left: size.width * 0.3,
+          ),
+          Positioned(
+            child: Text(
+              "Raven",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+                  fontSize: 24,
+                  color: theme.primaryColorDark,
+                ),
+              ),
+            ),
+            top: size.height * 0.32,
+            left: size.width * 0.415,
           ),
           Positioned(
             child: bottomBackground(context, size, theme),
@@ -53,44 +70,14 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 
-  Widget headertext(BuildContext context, var theme) {
+  Widget headerLogo(BuildContext context, var theme, var size) {
     return Container(
+      height: size.height * 0.25,
+      width: size.width * 0.4,
       color: theme.primaryColor,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(
-            "Hey there!",
-            style: GoogleFonts.poppins(
-              textStyle: TextStyle(
-                color: theme.backgroundColor,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Text(
-            "Welcome back to",
-            style: GoogleFonts.poppins(
-              textStyle: TextStyle(
-                color: theme.backgroundColor,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Text(
-            "Raven",
-            style: GoogleFonts.poppins(
-              textStyle: TextStyle(
-                color: theme.primaryColorDark,
-                fontSize: 60,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
+      child: SvgPicture.asset(
+        logo,
+        color: theme.primaryColorDark,
       ),
     );
   }
@@ -121,17 +108,16 @@ class _AuthScreenState extends State<AuthScreen> {
           Container(
             width: size.width * 0.8,
             child: Text(
-              "Get Started",
+              "Hey there, \nWelcome to Raven",
               style: GoogleFonts.poppins(
                   textStyle: TextStyle(
-                fontSize: 34,
-                fontWeight: FontWeight.bold,
+                fontSize: 24,
                 color: theme.primaryColorDark,
               )),
             ),
           ),
           SizedBox(
-            height: size.height * 0.04,
+            height: size.height * 0.07,
           ),
           Form(
             key: formKey,
@@ -141,7 +127,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 keyboardType: TextInputType.phone,
                 textInputAction: TextInputAction.done,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   height: 1,
                   color: theme.accentColor,
                 ),
@@ -161,7 +147,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       width: 2,
                     ),
                   ),
-                  labelText: "Phone No",
+                  labelText: "Phone Number",
                   labelStyle: TextStyle(
                     color: theme.accentColor,
                   ),
@@ -180,7 +166,7 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
           ),
           SizedBox(
-            height: size.height * 0.13,
+            height: size.height * 0.07,
           ),
           Container(
             width: size.width * 0.8,
@@ -251,7 +237,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(
                       size.width * 0.6,
-                      size.height * 0.07,
+                      size.height * 0.08,
                     ),
                     onPrimary: theme.backgroundColor,
                     primary: theme.accentColor,
