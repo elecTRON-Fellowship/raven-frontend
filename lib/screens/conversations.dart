@@ -44,9 +44,8 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
           ),
           IconButton(
             onPressed: () {
-              Navigator.of(context)
-                  .pushNamed('/contacts')
-                  .then((_) => setState(() {}));
+              Navigator.of(context).pushNamed('/contacts');
+              // .then((_) => setState(() {}));
             },
             icon: Icon(Icons.add_circle_outline_rounded),
             iconSize: 30,

@@ -47,16 +47,15 @@ class _ConversationCardState extends State<ConversationCard> {
   }
 
   void selectConversation(BuildContext context, String name) {
-    Navigator.of(context)
-        .push(
-          MaterialPageRoute(
-            builder: (_) => ChatScreen(
-              conversationId: widget.conversationId,
-              friendName: fetchedName,
-            ),
-          ),
-        )
-        .then((_) => setState(() {}));
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ChatScreen(
+          conversationId: widget.conversationId,
+          friendName: fetchedName,
+        ),
+      ),
+    );
+    // .then((_) => setState(() {}));
   }
 
   @override

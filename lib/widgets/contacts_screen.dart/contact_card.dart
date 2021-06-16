@@ -28,6 +28,9 @@ class _ContactCardState extends State<ContactCard> {
   CollectionReference _conversationsCollection =
       FirebaseFirestore.instance.collection('conversations');
 
+  CollectionReference _connectionsCollection =
+      FirebaseFirestore.instance.collection('connections');
+
   bool showLoading = true;
 
   ContactRegisteredStatus status = ContactRegisteredStatus.NOT_REGISTERED;
@@ -74,23 +77,62 @@ class _ContactCardState extends State<ContactCard> {
       numberToQuery = '+91$numberToQuery';
     }
 
-    final snapshot = await _userCollection
+    final userSnapshot = await _userCollection
         .where('phoneNumber', isEqualTo: numberToQuery)
         .get();
 
-    final newConversationDocument = await _conversationsCollection.add({
-      'members': [_auth.currentUser!.uid, snapshot.docs[0].id],
-      'unreadTexts': 0
-    });
+    bool _isConnectionFound = false;
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (_) => ChatScreen(
-          conversationId: newConversationDocument.id,
-          friendName: widget.name,
+    var connectionSnapshot = await _connectionsCollection
+        .where('member0', isEqualTo: _auth.currentUser!.uid)
+        .where('member1', isEqualTo: userSnapshot.docs[0].id)
+        .get();
+
+    if (connectionSnapshot.docs.length != 0) {
+      _isConnectionFound = true;
+    } else {
+      connectionSnapshot = await _connectionsCollection
+          .where('member0', isEqualTo: userSnapshot.docs[0].id)
+          .where('member1', isEqualTo: _auth.currentUser!.uid)
+          .get();
+
+      if (connectionSnapshot.docs.length != 0) {
+        _isConnectionFound = true;
+      }
+    }
+
+    if (_isConnectionFound) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => ChatScreen(
+            conversationId: connectionSnapshot.docs[0]['conversationId'],
+            friendName:
+                "${userSnapshot.docs[0]['firstName']} ${userSnapshot.docs[0]['lastName']}",
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      final newConversationDocument = await _conversationsCollection.add({
+        'members': [_auth.currentUser!.uid, userSnapshot.docs[0].id],
+        'unreadTexts': 0
+      });
+
+      final newConnectionDocument = await _connectionsCollection.add({
+        'conversationId': newConversationDocument.id,
+        'member0': _auth.currentUser!.uid,
+        'member1': userSnapshot.docs[0].id
+      });
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => ChatScreen(
+            conversationId: newConversationDocument.id,
+            friendName:
+                "${userSnapshot.docs[0]['firstName']} ${userSnapshot.docs[0]['lastName']}",
+          ),
+        ),
+      );
+    }
   }
 
   @override
