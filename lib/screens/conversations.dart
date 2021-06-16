@@ -59,8 +59,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
         child: StreamBuilder<QuerySnapshot>(
           stream: _conversationsCollection
               .where('members', arrayContains: _auth.currentUser!.uid)
-              .get()
-              .asStream(),
+              .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
               return Center(child: Text('Something went wrong'));

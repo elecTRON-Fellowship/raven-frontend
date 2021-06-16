@@ -94,8 +94,7 @@ class _ConversationCardState extends State<ConversationCard> {
           stream: _messagesCollection
               .orderBy('time', descending: true)
               .limit(1)
-              .get()
-              .asStream(),
+              .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
               return Text('Something went wrong');
