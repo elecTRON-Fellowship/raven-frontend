@@ -174,7 +174,6 @@ class _ContactsScreenState extends State<ContactsScreen> {
                       String name = contact.displayName as String;
                       String number =
                           contact.phones!.elementAt(0).value as String;
-                      String initials = contact.initials();
                       return ContactCard(name: name, number: number);
                     },
                   ),
