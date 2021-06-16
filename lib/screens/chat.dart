@@ -31,8 +31,8 @@ class _ChatScreenState extends State<ChatScreen> {
           : EdgeInsets.only(top: 8.0, bottom: 8.0, right: 80.0),
       decoration: BoxDecoration(
         color: isSent
-            ? Color.fromRGBO(103, 186, 216, 1.0)
-            : Color.fromRGBO(194, 222, 232, 1.0),
+            ? Color.fromRGBO(61, 169, 252, 0.5)
+            : Color.fromRGBO(144, 180, 206, 1.0),
         borderRadius: isSent
             ? BorderRadius.only(
                 topLeft: Radius.circular(15),
