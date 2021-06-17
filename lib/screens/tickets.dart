@@ -28,8 +28,11 @@ class _TicketsScreenState extends State<TicketsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: theme.primaryColor,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100),
         child: Column(
@@ -45,7 +48,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                   textStyle: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 26,
-                    color: Color.fromRGBO(17, 128, 168, 1.0),
+                    color: theme.primaryColorDark,
                   ),
                 ),
               ),
@@ -54,7 +57,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                   onPressed: () {},
                   icon: Icon(Icons.add_circle_outline_rounded),
                   iconSize: 30,
-                  color: Color.fromRGBO(17, 128, 168, 1.0),
+                  color: theme.primaryColorDark,
                 )
               ],
             ),
@@ -83,7 +86,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                   child: Container(
                     margin: EdgeInsets.only(top: 15),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColorLight,
+                      color: theme.backgroundColor,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(30),
                         topRight: Radius.circular(30),
@@ -122,7 +125,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
       ),
       bottomNavigationBar: Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-        color: Theme.of(context).primaryColorLight,
+        color: theme.backgroundColor,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(15),
           child: BottomNavigationBar(
@@ -132,27 +135,27 @@ class _TicketsScreenState extends State<TicketsScreen> {
             },
             showSelectedLabels: false,
             showUnselectedLabels: false,
-            backgroundColor: Theme.of(context).primaryColorDark,
+            backgroundColor: theme.primaryColor,
             type: BottomNavigationBarType.fixed,
             items: [
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.message_rounded,
                   size: 30,
-                  color: Color.fromRGBO(194, 222, 232, 1.0),
+                  color: Colors.white,
                 ),
                 label: 'Conversations',
               ),
               BottomNavigationBarItem(
                 activeIcon: Icon(
-                  Icons.account_balance_wallet_rounded,
+                  Icons.message_rounded,
                   size: 30,
-                  color: Colors.white,
+                  color: theme.primaryColorDark,
                 ),
                 icon: Icon(
                   Icons.account_balance_wallet_rounded,
                   size: 30,
-                  color: Color.fromRGBO(194, 222, 232, 1.0),
+                  color: Colors.white,
                 ),
                 label: 'Tickets',
               ),
@@ -160,7 +163,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                 icon: Icon(
                   Icons.local_taxi_rounded,
                   size: 30,
-                  color: Color.fromRGBO(194, 222, 232, 1.0),
+                  color: Colors.white,
                 ),
                 label: 'Uber',
               ),
@@ -168,7 +171,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                 icon: Icon(
                   Icons.settings_rounded,
                   size: 30,
-                  color: Color.fromRGBO(194, 222, 232, 1.0),
+                  color: Colors.white,
                 ),
                 label: 'Settings',
               ),

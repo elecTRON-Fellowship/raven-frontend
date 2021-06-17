@@ -1,5 +1,10 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/requestsSingleton.dart';
 
 import '../user_singleton.dart';
 
@@ -11,6 +16,12 @@ class AddressDetailsScreen extends StatefulWidget {
 class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
   final _addressInfoKey = GlobalKey<FormState>();
   final _userInfoSingleton = UserDataSingleton();
+
+  CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection('users');
+
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -385,11 +396,24 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                   height: size.height * 0.05,
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_addressInfoKey.currentState!.validate()) {
-                      //storeUserDetails();
-                      _userInfoSingleton.printData1();
-                      _userInfoSingleton.printData2();
+                      final userUid = _auth.currentUser!.uid;
+
+                      final doc = await _userCollection.doc(userUid).get();
+
+                      final firstName = doc['firstName'];
+                      final lastName = doc['lastName'];
+                      final phoneNumber = doc['phoneNumber'];
+
+                      _userInfoSingleton.userUid(userUid);
+                      _userInfoSingleton.firstName(firstName);
+                      _userInfoSingleton.lastName(lastName);
+                      _userInfoSingleton.phoneNumber(phoneNumber);
+
+                      final _requestsSingleton = RequestsSingleton();
+                      var res = await _requestsSingleton.postReq();
+                      print(res);
                     }
                   },
                   child: Text(

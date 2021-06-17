@@ -15,63 +15,65 @@ class FriendTicketCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
-      ),
-      elevation: 3.0,
-      color: Theme.of(context).primaryColorLight,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              this.friendName,
-              style: GoogleFonts.poppins(
-                textStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 23,
-                    color: Colors.black),
-              ),
-            ),
-            SizedBox(
-              height: 13,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.43,
-                  child: Text(
-                    this.description,
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15.5,
-                        color: Theme.of(context).primaryColorDark,
+    final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+
+    return Container(
+      height: size.height * 0.26,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        elevation: 3.0,
+        color: theme.backgroundColor,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: size.width * 0.3,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: LinearProgressIndicator(
+                        backgroundColor: theme.primaryColor,
+                        color: theme.primaryColorDark,
+                        value: 0.6,
+                        minHeight: 20,
                       ),
                     ),
                   ),
-                ),
-                Text(
-                  '₹${this.amountRaised.toStringAsFixed(2)}/\n₹${this.totalAmount.toStringAsFixed(2)}',
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Theme.of(context).primaryColorDark,
+                  Text(
+                    '₹${this.amountRaised.toStringAsFixed(2)}/₹${this.totalAmount.toStringAsFixed(2)}',
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.black),
                     ),
                   ),
+                ],
+              ),
+              SizedBox(
+                height: 13,
+              ),
+              Text(
+                this.description,
+                style: GoogleFonts.poppins(
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                    color: theme.primaryColor,
+                  ),
                 ),
-              ],
-            ),
-            SizedBox(
-              height: 13,
-            ),
-            Container(
-              width: double.infinity,
-              child: ElevatedButton(
+              ),
+              SizedBox(
+                height: 13,
+              ),
+              ElevatedButton(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -84,7 +86,7 @@ class FriendTicketCard extends StatelessWidget {
                       style: GoogleFonts.poppins(
                         textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 14,
                         ),
                       ),
                     ),
@@ -93,11 +95,8 @@ class FriendTicketCard extends StatelessWidget {
                 style: ButtonStyle(
                   padding: MaterialStateProperty.all(
                       EdgeInsets.symmetric(vertical: 10)),
-                  foregroundColor: MaterialStateProperty.all(
-                      Theme.of(context).primaryColorDark),
-                  backgroundColor: MaterialStateProperty.all(
-                    Theme.of(context).backgroundColor,
-                  ),
+                  foregroundColor: MaterialStateProperty.all(Colors.white),
+                  backgroundColor: MaterialStateProperty.all(theme.accentColor),
                   shape: MaterialStateProperty.all(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
@@ -106,8 +105,8 @@ class FriendTicketCard extends StatelessWidget {
                 ),
                 onPressed: () {},
               ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );

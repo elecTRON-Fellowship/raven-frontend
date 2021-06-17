@@ -8,11 +8,14 @@ class FriendTransactionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, String>;
 
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: theme.primaryColor,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100),
         child: Column(
@@ -28,7 +31,7 @@ class FriendTransactionsScreen extends StatelessWidget {
                 },
                 icon: Icon(Icons.arrow_back_rounded),
                 iconSize: 30,
-                color: Color.fromRGBO(17, 128, 168, 1.0),
+                color: theme.primaryColorDark,
               ),
               title: Text(
                 'Transactions',
@@ -36,7 +39,7 @@ class FriendTransactionsScreen extends StatelessWidget {
                   textStyle: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 26,
-                    color: Color.fromRGBO(17, 128, 168, 1.0),
+                    color: theme.primaryColorDark,
                   ),
                 ),
               ),
@@ -45,7 +48,7 @@ class FriendTransactionsScreen extends StatelessWidget {
                   onPressed: () {},
                   icon: Icon(Icons.add_circle_outline_rounded),
                   iconSize: 30,
-                  color: Color.fromRGBO(17, 128, 168, 1.0),
+                  color: theme.primaryColorDark,
                 )
               ],
             ),
@@ -70,7 +73,7 @@ class FriendTransactionsScreen extends StatelessWidget {
             child: Container(
               margin: EdgeInsets.only(top: 15),
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColorLight,
+                color: theme.backgroundColor,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
                   topRight: Radius.circular(30),

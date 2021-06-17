@@ -15,68 +15,70 @@ class FriendTransactionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+
     return Container(
-      height: 82,
+      height: size.height * 0.1,
+      margin: EdgeInsets.symmetric(vertical: 5),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: theme.primaryColorDark)),
       width: double.infinity,
-      child: Card(
-        color: Theme.of(context).backgroundColor,
-        elevation: 2.5,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    this.status,
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
-                        fontSize: 14,
-                        color: Theme.of(context).primaryColorDark,
-                      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  this.status,
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                      fontSize: 14,
+                      color: theme.accentColor,
                     ),
                   ),
-                  Text(
-                    this.date,
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
-                        fontSize: 14,
-                        color: Theme.of(context).primaryColorDark,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    this.description,
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15,
-                        color: Theme.of(context).primaryColorDark,
-                      ),
+                ),
+                Text(
+                  this.date,
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                      fontSize: 14,
+                      color: theme.accentColor,
                     ),
                   ),
-                  Text(
-                    '₹${this.amount.toStringAsFixed(2)}',
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Theme.of(context).primaryColorDark,
-                      ),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  this.description,
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
+                      color: theme.primaryColorDark,
                     ),
-                  )
-                ],
-              )
-            ],
-          ),
+                  ),
+                ),
+                Text(
+                  '₹${this.amount.toStringAsFixed(2)}',
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
+                  ),
+                )
+              ],
+            )
+          ],
         ),
       ),
     );

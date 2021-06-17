@@ -8,6 +8,9 @@ class FriendTicketIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+
     return Column(
       children: [
         GestureDetector(
@@ -16,8 +19,17 @@ class FriendTicketIcon extends StatelessWidget {
                 arguments: {'friendName': this.name});
           },
           child: CircleAvatar(
-            backgroundImage: NetworkImage(
-              'https://upload.wikimedia.org/wikipedia/commons/a/a0/Arh-avatar.jpg',
+            backgroundColor: theme.accentColor,
+            child: Text(
+              this.name.isNotEmpty
+                  ? this.name.trim().split(' ').map((l) => l[0]).take(2).join()
+                  : '',
+              style: GoogleFonts.poppins(
+                  textStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+                color: Colors.white,
+              )),
             ),
             radius: 33,
           ),
@@ -31,7 +43,7 @@ class FriendTicketIcon extends StatelessWidget {
             textStyle: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 15,
-              color: Theme.of(context).primaryColorDark,
+              color: Colors.black,
             ),
           ),
         ),

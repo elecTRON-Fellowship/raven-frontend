@@ -1,6 +1,7 @@
 import 'package:uuid/uuid.dart';
 
 class UserDataSingleton {
+  late String _userUid;
   late String _firstName;
   late String _lastName;
   late String _email;
@@ -25,6 +26,14 @@ class UserDataSingleton {
 
   factory UserDataSingleton() {
     return _singleton;
+  }
+
+  userUid(String userUid) {
+    this._userUid = userUid;
+  }
+
+  get getUserUid {
+    return _userUid;
   }
 
   firstName(String firstName) {

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:raven/user_singleton.dart';
 
@@ -12,9 +14,13 @@ class RequestsSingleton {
     return _singleton;
   }
 
-  Future<http.Response> fetchAlbum() async {
-    var url = Uri.parse('https://example.com/whatsit/create');
-    var response = await http.post(url, body: userSingleton.toJson());
+  Future<http.Response> postReq() async {
+    var url = Uri.parse('https://jsonplaceholder.typicode.com/todos/1');
+
+    var response = await http.post(url,
+        headers: {"user_uid": userSingleton.getUserUid},
+        body: json.encode(userSingleton.toJson()));
+
     return response;
   }
 }
