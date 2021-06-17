@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/screens/timed_chat.dart';
 import 'package:raven/widgets/chat_screen.dart/message_bubble.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -220,8 +221,14 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   IconButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed('/timed-chat',
-                          arguments: {'name': widget.friendName});
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => TimedChatScreen(
+                            conversationId: widget.conversationId,
+                            friendName: widget.friendName,
+                          ),
+                        ),
+                      );
                     },
                     icon: Icon(Icons.timer_rounded),
                     color: Theme.of(context).primaryColorDark,

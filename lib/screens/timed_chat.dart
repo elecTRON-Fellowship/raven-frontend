@@ -1,148 +1,58 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/widgets/chat_screen.dart/message_bubble.dart';
+import 'package:raven/widgets/timed_chat_screen.dart/timer_card.dart';
 
 class TimedChatScreen extends StatefulWidget {
-  const TimedChatScreen({Key? key}) : super(key: key);
+  final String conversationId;
+  final String friendName;
+
+  TimedChatScreen({required this.conversationId, required this.friendName});
 
   @override
   _TimedChatScreenState createState() => _TimedChatScreenState();
 }
 
 class _TimedChatScreenState extends State<TimedChatScreen> {
-  final List<Map<String, Object>> _messages = [
-    {
-      'type': 'received',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'received',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'sent',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'received',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'sent',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'sent',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'received',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'received',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'sent',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'received',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'sent',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-    {
-      'type': 'sent',
-      'text': 'wassup',
-      'time': '13:15',
-    },
-  ];
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
-  _buildMessage(Map<String, Object> message, BuildContext context) {
-    bool isSent = message['type'] == 'sent';
-    return Container(
-      margin: isSent
-          ? EdgeInsets.only(top: 8.0, bottom: 8.0, left: 80.0)
-          : EdgeInsets.only(top: 8.0, bottom: 8.0, right: 80.0),
-      decoration: BoxDecoration(
-        color: isSent
-            ? Color.fromRGBO(103, 186, 216, 1.0)
-            : Color.fromRGBO(194, 222, 232, 1.0),
-        borderRadius: isSent
-            ? BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-                bottomRight: Radius.circular(15),
-              )
-            : BorderRadius.only(
-                topRight: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-                bottomRight: Radius.circular(15),
-              ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              (message['time'] as String),
-              style: GoogleFonts.poppins(
-                  textStyle: TextStyle(fontSize: 14, color: Colors.grey[800])),
-            ),
-            Text(
-              (message['text'] as String),
-              style: GoogleFonts.poppins(
-                  textStyle: TextStyle(fontSize: 14, color: Colors.black)),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  final TextEditingController textController = new TextEditingController();
+  final ScrollController scrollController = ScrollController();
 
-  late int _secondsRemaining;
-  late Timer _timer;
+  late CollectionReference _timedChatsCollection;
 
   @override
   void initState() {
     super.initState();
-    _startTimer();
+    _timedChatsCollection = FirebaseFirestore.instance
+        .collection('conversations/${widget.conversationId}/timedChats');
   }
 
   @override
-  void dispose() {
+  void dispose() async {
     super.dispose();
-    _timer.cancel();
   }
 
-  void _startTimer() {
-    _secondsRemaining = 600;
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_secondsRemaining > 0)
-          _secondsRemaining--;
-        else {
-          _timer.cancel();
-          Navigator.of(context).pop();
-        }
-      });
+  void sendMessage() async {
+    FocusScope.of(context).unfocus();
+    await _timedChatsCollection.add({
+      'time': DateTime.now(),
+      'sender': _auth.currentUser!.uid,
+      'text': textController.text,
+    });
+    textController.clear();
+    scrollController.animateTo(scrollController.position.minScrollExtent,
+        duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
+  }
+
+  void deleteAllMessages() async {
+    final snapshot = await _timedChatsCollection.get();
+    snapshot.docs.forEach((doc) async {
+      _timedChatsCollection.doc(doc.id).delete();
     });
   }
 
@@ -158,9 +68,7 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
           ),
           TextButton(
             onPressed: () {
-              setState(() {
-                _timer.cancel();
-              });
+              deleteAllMessages();
               Navigator.pop(context, true);
             },
             child: Text('Yes'),
@@ -172,17 +80,6 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var minutes = _secondsRemaining ~/ 60;
-    var minutesString = minutes.toString();
-    if (minutesString.length == 1) minutesString = '0$minutesString';
-    var seconds = _secondsRemaining % 60;
-    var secondsString = seconds.toString();
-    if (secondsString.length == 1) secondsString = '0$secondsString';
-
-    //route arguments
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
-
     return WillPopScope(
       onWillPop: () => _onBackPressed(context),
       child: Scaffold(
@@ -227,17 +124,8 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
           },
           child: Column(
             children: [
-              Center(
-                child: Text(
-                  '☕ $minutesString:$secondsString',
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 26,
-                      color: Color.fromRGBO(17, 128, 168, 1.0),
-                    ),
-                  ),
-                ),
+              TimerCard(
+                onTimerFinish: deleteAllMessages,
               ),
               Expanded(
                 child: Container(
@@ -254,13 +142,33 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30),
                     ),
-                    child: ListView.builder(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 12.5, horizontal: 15),
-                      itemCount: _messages.length,
-                      itemBuilder: (ctx, index) {
-                        Map<String, Object> message = _messages[index];
-                        return _buildMessage(message, context);
+                    child: StreamBuilder(
+                      stream: _timedChatsCollection
+                          .orderBy('time', descending: true)
+                          .snapshots(),
+                      builder:
+                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                        if (snapshot.hasData) {
+                          final documents = (snapshot.data)!.docs;
+                          return ListView.builder(
+                            controller: scrollController,
+                            reverse: true,
+                            itemCount: documents.length,
+                            itemBuilder: (context, index) => MessageBubble(
+                              ValueKey(documents[index].id),
+                              documents[index]['sender'],
+                              documents[index]['text'],
+                              DateTime.parse(
+                                  documents[index]['time'].toDate().toString()),
+                            ),
+                          );
+                        } else {
+                          return Container();
+                        }
                       },
                     ),
                   ),
@@ -271,19 +179,12 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
                 color: Theme.of(context).backgroundColor,
                 child: Column(
                   children: [
-                    LinearProgressIndicator(
-                      value: _secondsRemaining / 600,
-                      color: Theme.of(context).primaryColorDark,
-                      minHeight: 6,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           child: TextField(
+                            controller: textController,
                             textInputAction: TextInputAction.newline,
                             minLines: 1,
                             maxLines: 5,
@@ -313,7 +214,7 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () => sendMessage(),
                           icon: Icon(Icons.send_rounded),
                           color: Theme.of(context).primaryColorDark,
                           iconSize: 30.0,

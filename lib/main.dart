@@ -1,16 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:raven/screens/chat.dart';
 import 'package:raven/screens/contacts.dart';
 import 'package:raven/screens/conversations.dart';
 import 'package:raven/screens/create_wallet_user_details.dart';
 import 'package:raven/screens/friend_transactions.dart';
 import 'package:raven/screens/auth.dart';
-import 'package:raven/screens/otp_screen.dart';
-
 import 'package:raven/screens/tickets.dart';
-import 'package:raven/screens/timed_chat.dart';
 
 import 'screens/address_details_screen.dart';
 
@@ -38,8 +34,6 @@ class MyApp extends StatelessWidget {
         '/auth': (ctx) => AuthScreen(),
         '/conversations': (ctx) => ConversationsScreen(),
         '/contacts': (ctx) => ContactsScreen(),
-        // '/chat': (ctx) => ChatScreen(),
-        '/timed-chat': (ctx) => TimedChatScreen(),
         '/tickets': (ctx) => TicketsScreen(),
         '/friend-transactions': (ctx) => FriendTransactionsScreen()
       },
