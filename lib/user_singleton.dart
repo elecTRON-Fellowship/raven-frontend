@@ -19,69 +19,71 @@ class UserDataSingleton {
 
   final _ewallet_reference_id = Uuid().v4();
 
-  final _instance = UserDataSingleton();
+  UserDataSingleton._internal();
 
-  get getInstance {
-    return _instance;
+  static final UserDataSingleton _singleton = UserDataSingleton._internal();
+
+  factory UserDataSingleton() {
+    return _singleton;
   }
 
-  set firstName(String firstName) {
+  firstName(String firstName) {
     this._firstName = firstName;
   }
 
-  set latName(String lastName) {
+  lastName(String lastName) {
     this._lastName = lastName;
   }
 
-  set email(String email) {
+  email(String email) {
     this._email = email;
   }
 
-  set phoneNumber(String phoneNumber) {
+  phoneNumber(String phoneNumber) {
     this._phoneNumber = phoneNumber;
   }
 
-  set mothersName(String mothersName) {
+  mothersName(String mothersName) {
     this._mothersName = mothersName;
   }
 
-  set addressLine1(String addressLine1) {
+  addressLine1(String addressLine1) {
     this._addressLine1 = addressLine1;
   }
 
-  set addressLine2(String addressLine2) {
+  addressLine2(String addressLine2) {
     this._addressLine2 = addressLine2;
   }
 
-  set addressLine3(String addressLine3) {
+  addressLine3(String addressLine3) {
     this._addressLine3 = addressLine3;
   }
 
-  set city(String city) {
+  city(String city) {
     this._city = city;
   }
 
-  set state(String state) {
+  state(String state) {
     this._state = state;
   }
 
-  set country(String country) {
+  country(String country) {
     this._country = country;
   }
 
-  set zip(String zip) {
+  zip(String zip) {
     this._zip = zip;
   }
 
-  set dob(String dob) {
+  dob(String dob) {
     this._dob = dob;
   }
 
-  set nationality(String nationality) {
+  nationality(String nationality) {
     this._nationality = nationality;
   }
 
-  set idNumber(String idNumber) {
+  idNumber(String idNumber) {
     this._idNumber = idNumber;
   }
 
@@ -123,8 +125,23 @@ class UserDataSingleton {
         }
       };
 
-  void printData() {
-    print(toJson());
+  void printData1() {
+    print(_email);
+    print(_mothersName);
+    print(_dob);
+    print(_nationality);
+    print(_idNumber);
+  }
+
+  void printData2() {
+    print(_addressLine1);
+    print(_addressLine2);
+    print(_addressLine3);
+    print(_nationality);
+    print(_city);
+    print(_state);
+    print(_country);
+    print(_zip);
   }
 
   Map<String, dynamic> get map {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../user_singleton.dart';
+
 class AddressDetailsScreen extends StatefulWidget {
   @override
   _AddressDetailsScreenState createState() => _AddressDetailsScreenState();
@@ -8,6 +10,7 @@ class AddressDetailsScreen extends StatefulWidget {
 
 class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
   final _addressInfoKey = GlobalKey<FormState>();
+  final _userInfoSingleton = UserDataSingleton();
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -101,6 +104,7 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                       } else if (!regExp.hasMatch(value)) {
                         return 'Invalid Input';
                       }
+                      _userInfoSingleton.addressLine1(value);
                       return null;
                     },
                   ),
@@ -145,6 +149,7 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                       } else if (!regExp.hasMatch(value)) {
                         return 'Invalid input';
                       }
+                      _userInfoSingleton.addressLine2(value);
                       return null;
                     },
                   ),
@@ -189,6 +194,7 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                       } else if (!regExp.hasMatch(value)) {
                         return 'Invalid input';
                       }
+                      _userInfoSingleton.addressLine3(value);
                       return null;
                     },
                   ),
@@ -233,6 +239,7 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                       } else if (!regExp.hasMatch(value)) {
                         return 'Invalid input';
                       }
+                      _userInfoSingleton.city(value);
                       return null;
                     },
                   ),
@@ -277,6 +284,7 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                       } else if (!regExp.hasMatch(value)) {
                         return 'Invalid input';
                       }
+                      _userInfoSingleton.state(value);
                       return null;
                     },
                   ),
@@ -321,6 +329,7 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                       } else if (!regExp.hasMatch(value)) {
                         return 'Invalid input';
                       }
+                      _userInfoSingleton.country(value);
                       return null;
                     },
                   ),
@@ -367,6 +376,7 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                       } else if (value.length != 6) {
                         return "Must be 6 digits";
                       }
+                      _userInfoSingleton.zip(value);
                       return null;
                     },
                   ),
@@ -378,7 +388,8 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                   onPressed: () {
                     if (_addressInfoKey.currentState!.validate()) {
                       //storeUserDetails();
-                      print("Wallet created");
+                      _userInfoSingleton.printData1();
+                      _userInfoSingleton.printData2();
                     }
                   },
                   child: Text(
@@ -401,6 +412,9 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                   ),
+                ),
+                SizedBox(
+                  height: size.height * 0.05,
                 ),
               ],
             ),

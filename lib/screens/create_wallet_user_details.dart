@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/screens/address_details_screen.dart';
+import 'package:raven/user_singleton.dart';
 
 class UserDetailsScreen extends StatefulWidget {
   @override
@@ -8,6 +10,7 @@ class UserDetailsScreen extends StatefulWidget {
 
 class _UserDetailsScreenState extends State<UserDetailsScreen> {
   final _userInfoKey = GlobalKey<FormState>();
+  final _userInfoSingleton = UserDataSingleton();
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -102,6 +105,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                       } else if (!regExp.hasMatch(value)) {
                         return 'Please enter a valid email address';
                       }
+                      _userInfoSingleton.email(value);
                       return null;
                     },
                   ),
@@ -146,6 +150,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                       } else if (!regExp.hasMatch(value)) {
                         return 'Please enter a valid name';
                       }
+                      _userInfoSingleton.mothersName(value);
                       return null;
                     },
                   ),
@@ -191,6 +196,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                       } else if (!regExp.hasMatch(value)) {
                         return 'Please enter a valid Date';
                       }
+                      _userInfoSingleton.dob(value);
                       return null;
                     },
                   ),
@@ -236,6 +242,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                       } else if (!regExp.hasMatch(value)) {
                         return 'Invalid input';
                       }
+                      _userInfoSingleton.nationality(value);
                       return null;
                     },
                   ),
@@ -282,6 +289,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                       } else if (value.length > 12) {
                         return "Can't be more than 12 digits";
                       }
+                      _userInfoSingleton.idNumber(value);
                       return null;
                     },
                   ),
@@ -292,7 +300,12 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 ElevatedButton(
                   onPressed: () {
                     if (_userInfoKey.currentState!.validate()) {
-                      //
+                      _userInfoSingleton.printData1();
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) {
+                          return AddressDetailsScreen();
+                        },
+                      ));
                     }
                   },
                   child: Text(
