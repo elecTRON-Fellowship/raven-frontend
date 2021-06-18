@@ -35,7 +35,6 @@ class MyApp extends StatelessWidget {
         '/conversations': (ctx) => ConversationsScreen(),
         '/contacts': (ctx) => ContactsScreen(),
         '/tickets': (ctx) => TicketsScreen(),
-        '/friend-transactions': (ctx) => FriendTransactionsScreen()
       },
     );
   }

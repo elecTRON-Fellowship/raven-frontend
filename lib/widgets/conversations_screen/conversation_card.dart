@@ -50,9 +50,8 @@ class _ConversationCardState extends State<ConversationCard> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => ChatScreen(
-          conversationId: widget.conversationId,
-          friendName: fetchedName,
-        ),
+            conversationId: widget.conversationId,
+            friendId: widget.friendUserId),
       ),
     );
     // .then((_) => setState(() {}));

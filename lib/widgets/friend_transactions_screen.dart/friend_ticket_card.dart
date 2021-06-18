@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FriendTicketCard extends StatelessWidget {
-  final String friendName;
+  final String ticketId;
   final String description;
   final double amountRaised;
   final double totalAmount;
 
   FriendTicketCard(
-      {required this.friendName,
+      {required this.ticketId,
       required this.description,
       required this.amountRaised,
       required this.totalAmount});
@@ -20,6 +20,8 @@ class FriendTicketCard extends StatelessWidget {
 
     return Container(
       height: size.height * 0.26,
+      width: size.width * 0.95,
+      margin: EdgeInsets.symmetric(horizontal: 8),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),

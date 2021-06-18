@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/screens/friend_transactions.dart';
 import 'package:raven/screens/timed_chat.dart';
 import 'package:raven/widgets/chat_screen.dart/message_bubble.dart';
 
@@ -9,9 +10,9 @@ class ChatScreen extends StatefulWidget {
   // const ChatScreen({ Key? key }) : super(key: key);
 
   String conversationId;
-  String friendName;
+  String friendId;
 
-  ChatScreen({required this.conversationId, required this.friendName});
+  ChatScreen({required this.conversationId, required this.friendId});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -19,11 +20,30 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   FirebaseAuth _auth = FirebaseAuth.instance;
-
+  CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection('users');
   final TextEditingController textController = new TextEditingController();
   final ScrollController scrollController = ScrollController();
 
   late CollectionReference _messagesCollection;
+
+  String fetchedName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _messagesCollection = FirebaseFirestore.instance
+        .collection('conversations/${widget.conversationId}/messages');
+    fetchContactName();
+  }
+
+  fetchContactName() async {
+    final snapshot = await _userCollection.doc(widget.friendId).get();
+    final data = snapshot.data() as Map<String, dynamic>;
+    setState(() {
+      fetchedName = "${data['firstName']} ${data['lastName']}";
+    });
+  }
 
   void sendMessage() async {
     FocusScope.of(context).unfocus();
@@ -35,13 +55,6 @@ class _ChatScreenState extends State<ChatScreen> {
     textController.clear();
     scrollController.animateTo(scrollController.position.minScrollExtent,
         duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _messagesCollection = FirebaseFirestore.instance
-        .collection('conversations/${widget.conversationId}/messages');
   }
 
   @override
@@ -68,8 +81,13 @@ class _ChatScreenState extends State<ChatScreen> {
               actions: [
                 IconButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed('/friend-transactions',
-                        arguments: {'friendName': widget.friendName});
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => FriendTransactionsScreen(
+                          friendId: widget.friendId,
+                        ),
+                      ),
+                    );
                   },
                   icon: Icon(Icons.credit_card_rounded),
                   iconSize: 30,
@@ -93,10 +111,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: CircleAvatar(
                     backgroundColor: Theme.of(context).primaryColorDark,
                     child: Text(
-                      this.widget.friendName.isNotEmpty
-                          ? this
-                              .widget
-                              .friendName
+                      fetchedName.isNotEmpty
+                          ? fetchedName
                               .trim()
                               .split(' ')
                               .map((l) => l[0])
@@ -117,7 +133,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   width: 15,
                 ),
                 Text(
-                  widget.friendName,
+                  fetchedName,
                   textAlign: TextAlign.start,
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(
@@ -225,7 +241,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         MaterialPageRoute(
                           builder: (_) => TimedChatScreen(
                             conversationId: widget.conversationId,
-                            friendName: widget.friendName,
+                            friendName: fetchedName,
                           ),
                         ),
                       );

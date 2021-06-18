@@ -106,8 +106,7 @@ class _ContactCardState extends State<ContactCard> {
         MaterialPageRoute(
           builder: (_) => ChatScreen(
             conversationId: connectionSnapshot.docs[0]['conversationId'],
-            friendName:
-                "${userSnapshot.docs[0]['firstName']} ${userSnapshot.docs[0]['lastName']}",
+            friendId: userSnapshot.docs[0].id,
           ),
         ),
       );
@@ -127,8 +126,7 @@ class _ContactCardState extends State<ContactCard> {
         MaterialPageRoute(
           builder: (_) => ChatScreen(
             conversationId: newConversationDocument.id,
-            friendName:
-                "${userSnapshot.docs[0]['firstName']} ${userSnapshot.docs[0]['lastName']}",
+            friendId: userSnapshot.docs[0].id,
           ),
         ),
       );

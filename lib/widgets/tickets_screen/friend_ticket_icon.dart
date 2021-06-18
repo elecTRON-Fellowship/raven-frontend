@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/screens/friend_transactions.dart';
 
 class FriendTicketIcon extends StatefulWidget {
   final String friendId;
@@ -40,8 +41,13 @@ class _FriendTicketIconState extends State<FriendTicketIcon> {
       children: [
         GestureDetector(
           onTap: () {
-            Navigator.of(context).pushNamed('/friend-transactions',
-                arguments: {'friendName': fetchedName});
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => FriendTransactionsScreen(
+                  friendId: widget.friendId,
+                ),
+              ),
+            );
           },
           child: CircleAvatar(
             backgroundColor: theme.accentColor,

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class FriendTransactionCard extends StatelessWidget {
   final String status;
   final String description;
-  final String date;
+  final DateTime date;
   final double amount;
 
   FriendTransactionCard(
@@ -43,7 +44,7 @@ class FriendTransactionCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  this.date,
+                  DateFormat.yMd().add_jm().format(this.date),
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(
                       fontSize: 14,

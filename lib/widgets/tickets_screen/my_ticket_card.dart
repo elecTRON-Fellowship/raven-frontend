@@ -58,7 +58,8 @@ class _MyTicketCardState extends State<MyTicketCard> {
                       child: LinearProgressIndicator(
                         backgroundColor: theme.primaryColor,
                         color: theme.primaryColorDark,
-                        value: 0.6,
+                        value:
+                            this.widget.amountRaised / this.widget.totalAmount,
                         minHeight: 20,
                       ),
                     ),
