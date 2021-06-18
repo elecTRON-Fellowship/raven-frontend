@@ -15,11 +15,16 @@ class RequestsSingleton {
   }
 
   Future<http.Response> postReq() async {
-    var url = Uri.parse('https://jsonplaceholder.typicode.com/todos/1');
+    var url = Uri.parse('https://raven.herokuapp.com/cwallet');
 
-    var response = await http.post(url,
-        headers: {"user_uid": userSingleton.getUserUid},
-        body: json.encode(userSingleton.toJson()));
+    var response = await http.post(
+      url,
+      headers: {
+        "user_id": userSingleton.getUserUid,
+        "Content-Type": "application/json"
+      },
+      body: json.encode(userSingleton.toJson()),
+    );
 
     return response;
   }

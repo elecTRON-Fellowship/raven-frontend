@@ -413,7 +413,8 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
 
                       final _requestsSingleton = RequestsSingleton();
                       var res = await _requestsSingleton.postReq();
-                      print(res);
+                      print(res.statusCode);
+                      print(res.body);
                     }
                   },
                   child: Text(

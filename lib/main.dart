@@ -63,5 +63,5 @@ class _HomePageRedirectState extends State<HomePageRedirect> {
 
   @override
   Widget build(BuildContext context) =>
-      _user == null ? AuthScreen() : ConversationsScreen();
+      _user == null ? AuthScreen() : UserDetailsScreen();
 }
