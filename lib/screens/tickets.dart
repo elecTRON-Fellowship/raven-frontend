@@ -161,18 +161,42 @@ class _TicketsScreenState extends State<TicketsScreen> {
                         topLeft: Radius.circular(30),
                         topRight: Radius.circular(30),
                       ),
-                      child: GridView.builder(
-                        itemCount: 24,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 20, horizontal: 25),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          mainAxisSpacing: 0,
-                          crossAxisSpacing: 15,
-                          childAspectRatio: 1,
-                        ),
-                        itemBuilder: (context, index) {
-                          return FriendTicketIcon(name: 'Jamie');
+                      child: StreamBuilder<QuerySnapshot>(
+                        stream: _ticketsCollection
+                            .where('userId',
+                                isNotEqualTo: _auth.currentUser!.uid)
+                            .where('isActive', isEqualTo: true)
+                            .snapshots(),
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasError) {
+                            return Center(child: Text('Something went wrong'));
+                          }
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                          if (snapshot.hasData) {
+                            final documents = (snapshot.data)!.docs;
+                            return GridView.builder(
+                              itemCount: documents.length,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 20, horizontal: 25),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                mainAxisSpacing: 0,
+                                crossAxisSpacing: 15,
+                                childAspectRatio: 1,
+                              ),
+                              itemBuilder: (context, index) {
+                                return FriendTicketIcon(
+                                    friendId: documents[index]['userId']);
+                              },
+                            );
+                          } else {
+                            return Container();
+                          }
                         },
                       ),
                     ),
