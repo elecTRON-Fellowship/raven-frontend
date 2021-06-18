@@ -1,26 +1,42 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_contributor_card.dart';
 
-class MyTicketCard extends StatelessWidget {
+class MyTicketCard extends StatefulWidget {
   final Function contributorCardOnTap;
   final String description;
   final double amountRaised;
   final double totalAmount;
+  final String ticketId;
 
-  MyTicketCard(
-      {required this.contributorCardOnTap,
-      required this.amountRaised,
-      required this.description,
-      required this.totalAmount});
+  MyTicketCard({
+    required this.contributorCardOnTap,
+    required this.amountRaised,
+    required this.description,
+    required this.totalAmount,
+    required this.ticketId,
+  });
 
   @override
+  _MyTicketCardState createState() => _MyTicketCardState();
+}
+
+class _MyTicketCardState extends State<MyTicketCard> {
+  @override
   Widget build(BuildContext context) {
+    FirebaseAuth _auth = FirebaseAuth.instance;
+    CollectionReference _contributorsCollection = FirebaseFirestore.instance
+        .collection('tickets/${this.widget.ticketId}/contributors');
+
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
 
     return Container(
       height: size.height * 0.26,
+      width: size.width * 0.95,
+      margin: EdgeInsets.symmetric(horizontal: 8),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
@@ -48,7 +64,7 @@ class MyTicketCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '₹${this.amountRaised.toStringAsFixed(2)}/₹${this.totalAmount.toStringAsFixed(2)}',
+                    '₹${this.widget.amountRaised.toStringAsFixed(2)}/₹${this.widget.totalAmount.toStringAsFixed(2)}',
                     style: GoogleFonts.poppins(
                       textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -62,7 +78,7 @@ class MyTicketCard extends StatelessWidget {
                 height: 13,
               ),
               Text(
-                this.description,
+                this.widget.description,
                 style: GoogleFonts.poppins(
                   textStyle: TextStyle(
                     fontWeight: FontWeight.w500,
@@ -74,11 +90,33 @@ class MyTicketCard extends StatelessWidget {
               SizedBox(
                 height: 13,
               ),
-              MyTicketContributorCard(
-                  contributorName: 'Zaid Sheikh',
-                  amountContributed: 200,
-                  backgroundColor: Theme.of(context).backgroundColor,
-                  onTap: this.contributorCardOnTap),
+              StreamBuilder<QuerySnapshot>(
+                stream: _contributorsCollection
+                    .orderBy('createdAt', descending: true)
+                    .limit(1)
+                    .snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Something went wrong'));
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasData) {
+                    final documents = (snapshot.data)!.docs;
+                    final data = documents[0].data() as Map<String, dynamic>;
+
+                    return MyTicketContributorCard(
+                        contributorId: data['userId'],
+                        amountContributed:
+                            double.parse(data['amount'].toString()),
+                        backgroundColor: Theme.of(context).backgroundColor,
+                        onTap: this.widget.contributorCardOnTap);
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
             ],
           ),
         ),

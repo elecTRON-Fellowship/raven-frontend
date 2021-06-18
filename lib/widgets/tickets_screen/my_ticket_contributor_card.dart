@@ -1,17 +1,43 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MyTicketContributorCard extends StatelessWidget {
-  final String contributorName;
+class MyTicketContributorCard extends StatefulWidget {
+  final String contributorId;
   final double amountContributed;
   final Color backgroundColor;
   final Function onTap;
 
   MyTicketContributorCard(
-      {required this.contributorName,
+      {required this.contributorId,
       required this.amountContributed,
       required this.backgroundColor,
       required this.onTap});
+
+  @override
+  _MyTicketContributorCardState createState() =>
+      _MyTicketContributorCardState();
+}
+
+class _MyTicketContributorCardState extends State<MyTicketContributorCard> {
+  CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection('users');
+
+  String fetchedName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchContributorName();
+  }
+
+  fetchContributorName() async {
+    final snapshot = await _userCollection.doc(widget.contributorId).get();
+    final data = snapshot.data() as Map<String, dynamic>;
+    setState(() {
+      fetchedName = "${data['firstName']} ${data['lastName']}";
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +54,7 @@ class MyTicketContributorCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(15),
         splashColor: Theme.of(context).primaryColorLight,
-        onTap: () => this.onTap(),
+        onTap: () => this.widget.onTap(),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Row(
@@ -39,9 +65,8 @@ class MyTicketContributorCard extends StatelessWidget {
                   CircleAvatar(
                     backgroundColor: theme.accentColor,
                     child: Text(
-                      this.contributorName.isNotEmpty
-                          ? this
-                              .contributorName
+                      fetchedName.isNotEmpty
+                          ? fetchedName
                               .trim()
                               .split(' ')
                               .map((l) => l[0])
@@ -55,13 +80,13 @@ class MyTicketContributorCard extends StatelessWidget {
                         color: Colors.white,
                       )),
                     ),
-                    radius: 15,
+                    radius: 16,
                   ),
                   SizedBox(
                     width: 10,
                   ),
                   Text(
-                    this.contributorName,
+                    fetchedName,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
                       textStyle: TextStyle(
@@ -74,7 +99,7 @@ class MyTicketContributorCard extends StatelessWidget {
                 ],
               ),
               Text(
-                '₹${this.amountContributed.toStringAsFixed(2)}',
+                '₹${this.widget.amountContributed.toStringAsFixed(2)}',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.poppins(
                   textStyle: TextStyle(

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/widgets/tickets_screen/friend_ticket_icon.dart';
@@ -12,17 +14,24 @@ class TicketsScreen extends StatefulWidget {
 }
 
 class _TicketsScreenState extends State<TicketsScreen> {
-  bool _showContributors = false;
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  CollectionReference _ticketsCollection =
+      FirebaseFirestore.instance.collection('tickets');
 
-  void _setShowContributorsToTrue() {
+  bool _showContributors = false;
+  String _showContributorsTicketId = '';
+
+  void _setShowContributorsToTrue(String ticketId) {
     setState(() {
       _showContributors = true;
+      _showContributorsTicketId = ticketId;
     });
   }
 
   void _setShowContributorsToFalse() {
     setState(() {
       _showContributors = false;
+      _showContributorsTicketId = '';
     });
   }
 
@@ -70,13 +79,68 @@ class _TicketsScreenState extends State<TicketsScreen> {
             onTap: _setShowContributorsToFalse,
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: MyTicketCard(
-                    description: 'Lorem impsum',
-                    amountRaised: 800,
-                    totalAmount: 1000,
-                    contributorCardOnTap: _setShowContributorsToTrue,
+                Container(
+                  height: size.height * 0.28,
+                  width: size.width,
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: _ticketsCollection
+                        .where('userId', isEqualTo: _auth.currentUser!.uid)
+                        .where('isActive', isEqualTo: true)
+                        .snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return Center(child: Text('Something went wrong'));
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      if (snapshot.hasData) {
+                        final documents = (snapshot.data)!.docs;
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: documents.length,
+                          itemBuilder: (context, index) => MyTicketCard(
+                            ticketId: documents[index].id,
+                            description: documents[index]['description'],
+                            amountRaised: double.parse(
+                                documents[index]['amountRaised'].toString()),
+                            totalAmount: double.parse(
+                                documents[index]['totalAmount'].toString()),
+                            contributorCardOnTap: () =>
+                                _setShowContributorsToTrue(documents[index].id),
+                          ),
+                        );
+                        // return ListWheelScrollView.useDelegate(
+                        //   itemExtent: 100.0,
+                        //   diameterRatio: 2.5,
+
+                        //   magnification: 1.5,
+                        //   // overAndUnderCenterOpacity: 1,
+                        //   offAxisFraction: 0.1,
+                        //   useMagnifier: true,
+                        //   physics: PageScrollPhysics(),
+                        //   // onSelectedItemChanged: (i) => print("Changed $i"),
+                        //   // renderChildrenOutsideViewport: false,
+                        //   // squeeze: 1.5,
+                        //   childDelegate: ListWheelChildBuilderDelegate(
+                        //     builder: (context, index) {
+                        //       return MyTicketCard(
+                        //         description: documents[index]['description'],
+                        //         amountRaised: double.parse(documents[index]
+                        //                 ['amountRaised']
+                        //             .toString()),
+                        //         totalAmount: double.parse(
+                        //             documents[index]['totalAmount'].toString()),
+                        //         contributorCardOnTap:
+                        //             _setShowContributorsToTrue,
+                        //       );
+                        //     },
+                        //   ),
+                        // );
+                      } else {
+                        return Container();
+                      }
+                    },
                   ),
                 ),
                 SizedBox(
@@ -119,7 +183,9 @@ class _TicketsScreenState extends State<TicketsScreen> {
           ),
           if (_showContributors)
             Center(
-              child: MyTicketContributors(),
+              child: MyTicketContributors(
+                ticketId: _showContributorsTicketId,
+              ),
             ),
         ],
       ),
