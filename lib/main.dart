@@ -35,7 +35,6 @@ class MyApp extends StatelessWidget {
         '/conversations': (ctx) => ConversationsScreen(),
         '/contacts': (ctx) => ContactsScreen(),
         '/tickets': (ctx) => TicketsScreen(),
-        '/friend-transactions': (ctx) => FriendTransactionsScreen()
       },
     );
   }
@@ -63,5 +62,5 @@ class _HomePageRedirectState extends State<HomePageRedirect> {
 
   @override
   Widget build(BuildContext context) =>
-      _user == null ? AuthScreen() : UserDetailsScreen();
+      _user == null ? AuthScreen() : ConversationsScreen();
 }
