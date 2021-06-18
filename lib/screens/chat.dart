@@ -59,44 +59,31 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      appBar: PreferredSize(
-        preferredSize:
-            Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AppBar(
-              elevation: 0.0,
-              backgroundColor: Colors.transparent,
-              leading: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: Icon(Icons.arrow_back_rounded),
-                iconSize: 30,
-                color: Color.fromRGBO(17, 128, 168, 1.0),
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => FriendTransactionsScreen(
-                          friendId: widget.friendId,
-                        ),
-                      ),
-                    );
-                  },
-                  icon: Icon(Icons.credit_card_rounded),
-                  iconSize: 30,
-                  color: Color.fromRGBO(17, 128, 168, 1.0),
-                )
-              ],
-            ),
-          ],
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: theme.primaryColor,
+        centerTitle: true,
+        title: Text(
+          fetchedName,
+          style: GoogleFonts.poppins(
+              textStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                  color: theme.primaryColorDark)),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.credit_card_rounded),
+            iconSize: 30,
+            color: theme.primaryColorDark,
+          ),
+        ],
       ),
       body: GestureDetector(
         onTap: () {
@@ -104,47 +91,6 @@ class _ChatScreenState extends State<ChatScreen> {
         },
         child: Column(
           children: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 18.0),
-                  child: CircleAvatar(
-                    backgroundColor: Theme.of(context).primaryColorDark,
-                    child: Text(
-                      fetchedName.isNotEmpty
-                          ? fetchedName
-                              .trim()
-                              .split(' ')
-                              .map((l) => l[0])
-                              .take(2)
-                              .join()
-                          : '',
-                      style: GoogleFonts.poppins(
-                          textStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                        color: Colors.white,
-                      )),
-                    ),
-                    radius: 30,
-                  ),
-                ),
-                SizedBox(
-                  width: 15,
-                ),
-                Text(
-                  fetchedName,
-                  textAlign: TextAlign.start,
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
             Expanded(
               child: Container(
                 margin: EdgeInsets.only(top: 15),
@@ -207,19 +153,17 @@ class _ChatScreenState extends State<ChatScreen> {
                         textStyle: TextStyle(),
                       ),
                       decoration: InputDecoration(
-                        fillColor: Color.fromRGBO(194, 222, 232, 1.0),
-                        filled: true,
                         contentPadding: EdgeInsets.all(13),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16.0),
                           borderSide: BorderSide(
-                            color: Colors.transparent,
+                            color: theme.primaryColor,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16.0),
                           borderSide: BorderSide(
-                            color: Theme.of(context).primaryColorDark,
+                            color: theme.primaryColor,
                             width: 2,
                           ),
                         ),
@@ -231,7 +175,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   IconButton(
                     onPressed: () => sendMessage(),
                     icon: Icon(Icons.send_rounded),
-                    color: Theme.of(context).primaryColorDark,
+                    color: theme.accentColor,
                     iconSize: 30.0,
                     padding: EdgeInsets.only(left: 15),
                   ),
@@ -247,7 +191,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       );
                     },
                     icon: Icon(Icons.timer_rounded),
-                    color: Theme.of(context).primaryColorDark,
+                    color: theme.accentColor,
                     iconSize: 30.0,
                     padding: EdgeInsets.only(left: 15),
                   ),

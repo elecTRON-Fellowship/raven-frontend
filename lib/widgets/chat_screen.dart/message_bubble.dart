@@ -22,7 +22,7 @@ class MessageBubble extends StatelessWidget {
           : EdgeInsets.only(top: 8.0, bottom: 8.0, right: 80.0),
       decoration: BoxDecoration(
         color: isSent
-            ? Color.fromRGBO(61, 169, 252, 1.0)
+            ? Theme.of(context).accentColor
             : Color.fromRGBO(144, 180, 206, 0.5),
         borderRadius: isSent
             ? BorderRadius.only(
