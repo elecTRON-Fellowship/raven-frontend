@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/screens/friend_transactions.dart';
 import 'package:raven/screens/timed_chat.dart';
 import 'package:raven/widgets/chat_screen.dart/message_bubble.dart';
+import 'package:raven/widgets/chat_screen.dart/timed_chat.dart';
 
 class ChatScreen extends StatefulWidget {
   // const ChatScreen({ Key? key }) : super(key: key);
@@ -55,6 +56,15 @@ class _ChatScreenState extends State<ChatScreen> {
     textController.clear();
     scrollController.animateTo(scrollController.position.minScrollExtent,
         duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
+  }
+
+  void sendTimedChatInvitation() async {
+    await _messagesCollection.add({
+      'time': DateTime.now(),
+      'sender': _auth.currentUser!.uid,
+      'text': '/TIMED_CHAT',
+      'status': 'PENDING'
+    });
   }
 
   @override
@@ -118,17 +128,32 @@ class _ChatScreenState extends State<ChatScreen> {
                       if (snapshot.hasData) {
                         final documents = (snapshot.data)!.docs;
                         return ListView.builder(
-                          controller: scrollController,
-                          reverse: true,
-                          itemCount: documents.length,
-                          itemBuilder: (context, index) => MessageBubble(
-                            ValueKey(documents[index].id),
-                            documents[index]['sender'],
-                            documents[index]['text'],
-                            DateTime.parse(
-                                documents[index]['time'].toDate().toString()),
-                          ),
-                        );
+                            controller: scrollController,
+                            reverse: true,
+                            itemCount: documents.length,
+                            itemBuilder: (context, index) {
+                              if (documents[index]['text'] == '/TIMED_CHAT') {
+                                return TimedChatInvite(
+                                  conversationId: widget.conversationId,
+                                  messageId: documents[index].id,
+                                  key: ValueKey(documents[index].id),
+                                  sender: documents[index]['sender'],
+                                  text: documents[index]['text'],
+                                  time: DateTime.parse(documents[index]['time']
+                                      .toDate()
+                                      .toString()),
+                                );
+                              } else {
+                                return MessageBubble(
+                                  ValueKey(documents[index].id),
+                                  documents[index]['sender'],
+                                  documents[index]['text'],
+                                  DateTime.parse(documents[index]['time']
+                                      .toDate()
+                                      .toString()),
+                                );
+                              }
+                            });
                       } else {
                         return Container();
                       }
@@ -180,16 +205,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     padding: EdgeInsets.only(left: 15),
                   ),
                   IconButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => TimedChatScreen(
-                            conversationId: widget.conversationId,
-                            friendName: fetchedName,
-                          ),
-                        ),
-                      );
-                    },
+                    onPressed: () => sendTimedChatInvitation(),
                     icon: Icon(Icons.timer_rounded),
                     color: theme.accentColor,
                     iconSize: 30.0,

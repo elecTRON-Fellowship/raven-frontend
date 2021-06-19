@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/screens/all_transactions.dart';
 import 'package:raven/widgets/tickets_screen/friend_ticket_icon.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_card.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_contributors.dart';
@@ -60,6 +61,18 @@ class _TicketsScreenState extends State<TicketsScreen> {
           ),
         ),
         actions: [
+          IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => AllTransactionsScreen(),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.history_rounded),
+                  iconSize: 30,
+                  color: theme.primaryColorDark,
+                ),
           IconButton(
             onPressed: () {
               showOverlay(theme, size);
@@ -165,6 +178,8 @@ class _TicketsScreenState extends State<TicketsScreen> {
                             .where('userId',
                                 isNotEqualTo: _auth.currentUser!.uid)
                             .where('isActive', isEqualTo: true)
+                            .where('visibleTo',
+                                arrayContains: _auth.currentUser!.uid)
                             .snapshots(),
                         builder:
                             (context, AsyncSnapshot<QuerySnapshot> snapshot) {
