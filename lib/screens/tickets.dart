@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/screens/all_transactions.dart';
 import 'package:raven/widgets/tickets_screen/friend_ticket_icon.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_card.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_contributors.dart';
@@ -63,11 +64,23 @@ class _TicketsScreenState extends State<TicketsScreen> {
               ),
               actions: [
                 IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => AllTransactionsScreen(),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.history_rounded),
+                  iconSize: 30,
+                  color: theme.primaryColorDark,
+                ),
+                IconButton(
                   onPressed: () {},
                   icon: Icon(Icons.add_circle_outline_rounded),
                   iconSize: 30,
                   color: theme.primaryColorDark,
-                )
+                ),
               ],
             ),
           ],
