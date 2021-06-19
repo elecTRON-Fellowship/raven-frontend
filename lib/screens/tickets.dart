@@ -20,6 +20,12 @@ class _TicketsScreenState extends State<TicketsScreen> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   CollectionReference _ticketsCollection =
       FirebaseFirestore.instance.collection('tickets');
+  CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection('users');
+
+  TextEditingController ticketDescriptionController =
+      new TextEditingController();
+  TextEditingController ticketAmountController = new TextEditingController();
 
   bool _showContributors = false;
   String _showContributorsTicketId = '';
@@ -37,6 +43,25 @@ class _TicketsScreenState extends State<TicketsScreen> {
       _showContributors = false;
       _showContributorsTicketId = '';
     });
+  }
+
+  void createTicket() async {
+    final snapshot = await _userCollection.doc(_auth.currentUser!.uid).get();
+    final data = snapshot.data() as Map;
+
+    await _ticketsCollection.add({
+      'createdAt': DateTime.now(),
+      'userId': _auth.currentUser!.uid,
+      'isActive': true,
+      'amountRaised': 0.00,
+      'description': ticketDescriptionController.text,
+      'totalAmount': double.parse(ticketAmountController.text.toString()),
+      'visibleTo': data['closeFriends']
+    });
+
+    ticketDescriptionController.clear();
+    ticketAmountController.clear();
+    Navigator.of(context).pop();
   }
 
   @override
@@ -98,6 +123,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                     stream: _ticketsCollection
                         .where('userId', isEqualTo: _auth.currentUser!.uid)
                         .where('isActive', isEqualTo: true)
+                        .orderBy('createdAt', descending: true)
                         .snapshots(),
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasError) {
@@ -147,11 +173,8 @@ class _TicketsScreenState extends State<TicketsScreen> {
                         topRight: Radius.circular(30),
                       ),
                       child: StreamBuilder<QuerySnapshot>(
-                        stream: _ticketsCollection
-                            .where('userId',
-                                isNotEqualTo: _auth.currentUser!.uid)
-                            .where('isActive', isEqualTo: true)
-                            .where('visibleTo',
+                        stream: _userCollection
+                            .where('closeFriends',
                                 arrayContains: _auth.currentUser!.uid)
                             .snapshots(),
                         builder:
@@ -178,7 +201,8 @@ class _TicketsScreenState extends State<TicketsScreen> {
                               ),
                               itemBuilder: (context, index) {
                                 return FriendTicketIcon(
-                                    friendId: documents[index]['userId']);
+                                  friendId: documents[index].id,
+                                );
                               },
                             );
                           } else {
@@ -278,7 +302,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
               )),
           child: Container(
             width: size.width * 0.75,
-            height: size.height * 0.5,
+            height: size.height * 0.51,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20.0),
               color: theme.backgroundColor,
@@ -287,7 +311,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   SizedBox(
                     height: size.height * 0.02,
@@ -308,6 +332,8 @@ class _TicketsScreenState extends State<TicketsScreen> {
                   Container(
                     width: size.width * 0.6,
                     child: TextFormField(
+                      textCapitalization: TextCapitalization.sentences,
+                      controller: ticketDescriptionController,
                       maxLines: 3,
                       minLines: 3,
                       maxLength: 60,
@@ -348,6 +374,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                   Container(
                     width: size.width * 0.5,
                     child: TextFormField(
+                      controller: ticketAmountController,
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.done,
@@ -395,7 +422,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        Navigator.of(context, rootNavigator: true).pop();
+                        createTicket();
                       }
                     },
                     child: Text(

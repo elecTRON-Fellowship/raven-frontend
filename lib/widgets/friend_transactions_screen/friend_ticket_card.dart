@@ -1,16 +1,22 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FriendTicketCard extends StatefulWidget {
+  final String friendId;
+  final String friendName;
   final String ticketId;
   final String description;
   final double amountRaised;
   final double totalAmount;
 
   FriendTicketCard(
-      {required this.ticketId,
+      {required this.friendId,
+      required this.friendName,
+      required this.ticketId,
       required this.description,
       required this.amountRaised,
       required this.totalAmount});
@@ -20,7 +26,59 @@ class FriendTicketCard extends StatefulWidget {
 }
 
 class _FriendTicketCardState extends State<FriendTicketCard> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
+  CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection('users');
+  CollectionReference _ticketsCollection =
+      FirebaseFirestore.instance.collection('tickets');
+  CollectionReference _transactionsCollection =
+      FirebaseFirestore.instance.collection('transactions');
+  late CollectionReference _contributorsCollection;
+
+  TextEditingController ticketAmountController = new TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _contributorsCollection = FirebaseFirestore.instance
+        .collection('tickets/${widget.ticketId}/contributors');
+  }
+
+  void sendMoney(context) async {
+    //update friend ticket
+    final ticketSnapshot = await _ticketsCollection.doc(widget.ticketId).get();
+    final data = ticketSnapshot.data() as Map;
+    await _ticketsCollection.doc(widget.ticketId).update({
+      'amountRaised': double.parse(data['amountRaised'].toString()) +
+          double.parse(ticketAmountController.text.toString())
+    });
+
+    //update contributors on ticket
+    await _contributorsCollection.add({
+      'amount': double.parse(ticketAmountController.text.toString()),
+      'userId': _auth.currentUser!.uid,
+      'createdAt': DateTime.now()
+    });
+
+    //create transaction
+    await _transactionsCollection.add({
+      'amount': double.parse(ticketAmountController.text.toString()),
+      'createdAt': DateTime.now(),
+      'description': widget.description,
+      'ticketId': widget.ticketId,
+      'sender': _auth.currentUser!.uid,
+      'userIds': {
+        _auth.currentUser!.uid: true,
+        widget.friendId: true,
+      }
+    });
+
+    ticketAmountController.clear();
+    Navigator.of(context, rootNavigator: true).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +110,8 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                       child: LinearProgressIndicator(
                         backgroundColor: theme.primaryColor,
                         color: theme.primaryColorDark,
-                        value: 0.6,
+                        value:
+                            this.widget.amountRaised / this.widget.totalAmount,
                         minHeight: 20,
                       ),
                     ),
@@ -147,8 +206,11 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                 height: size.height * 0.62,
                 width: size.width * 0.6,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    SizedBox(
+                      height: size.height * 0.02,
+                    ),
                     Text(
                       "Sending Money to",
                       style: GoogleFonts.poppins(
@@ -163,7 +225,7 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                       height: size.height * 0.02,
                     ),
                     Text(
-                      "Mizanali",
+                      widget.friendName,
                       style: GoogleFonts.poppins(
                         textStyle: TextStyle(
                           fontSize: 22,
@@ -178,7 +240,7 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                     Container(
                       width: size.width * 0.48,
                       child: Text(
-                        "Need money to spend on Abu Dhabi GP and some more.",
+                        widget.description,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.poppins(
                           textStyle: TextStyle(
@@ -196,6 +258,7 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                       child: Form(
                         key: _formKey,
                         child: TextFormField(
+                          controller: ticketAmountController,
                           textAlign: TextAlign.center,
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.done,
@@ -297,6 +360,9 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                         ),
                       ),
                     ),
+                    SizedBox(
+                      height: size.height * 0.02,
+                    ),
                   ],
                 ),
               ),
@@ -333,7 +399,7 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
               textAlign: TextAlign.center,
             ),
             content: Text(
-              "9999 will be deducted from your wallet",
+              "₹${double.parse(ticketAmountController.text).toStringAsFixed(2)} will be deducted from your wallet",
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
                 textStyle: TextStyle(
@@ -358,7 +424,7 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.of(context, rootNavigator: true).pop();
+                  sendMoney(context);
                 },
                 child: Text(
                   "Yes",

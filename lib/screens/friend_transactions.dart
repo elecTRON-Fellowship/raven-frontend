@@ -22,6 +22,25 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
   CollectionReference _transactionsCollection =
       FirebaseFirestore.instance.collection('transactions');
 
+  CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection('users');
+
+  String fetchedName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchContactName();
+  }
+
+  fetchContactName() async {
+    final snapshot = await _userCollection.doc(widget.friendId).get();
+    final data = snapshot.data() as Map<String, dynamic>;
+    setState(() {
+      fetchedName = "${data['firstName']} ${data['lastName']}";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -42,7 +61,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
           color: theme.primaryColorDark,
         ),
         title: Text(
-          'Transactions',
+          fetchedName,
           style: GoogleFonts.poppins(
             textStyle: TextStyle(
               fontWeight: FontWeight.bold,
@@ -51,14 +70,6 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
             ),
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.add_circle_outline_rounded),
-            iconSize: 30,
-            color: theme.primaryColorDark,
-          )
-        ],
         centerTitle: true,
       ),
       body: Column(
@@ -70,6 +81,8 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
               stream: _ticketsCollection
                   .where('userId', isEqualTo: widget.friendId)
                   .where('isActive', isEqualTo: true)
+                  .where('visibleTo', arrayContains: _auth.currentUser!.uid)
+                  .orderBy('createdAt', descending: true)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
@@ -84,6 +97,8 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                     scrollDirection: Axis.horizontal,
                     itemCount: documents.length,
                     itemBuilder: (context, index) => FriendTicketCard(
+                      friendId: widget.friendId,
+                      friendName: fetchedName,
                       ticketId: documents[index].id,
                       description: documents[index]['description'],
                       amountRaised: double.parse(
@@ -121,6 +136,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                       .where('userIds.${_auth.currentUser!.uid}',
                           isEqualTo: true)
                       .where('userIds.${widget.friendId}', isEqualTo: true)
+                      .orderBy('createdAt', descending: true)
                       .snapshots(),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasError) {
