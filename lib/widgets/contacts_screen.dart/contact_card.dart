@@ -28,9 +28,6 @@ class _ContactCardState extends State<ContactCard> {
   CollectionReference _conversationsCollection =
       FirebaseFirestore.instance.collection('conversations');
 
-  CollectionReference _connectionsCollection =
-      FirebaseFirestore.instance.collection('connections');
-
   bool showLoading = true;
 
   ContactRegisteredStatus status = ContactRegisteredStatus.NOT_REGISTERED;
@@ -81,31 +78,22 @@ class _ContactCardState extends State<ContactCard> {
         .where('phoneNumber', isEqualTo: numberToQuery)
         .get();
 
-    bool _isConnectionFound = false;
+    bool _isConversationFound = false;
 
-    var connectionSnapshot = await _connectionsCollection
-        .where('member0', isEqualTo: _auth.currentUser!.uid)
-        .where('member1', isEqualTo: userSnapshot.docs[0].id)
+    var conversationsSnapshot = await _conversationsCollection
+        .where('userIds.${_auth.currentUser!.uid}', isEqualTo: true)
+        .where('userIds.${userSnapshot.docs[0].id}', isEqualTo: true)
         .get();
 
-    if (connectionSnapshot.docs.length != 0) {
-      _isConnectionFound = true;
-    } else {
-      connectionSnapshot = await _connectionsCollection
-          .where('member0', isEqualTo: userSnapshot.docs[0].id)
-          .where('member1', isEqualTo: _auth.currentUser!.uid)
-          .get();
-
-      if (connectionSnapshot.docs.length != 0) {
-        _isConnectionFound = true;
-      }
+    if (conversationsSnapshot.docs.length != 0) {
+      _isConversationFound = true;
     }
 
-    if (_isConnectionFound) {
+    if (_isConversationFound) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (_) => ChatScreen(
-            conversationId: connectionSnapshot.docs[0]['conversationId'],
+            conversationId: conversationsSnapshot.docs[0].id,
             friendId: userSnapshot.docs[0].id,
           ),
         ),
@@ -113,13 +101,8 @@ class _ContactCardState extends State<ContactCard> {
     } else {
       final newConversationDocument = await _conversationsCollection.add({
         'members': [_auth.currentUser!.uid, userSnapshot.docs[0].id],
-        'unreadTexts': 0
-      });
-
-      final newConnectionDocument = await _connectionsCollection.add({
-        'conversationId': newConversationDocument.id,
-        'member0': _auth.currentUser!.uid,
-        'member1': userSnapshot.docs[0].id
+        'unreadTexts': 0,
+        'userIds': {_auth.currentUser!.uid: true, userSnapshot.docs[0].id: true}
       });
 
       Navigator.of(context).pushReplacement(
