@@ -144,14 +144,11 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                     width: 2,
                   )),
               child: Container(
-                height: size.height * 0.6,
+                height: size.height * 0.62,
                 width: size.width * 0.6,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      height: size.height * 0.02,
-                    ),
                     Text(
                       "Sending Money to",
                       style: GoogleFonts.poppins(
@@ -299,9 +296,6 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                           color: theme.accentColor,
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.01,
                     ),
                   ],
                 ),
