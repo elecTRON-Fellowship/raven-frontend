@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
 
   bool _showContributors = false;
   String _showContributorsTicketId = '';
+  final _formKey = GlobalKey<FormState>();
 
   void _setShowContributorsToTrue(String ticketId) {
     setState(() {
@@ -42,41 +45,37 @@ class _TicketsScreenState extends State<TicketsScreen> {
 
     return Scaffold(
       backgroundColor: theme.primaryColor,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AppBar(
-              elevation: 0.0,
-              backgroundColor: Colors.transparent,
-              automaticallyImplyLeading: false,
-              title: Text(
-                'Tickets',
-                style: GoogleFonts.poppins(
-                  textStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 26,
-                    color: theme.primaryColorDark,
-                  ),
-                ),
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.add_circle_outline_rounded),
-                  iconSize: 30,
-                  color: theme.primaryColorDark,
-                )
-              ],
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Tickets',
+          style: GoogleFonts.poppins(
+            textStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 26,
+              color: theme.primaryColorDark,
             ),
-          ],
+          ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showOverlay(theme, size);
+            },
+            icon: Icon(Icons.add_circle_outline_rounded),
+            iconSize: 30,
+            color: theme.primaryColorDark,
+          )
+        ],
       ),
       body: Stack(
         children: [
           GestureDetector(
-            onTap: _setShowContributorsToFalse,
+            onTap: () {
+              _setShowContributorsToFalse();
+            },
             child: Column(
               children: [
                 Container(
@@ -266,6 +265,178 @@ class _TicketsScreenState extends State<TicketsScreen> {
                 label: 'Settings',
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void showOverlay(final theme, final size) {
+    showDialog(
+      context: context,
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: 5,
+          sigmaY: 5,
+        ),
+        child: Dialog(
+          backgroundColor: theme.backgroundColor,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              side: BorderSide(
+                color: theme.primaryColor,
+                width: 2,
+              )),
+          child: Container(
+            width: size.width * 0.75,
+            height: size.height * 0.5,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              color: theme.backgroundColor,
+              border: Border.all(color: theme.primaryColor, width: 2),
+            ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: size.height * 0.02,
+                  ),
+                  Text(
+                    "New Ticket",
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        fontSize: 20.0,
+                        color: theme.primaryColorDark,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.02,
+                  ),
+                  Container(
+                    width: size.width * 0.6,
+                    child: TextFormField(
+                      maxLines: 3,
+                      minLines: 3,
+                      maxLength: 60,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: theme.primaryColorDark,
+                      ),
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(10.0),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          borderSide: BorderSide(
+                            color: theme.primaryColor,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          borderSide: BorderSide(
+                            color: theme.primaryColor,
+                            width: 2,
+                          ),
+                        ),
+                        hintText: "Need money for.....",
+                        hintStyle: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            fontSize: 18.0,
+                            color: theme.primaryColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.04,
+                  ),
+                  Container(
+                    width: size.width * 0.5,
+                    child: TextFormField(
+                      textAlign: TextAlign.center,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.done,
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: theme.primaryColorDark,
+                      ),
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(10.0),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          borderSide: BorderSide(
+                            color: theme.primaryColor,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          borderSide: BorderSide(
+                            color: theme.primaryColorDark,
+                            width: 2,
+                          ),
+                        ),
+                        hintText: "Amount",
+                        hintStyle: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            fontSize: 18.0,
+                            color: theme.primaryColorDark,
+                          ),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (double.tryParse(value.toString()) == null) {
+                          return "Enter a valid amount";
+                        } else if (double.parse(value.toString()) <= 0) {
+                          return "Amount can't be 0";
+                        } else if (double.parse(value.toString()) > 9999.00) {
+                          return "Max amount allowed is 9999.00";
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.05,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        Navigator.of(context, rootNavigator: true).pop();
+                      }
+                    },
+                    child: Text(
+                      "Add Ticket",
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                        ),
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(
+                        size.width * 0.55,
+                        size.height * 0.07,
+                      ),
+                      onPrimary: theme.backgroundColor,
+                      primary: theme.accentColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.05,
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
