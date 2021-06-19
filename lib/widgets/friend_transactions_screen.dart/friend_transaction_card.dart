@@ -24,7 +24,7 @@ class FriendTransactionCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: theme.primaryColorDark)),
+          border: Border.all(color: theme.primaryColor)),
       width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.all(10),

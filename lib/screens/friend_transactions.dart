@@ -29,44 +29,37 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
 
     return Scaffold(
       backgroundColor: theme.primaryColor,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AppBar(
-              elevation: 0.0,
-              backgroundColor: Colors.transparent,
-              titleSpacing: 0,
-              leading: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: Icon(Icons.arrow_back_rounded),
-                iconSize: 30,
-                color: theme.primaryColorDark,
-              ),
-              title: Text(
-                'Transactions',
-                style: GoogleFonts.poppins(
-                  textStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 26,
-                    color: theme.primaryColorDark,
-                  ),
-                ),
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.add_circle_outline_rounded),
-                  iconSize: 30,
-                  color: theme.primaryColorDark,
-                )
-              ],
-            ),
-          ],
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        titleSpacing: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back_rounded),
+          iconSize: 30,
+          color: theme.primaryColorDark,
         ),
+        title: Text(
+          'Transactions',
+          style: GoogleFonts.poppins(
+            textStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+              color: theme.primaryColorDark,
+            ),
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.add_circle_outline_rounded),
+            iconSize: 30,
+            color: theme.primaryColorDark,
+          )
+        ],
+        centerTitle: true,
       ),
       body: Column(
         children: [
