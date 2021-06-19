@@ -1,7 +1,7 @@
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:raven/widgets/close_friends_screen.dart/close_friend_card.dart';
+import 'package:raven/widgets/close_friends_screen/close_friend_card.dart';
 
 class CloseFriendsScreen extends StatefulWidget {
   const CloseFriendsScreen({Key? key}) : super(key: key);

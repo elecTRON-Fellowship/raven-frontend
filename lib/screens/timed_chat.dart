@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:raven/widgets/chat_screen.dart/message_bubble.dart';
-import 'package:raven/widgets/timed_chat_screen.dart/timer_card.dart';
+import 'package:raven/widgets/chat_screen/message_bubble.dart';
+import 'package:raven/widgets/timed_chat_screen/timer_card.dart';
 
 class TimedChatScreen extends StatefulWidget {
   final String conversationId;

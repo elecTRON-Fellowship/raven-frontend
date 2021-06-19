@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/screens/friend_transactions.dart';
 import 'package:raven/screens/timed_chat.dart';
-import 'package:raven/widgets/chat_screen.dart/message_bubble.dart';
-import 'package:raven/widgets/chat_screen.dart/timed_chat.dart';
+import 'package:raven/widgets/chat_screen/message_bubble.dart';
+import 'package:raven/widgets/chat_screen/timed_chat.dart';
 
 class ChatScreen extends StatefulWidget {
   // const ChatScreen({ Key? key }) : super(key: key);

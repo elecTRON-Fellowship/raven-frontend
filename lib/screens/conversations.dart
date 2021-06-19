@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:raven/widgets/end_drawer.dart';
+import 'package:raven/widgets/common/end_drawer.dart';
 
 import '../widgets/conversations_screen/conversation_card.dart';
 

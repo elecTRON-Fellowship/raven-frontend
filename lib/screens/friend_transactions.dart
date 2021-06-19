@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:raven/widgets/friend_transactions_screen.dart/friend_ticket_card.dart';
-import 'package:raven/widgets/friend_transactions_screen.dart/friend_transaction_card.dart';
+import 'package:raven/widgets/friend_transactions_screen/friend_ticket_card.dart';
+import 'package:raven/widgets/friend_transactions_screen/friend_transaction_card.dart';
 
 class FriendTransactionsScreen extends StatefulWidget {
   final String friendId;
