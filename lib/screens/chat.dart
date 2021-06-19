@@ -58,6 +58,15 @@ class _ChatScreenState extends State<ChatScreen> {
         duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
   }
 
+  void sendTimedChatInvitation() async {
+    await _messagesCollection.add({
+      'time': DateTime.now(),
+      'sender': _auth.currentUser!.uid,
+      'text': '/TIMED_CHAT',
+      'status': 'PENDING'
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -196,7 +205,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     padding: EdgeInsets.only(left: 15),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () => sendTimedChatInvitation(),
                     icon: Icon(Icons.timer_rounded),
                     color: theme.accentColor,
                     iconSize: 30.0,
