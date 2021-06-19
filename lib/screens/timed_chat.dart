@@ -9,9 +9,9 @@ import 'package:raven/widgets/timed_chat_screen.dart/timer_card.dart';
 
 class TimedChatScreen extends StatefulWidget {
   final String conversationId;
-  final String friendName;
+  final String messageId;
 
-  TimedChatScreen({required this.conversationId, required this.friendName});
+  TimedChatScreen({required this.conversationId, required this.messageId});
 
   @override
   _TimedChatScreenState createState() => _TimedChatScreenState();
@@ -56,6 +56,13 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
     });
   }
 
+  void setTimedChatStatusToFinished() async {
+    await FirebaseFirestore.instance
+        .collection('conversations/${widget.conversationId}/messages')
+        .doc(widget.messageId)
+        .update({'status': 'FINISHED'});
+  }
+
   Future<bool> _onBackPressed(context) async {
     return await showDialog(
       context: context,
@@ -69,6 +76,7 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
           TextButton(
             onPressed: () {
               deleteAllMessages();
+              setTimedChatStatusToFinished();
               Navigator.pop(context, true);
             },
             child: Text('Yes'),

@@ -50,9 +50,11 @@ class MessageBubble extends StatelessWidget {
               this.text,
               style: isSent
                   ? GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 14, color: Colors.white))
+                      textStyle: TextStyle(fontSize: 15, color: Colors.white))
                   : GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 14, color: Colors.black)),
+                      textStyle: TextStyle(
+                          fontSize: 15,
+                          color: Theme.of(context).primaryColorDark)),
             ),
           ],
         ),
