@@ -2,16 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:raven/screens/friend_transactions.dart';
-import 'package:raven/screens/timed_chat.dart';
 import 'package:raven/widgets/chat_screen/message_bubble.dart';
-import 'package:raven/widgets/chat_screen/timed_chat.dart';
+import 'package:raven/widgets/chat_screen/timed_chat_invite.dart';
 
 class ChatScreen extends StatefulWidget {
-  // const ChatScreen({ Key? key }) : super(key: key);
-
-  String conversationId;
-  String friendId;
+  final String conversationId;
+  final String friendId;
 
   ChatScreen({required this.conversationId, required this.friendId});
 
@@ -202,7 +198,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () => sendMessage(),
+                    onPressed: textController.text.isEmpty
+                        ? () {
+                            print('ok');
+                          }
+                        : () => sendMessage(),
                     icon: Icon(Icons.send_rounded),
                     color: theme.accentColor,
                     iconSize: 30.0,

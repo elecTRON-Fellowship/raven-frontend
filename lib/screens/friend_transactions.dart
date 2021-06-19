@@ -92,33 +92,6 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                           documents[index]['totalAmount'].toString()),
                     ),
                   );
-                  // return ListWheelScrollView.useDelegate(
-                  //   itemExtent: 100.0,
-                  //   diameterRatio: 2.5,
-
-                  //   magnification: 1.5,
-                  //   // overAndUnderCenterOpacity: 1,
-                  //   offAxisFraction: 0.1,
-                  //   useMagnifier: true,
-                  //   physics: PageScrollPhysics(),
-                  //   // onSelectedItemChanged: (i) => print("Changed $i"),
-                  //   // renderChildrenOutsideViewport: false,
-                  //   // squeeze: 1.5,
-                  //   childDelegate: ListWheelChildBuilderDelegate(
-                  //     builder: (context, index) {
-                  //       return MyTicketCard(
-                  //         description: documents[index]['description'],
-                  //         amountRaised: double.parse(documents[index]
-                  //                 ['amountRaised']
-                  //             .toString()),
-                  //         totalAmount: double.parse(
-                  //             documents[index]['totalAmount'].toString()),
-                  //         contributorCardOnTap:
-                  //             _setShowContributorsToTrue,
-                  //       );
-                  //     },
-                  //   ),
-                  // );
                 } else {
                   return Container();
                 }

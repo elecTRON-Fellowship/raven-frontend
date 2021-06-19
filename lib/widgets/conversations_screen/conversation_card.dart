@@ -90,37 +90,33 @@ class _ConversationCardState extends State<ConversationCard> {
                   textStyle: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
-                      color: Colors.blueGrey)),
+                      color: Theme.of(context).primaryColorDark)),
             ),
             StreamBuilder<QuerySnapshot>(
               stream: _messagesCollection
-                  .where('sender', isNotEqualTo: _auth.currentUser!.uid)
-                  .where('read', isEqualTo: false)
+                  .orderBy('time', descending: true)
+                  .limit(1)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
-                  return Center(child: Text('Something went wrong'));
+                  return Text('Something went wrong');
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Text('');
                 }
                 if (snapshot.hasData) {
-                  final data = snapshot.data!;
-                  final unreadMessages = data.docs.length;
-
-                  return unreadMessages == 0
-                      ? Text('')
-                      : CircleAvatar(
-                          child: Text(
-                            unreadMessages.toString(),
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                                textStyle: TextStyle(
-                                    fontSize: 14, color: Colors.white)),
-                          ),
-                          radius: 12,
-                          backgroundColor: Theme.of(context).accentColor,
-                        );
+                  final documents = (snapshot.data)!.docs;
+                  final data = documents[0].data() as Map<String, dynamic>;
+                  String lastTextTime = DateFormat.Hm()
+                      .format(DateTime.parse(data['time'].toDate().toString()));
+                  return Text(
+                    lastTextTime,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                            fontSize: 14,
+                            color: Theme.of(context).primaryColorDark)),
+                  );
                 } else {
                   return Text('');
                 }
@@ -161,28 +157,33 @@ class _ConversationCardState extends State<ConversationCard> {
             ),
             StreamBuilder<QuerySnapshot>(
               stream: _messagesCollection
-                  .orderBy('time', descending: true)
-                  .limit(1)
+                  .where('sender', isNotEqualTo: _auth.currentUser!.uid)
+                  .where('read', isEqualTo: false)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
-                  return Text('Something went wrong');
+                  return Center(child: Text('Something went wrong'));
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Text('');
                 }
                 if (snapshot.hasData) {
-                  final documents = (snapshot.data)!.docs;
-                  final data = documents[0].data() as Map<String, dynamic>;
-                  String lastTextTime = DateFormat.Hm()
-                      .format(DateTime.parse(data['time'].toDate().toString()));
-                  return Text(
-                    lastTextTime,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                        textStyle:
-                            TextStyle(fontSize: 14, color: Colors.blueGrey)),
-                  );
+                  final data = snapshot.data!;
+                  final unreadMessages = data.docs.length;
+
+                  return unreadMessages == 0
+                      ? Text('')
+                      : CircleAvatar(
+                          child: Text(
+                            unreadMessages.toString(),
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                    fontSize: 14, color: Colors.white)),
+                          ),
+                          radius: 12,
+                          backgroundColor: Theme.of(context).accentColor,
+                        );
                 } else {
                   return Text('');
                 }

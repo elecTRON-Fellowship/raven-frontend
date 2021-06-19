@@ -61,7 +61,7 @@ class _TimerCardState extends State<TimerCard> {
               textStyle: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 26,
-                color: Color.fromRGBO(17, 128, 168, 1.0),
+                color: Theme.of(context).primaryColorDark,
               ),
             ),
           ),
