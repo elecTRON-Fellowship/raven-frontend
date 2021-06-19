@@ -179,6 +179,8 @@ class _TicketsScreenState extends State<TicketsScreen> {
                             .where('userId',
                                 isNotEqualTo: _auth.currentUser!.uid)
                             .where('isActive', isEqualTo: true)
+                            .where('visibleTo',
+                                arrayContains: _auth.currentUser!.uid)
                             .snapshots(),
                         builder:
                             (context, AsyncSnapshot<QuerySnapshot> snapshot) {

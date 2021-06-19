@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/screens/close_friends.dart';
 
 class EndDrawer extends StatefulWidget {
   const EndDrawer({Key? key}) : super(key: key);
@@ -77,7 +78,11 @@ class _EndDrawerState extends State<EndDrawer> {
                           fontSize: 24,
                           color: Theme.of(context).primaryColor)),
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => CloseFriendsScreen(),
+                  ));
+                },
               ),
               ListTile(
                 title: Text(

@@ -105,14 +105,17 @@ class _MyTicketCardState extends State<MyTicketCard> {
                   }
                   if (snapshot.hasData) {
                     final documents = (snapshot.data)!.docs;
-                    final data = documents[0].data() as Map<String, dynamic>;
-
-                    return MyTicketContributorCard(
-                        contributorId: data['userId'],
-                        amountContributed:
-                            double.parse(data['amount'].toString()),
-                        backgroundColor: Theme.of(context).backgroundColor,
-                        onTap: this.widget.contributorCardOnTap);
+                    if (documents.isNotEmpty) {
+                      final data = documents[0].data() as Map<String, dynamic>;
+                      return MyTicketContributorCard(
+                          contributorId: data['userId'],
+                          amountContributed:
+                              double.parse(data['amount'].toString()),
+                          backgroundColor: Theme.of(context).backgroundColor,
+                          onTap: this.widget.contributorCardOnTap);
+                    } else {
+                      return Text('No contributors found.');
+                    }
                   } else {
                     return Container();
                   }
