@@ -43,6 +43,7 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
       'time': DateTime.now(),
       'sender': _auth.currentUser!.uid,
       'text': textController.text,
+      'read': false
     });
     textController.clear();
     scrollController.animateTo(scrollController.position.minScrollExtent,
@@ -167,10 +168,12 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
                             reverse: true,
                             itemCount: documents.length,
                             itemBuilder: (context, index) => MessageBubble(
-                              ValueKey(documents[index].id),
-                              documents[index]['sender'],
-                              documents[index]['text'],
-                              DateTime.parse(
+                              conversationId: widget.conversationId,
+                              messageId: documents[index].id,
+                              key: ValueKey(documents[index].id),
+                              sender: documents[index]['sender'],
+                              text: documents[index]['text'],
+                              time: DateTime.parse(
                                   documents[index]['time'].toDate().toString()),
                             ),
                           );

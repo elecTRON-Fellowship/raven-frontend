@@ -52,6 +52,7 @@ class _ChatScreenState extends State<ChatScreen> {
       'time': DateTime.now(),
       'sender': _auth.currentUser!.uid,
       'text': textController.text,
+      'read': false
     });
     textController.clear();
     scrollController.animateTo(scrollController.position.minScrollExtent,
@@ -63,7 +64,8 @@ class _ChatScreenState extends State<ChatScreen> {
       'time': DateTime.now(),
       'sender': _auth.currentUser!.uid,
       'text': '/TIMED_CHAT',
-      'status': 'PENDING'
+      'status': 'PENDING',
+      'read': false
     });
   }
 
@@ -145,10 +147,12 @@ class _ChatScreenState extends State<ChatScreen> {
                                 );
                               } else {
                                 return MessageBubble(
-                                  ValueKey(documents[index].id),
-                                  documents[index]['sender'],
-                                  documents[index]['text'],
-                                  DateTime.parse(documents[index]['time']
+                                  conversationId: widget.conversationId,
+                                  messageId: documents[index].id,
+                                  key: ValueKey(documents[index].id),
+                                  sender: documents[index]['sender'],
+                                  text: documents[index]['text'],
+                                  time: DateTime.parse(documents[index]['time']
                                       .toDate()
                                       .toString()),
                                 );

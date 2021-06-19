@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +22,7 @@ class ConversationCard extends StatefulWidget {
 }
 
 class _ConversationCardState extends State<ConversationCard> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
   CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('users');
 
@@ -54,7 +56,6 @@ class _ConversationCardState extends State<ConversationCard> {
             friendId: widget.friendUserId),
       ),
     );
-    // .then((_) => setState(() {}));
   }
 
   @override
@@ -79,70 +80,115 @@ class _ConversationCardState extends State<ConversationCard> {
           ),
           radius: 24,
         ),
-        title: Text(
-          this.fetchedName,
-          textAlign: TextAlign.start,
-          style: GoogleFonts.poppins(
-              textStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: Colors.blueGrey)),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              this.fetchedName,
+              textAlign: TextAlign.start,
+              style: GoogleFonts.poppins(
+                  textStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.blueGrey)),
+            ),
+            StreamBuilder<QuerySnapshot>(
+              stream: _messagesCollection
+                  .where('sender', isNotEqualTo: _auth.currentUser!.uid)
+                  .where('read', isEqualTo: false)
+                  .snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Center(child: Text('Something went wrong'));
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Text('');
+                }
+                if (snapshot.hasData) {
+                  final data = snapshot.data!;
+                  final unreadMessages = data.docs.length;
+
+                  return unreadMessages == 0
+                      ? Text('')
+                      : CircleAvatar(
+                          child: Text(
+                            unreadMessages.toString(),
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                    fontSize: 14, color: Colors.white)),
+                          ),
+                          radius: 12,
+                          backgroundColor: Theme.of(context).accentColor,
+                        );
+                } else {
+                  return Text('');
+                }
+              },
+            ),
+          ],
         ),
-        subtitle: StreamBuilder<QuerySnapshot>(
-          stream: _messagesCollection
-              .orderBy('time', descending: true)
-              .limit(1)
-              .snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) {
-              return Text('Something went wrong');
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Text('');
-            }
-            if (snapshot.hasData) {
-              final documents = (snapshot.data)!.docs;
-              final data = documents[0].data() as Map<String, dynamic>;
-              String lastText = data['text'];
-              return Text(
-                lastText,
-                textAlign: TextAlign.start,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.poppins(
-                    textStyle: TextStyle(fontSize: 14, color: Colors.grey)),
-              );
-            } else {
-              return Text('');
-            }
-          },
-        ),
-        trailing: StreamBuilder<QuerySnapshot>(
-          stream: _messagesCollection
-              .orderBy('time', descending: true)
-              .limit(1)
-              .snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) {
-              return Text('Something went wrong');
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Text('');
-            }
-            if (snapshot.hasData) {
-              final documents = (snapshot.data)!.docs;
-              final data = documents[0].data() as Map<String, dynamic>;
-              String lastTextTime = DateFormat.Hm()
-                  .format(DateTime.parse(data['time'].toDate().toString()));
-              return Text(
-                lastTextTime,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                    textStyle: TextStyle(fontSize: 14, color: Colors.blueGrey)),
-              );
-            } else {
-              return Text('');
-            }
-          },
+        subtitle: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            StreamBuilder<QuerySnapshot>(
+              stream: _messagesCollection
+                  .orderBy('time', descending: true)
+                  .limit(1)
+                  .snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Something went wrong');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Text('');
+                }
+                if (snapshot.hasData) {
+                  final documents = (snapshot.data)!.docs;
+                  final data = documents[0].data() as Map<String, dynamic>;
+                  String lastText = data['text'];
+                  return Text(
+                    lastText,
+                    textAlign: TextAlign.start,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.poppins(
+                        textStyle: TextStyle(fontSize: 14, color: Colors.grey)),
+                  );
+                } else {
+                  return Text('');
+                }
+              },
+            ),
+            StreamBuilder<QuerySnapshot>(
+              stream: _messagesCollection
+                  .orderBy('time', descending: true)
+                  .limit(1)
+                  .snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Something went wrong');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Text('');
+                }
+                if (snapshot.hasData) {
+                  final documents = (snapshot.data)!.docs;
+                  final data = documents[0].data() as Map<String, dynamic>;
+                  String lastTextTime = DateFormat.Hm()
+                      .format(DateTime.parse(data['time'].toDate().toString()));
+                  return Text(
+                    lastTextTime,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                        textStyle:
+                            TextStyle(fontSize: 14, color: Colors.blueGrey)),
+                  );
+                } else {
+                  return Text('');
+                }
+              },
+            ),
+          ],
         ),
         onTap: () => selectConversation(context, this.fetchedName),
       ),

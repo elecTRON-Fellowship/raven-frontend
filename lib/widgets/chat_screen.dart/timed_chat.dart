@@ -38,7 +38,7 @@ class _TimedChatInviteState extends State<TimedChatInvite> {
     super.initState();
     _messagesCollection = FirebaseFirestore.instance
         .collection('conversations/${widget.conversationId}/messages');
-    // timedChatStatus = widget.timedChatStatus;
+    markMessagesAsRead();
   }
 
   void acceptTimedChatInvitation() async {
@@ -51,6 +51,13 @@ class _TimedChatInviteState extends State<TimedChatInvite> {
     await _messagesCollection
         .doc(widget.messageId)
         .update({'status': 'DECLINED'});
+  }
+
+  void markMessagesAsRead() async {
+    if (this.widget.sender != _auth.currentUser!.uid) {
+      final data = _messagesCollection.doc(widget.messageId);
+      await data.update({'read': true});
+    }
   }
 
   @override
