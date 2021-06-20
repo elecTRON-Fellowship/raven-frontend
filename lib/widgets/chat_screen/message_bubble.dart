@@ -47,42 +47,49 @@ class _MessageBubbleState extends State<MessageBubble> {
     bool isSent = this.widget.sender == _auth.currentUser!.uid;
     return Container(
       margin: isSent
-          ? EdgeInsets.only(top: 8.0, bottom: 8.0, left: 80.0)
-          : EdgeInsets.only(top: 8.0, bottom: 8.0, right: 80.0),
+          ? EdgeInsets.only(top: 4.0, bottom: 4.0, left: 80.0, right: 10.0)
+          : EdgeInsets.only(top: 4.0, bottom: 4.0, right: 80.0, left: 10.0),
       decoration: BoxDecoration(
         color: isSent
             ? Theme.of(context).accentColor
             : Color.fromRGBO(144, 180, 206, 0.5),
         borderRadius: isSent
             ? BorderRadius.only(
-                topLeft: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-                bottomRight: Radius.circular(15),
+                topLeft: Radius.circular(16),
+                bottomLeft: Radius.circular(16),
+                bottomRight: Radius.circular(16),
               )
             : BorderRadius.only(
-                topRight: Radius.circular(15),
-                bottomLeft: Radius.circular(15),
-                bottomRight: Radius.circular(15),
+                topRight: Radius.circular(16),
+                bottomLeft: Radius.circular(16),
+                bottomRight: Radius.circular(16),
               ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.only(
+            left: 10.0, top: 4.0, bottom: 4.0, right: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               DateFormat.Hm().format(this.widget.time),
-              style: GoogleFonts.poppins(
-                  textStyle: TextStyle(fontSize: 14, color: Colors.grey[800])),
+              style: isSent
+                  ? GoogleFonts.poppins(
+                      textStyle:
+                          TextStyle(fontSize: 12, color: Colors.grey[800]))
+                  : GoogleFonts.poppins(
+                      textStyle:
+                          TextStyle(fontSize: 12, color: Colors.grey[800]),
+                    ),
             ),
             Text(
               this.widget.text,
               style: isSent
                   ? GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 15, color: Colors.white))
+                      textStyle: TextStyle(fontSize: 14, color: Colors.white))
                   : GoogleFonts.poppins(
                       textStyle: TextStyle(
-                          fontSize: 15,
+                          fontSize: 14,
                           color: Theme.of(context).primaryColorDark)),
             ),
           ],

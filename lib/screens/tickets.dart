@@ -68,46 +68,47 @@ class _TicketsScreenState extends State<TicketsScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
+    final appBar = AppBar(
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      automaticallyImplyLeading: false,
+      title: Text(
+        'Tickets',
+        style: GoogleFonts.poppins(
+          textStyle: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: theme.primaryColorDark,
+          ),
+        ),
+      ),
+      actions: [
+        IconButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => AllTransactionsScreen(),
+              ),
+            );
+          },
+          icon: Icon(Icons.history_rounded),
+          iconSize: 25,
+          color: theme.primaryColorDark,
+        ),
+        IconButton(
+          onPressed: () {
+            showOverlay(theme, size);
+          },
+          icon: Icon(Icons.add_circle_outline_rounded),
+          iconSize: 25,
+          color: theme.primaryColorDark,
+        )
+      ],
+    );
 
     return Scaffold(
       backgroundColor: theme.primaryColor,
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Tickets',
-          style: GoogleFonts.poppins(
-            textStyle: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 26,
-              color: theme.primaryColorDark,
-            ),
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => AllTransactionsScreen(),
-                ),
-              );
-            },
-            icon: Icon(Icons.history_rounded),
-            iconSize: 30,
-            color: theme.primaryColorDark,
-          ),
-          IconButton(
-            onPressed: () {
-              showOverlay(theme, size);
-            },
-            icon: Icon(Icons.add_circle_outline_rounded),
-            iconSize: 30,
-            color: theme.primaryColorDark,
-          )
-        ],
-      ),
+      appBar: appBar,
       body: Stack(
         children: [
           GestureDetector(
@@ -295,11 +296,8 @@ class _TicketsScreenState extends State<TicketsScreen> {
           backgroundColor: theme.backgroundColor,
           elevation: 0,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              side: BorderSide(
-                color: theme.primaryColor,
-                width: 2,
-              )),
+            borderRadius: BorderRadius.circular(20.0),
+          ),
           child: Container(
             width: size.width * 0.75,
             height: size.height * 0.51,
@@ -348,13 +346,13 @@ class _TicketsScreenState extends State<TicketsScreen> {
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20.0),
                           borderSide: BorderSide(
-                            color: theme.primaryColor,
+                            color: theme.primaryColorDark,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20.0),
                           borderSide: BorderSide(
-                            color: theme.primaryColor,
+                            color: theme.primaryColorDark,
                             width: 2,
                           ),
                         ),
@@ -387,7 +385,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20.0),
                           borderSide: BorderSide(
-                            color: theme.primaryColor,
+                            color: theme.primaryColorDark,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
@@ -401,7 +399,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                         hintStyle: GoogleFonts.poppins(
                           textStyle: TextStyle(
                             fontSize: 18.0,
-                            color: theme.primaryColorDark,
+                            color: theme.primaryColor,
                           ),
                         ),
                       ),

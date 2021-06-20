@@ -24,40 +24,41 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
 
+    final appBar = AppBar(
+      elevation: 0.0,
+      backgroundColor: theme.primaryColor,
+      title: Text(
+        'Conversations',
+        style: GoogleFonts.poppins(
+            textStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Theme.of(context).primaryColorDark)),
+      ),
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.search_rounded),
+          iconSize: 25,
+          color: Theme.of(context).primaryColorDark,
+        ),
+        IconButton(
+          onPressed: () {
+            Navigator.of(context).pushNamed('/contacts');
+          },
+          icon: Icon(Icons.add_circle_outline_rounded),
+          iconSize: 25,
+          color: Theme.of(context).primaryColorDark,
+        ),
+      ],
+    );
+
     return Scaffold(
       backgroundColor: theme.primaryColor,
       // extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: theme.primaryColor,
-        title: Text(
-          'Conversations',
-          style: GoogleFonts.poppins(
-              textStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 26,
-                  color: Theme.of(context).primaryColorDark)),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.search_rounded),
-            iconSize: 30,
-            color: Theme.of(context).primaryColorDark,
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed('/contacts');
-            },
-            icon: Icon(Icons.add_circle_outline_rounded),
-            iconSize: 30,
-            color: Theme.of(context).primaryColorDark,
-          ),
-        ],
-      ),
+      appBar: appBar,
       body: Container(
-        padding: EdgeInsets.only(top: 20),
-        height: size.height * 0.9,
+        height: size.height - appBar.preferredSize.height,
         width: size.width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(

@@ -63,11 +63,11 @@ class _FriendTicketIconState extends State<FriendTicketIcon> {
               style: GoogleFonts.poppins(
                   textStyle: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 22,
+                fontSize: 20,
                 color: Colors.white,
               )),
             ),
-            radius: 33,
+            radius: 30,
           ),
         ),
         SizedBox(
@@ -78,8 +78,8 @@ class _FriendTicketIconState extends State<FriendTicketIcon> {
           style: GoogleFonts.poppins(
             textStyle: TextStyle(
               fontWeight: FontWeight.w500,
-              fontSize: 15,
-              color: Colors.black,
+              fontSize: 16,
+              color: theme.primaryColorDark,
             ),
           ),
         ),

@@ -60,139 +60,137 @@ class _ConversationCardState extends State<ConversationCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-          side: BorderSide(color: Theme.of(context).primaryColor)),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Theme.of(context).accentColor,
-          child: Text(
-            fetchedName.isNotEmpty
-                ? fetchedName.trim().split(' ').map((l) => l[0]).take(2).join()
-                : '',
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor: Theme.of(context).accentColor,
+        child: Text(
+          fetchedName.isNotEmpty
+              ? fetchedName.trim().split(' ').map((l) => l[0]).take(2).join()
+              : '',
+          style: GoogleFonts.poppins(
+              textStyle: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: Colors.white,
+          )),
+        ),
+        radius: 24,
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            this.fetchedName,
+            textAlign: TextAlign.start,
             style: GoogleFonts.poppins(
                 textStyle: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Colors.white,
-            )),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Theme.of(context).primaryColorDark)),
           ),
-          radius: 24,
-        ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              this.fetchedName,
-              textAlign: TextAlign.start,
-              style: GoogleFonts.poppins(
-                  textStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Theme.of(context).primaryColorDark)),
-            ),
-            StreamBuilder<QuerySnapshot>(
-              stream: _messagesCollection
-                  .orderBy('time', descending: true)
-                  .limit(1)
-                  .snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Something went wrong');
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text('');
-                }
-                if (snapshot.hasData) {
-                  final documents = (snapshot.data)!.docs;
-                  final data = documents[0].data() as Map<String, dynamic>;
-                  String lastTextTime = DateFormat.Hm()
-                      .format(DateTime.parse(data['time'].toDate().toString()));
-                  return Text(
-                    lastTextTime,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
-                            fontSize: 14,
-                            color: Theme.of(context).primaryColorDark)),
-                  );
-                } else {
-                  return Text('');
-                }
-              },
-            ),
-          ],
-        ),
-        subtitle: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            StreamBuilder<QuerySnapshot>(
-              stream: _messagesCollection
-                  .orderBy('time', descending: true)
-                  .limit(1)
-                  .snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Something went wrong');
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text('');
-                }
-                if (snapshot.hasData) {
-                  final documents = (snapshot.data)!.docs;
-                  final data = documents[0].data() as Map<String, dynamic>;
-                  String lastText = data['text'];
-                  return Text(
+          StreamBuilder<QuerySnapshot>(
+            stream: _messagesCollection
+                .orderBy('time', descending: true)
+                .limit(1)
+                .snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Something went wrong');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text('');
+              }
+              if (snapshot.hasData) {
+                final documents = (snapshot.data)!.docs;
+                final data = documents[0].data() as Map<String, dynamic>;
+                String lastTextTime = DateFormat.Hm()
+                    .format(DateTime.parse(data['time'].toDate().toString()));
+                return Text(
+                  lastTextTime,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                          fontSize: 14,
+                          color: Theme.of(context).primaryColorDark)),
+                );
+              } else {
+                return Text('');
+              }
+            },
+          ),
+        ],
+      ),
+      subtitle: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          StreamBuilder<QuerySnapshot>(
+            stream: _messagesCollection
+                .orderBy('time', descending: true)
+                .limit(1)
+                .snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Something went wrong');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text('');
+              }
+              if (snapshot.hasData) {
+                final documents = (snapshot.data)!.docs;
+                final data = documents[0].data() as Map<String, dynamic>;
+                String lastText = data['text'];
+                return Container(
+                  width: MediaQuery.of(context).size.width * 0.65,
+                  child: Text(
                     lastText,
                     textAlign: TextAlign.start,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.poppins(
                         textStyle: TextStyle(fontSize: 14, color: Colors.grey)),
-                  );
-                } else {
-                  return Text('');
-                }
-              },
-            ),
-            StreamBuilder<QuerySnapshot>(
-              stream: _messagesCollection
-                  .where('sender', isNotEqualTo: _auth.currentUser!.uid)
-                  .where('read', isEqualTo: false)
-                  .snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return Center(child: Text('Something went wrong'));
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text('');
-                }
-                if (snapshot.hasData) {
-                  final data = snapshot.data!;
-                  final unreadMessages = data.docs.length;
+                  ),
+                );
+              } else {
+                return Text('');
+              }
+            },
+          ),
+          StreamBuilder<QuerySnapshot>(
+            stream: _messagesCollection
+                .where('sender', isNotEqualTo: _auth.currentUser!.uid)
+                .where('read', isEqualTo: false)
+                .snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Center(child: Text('Something went wrong'));
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text('');
+              }
+              if (snapshot.hasData) {
+                final data = snapshot.data!;
+                final unreadMessages = data.docs.length;
 
-                  return unreadMessages == 0
-                      ? Text('')
-                      : CircleAvatar(
-                          child: Text(
-                            unreadMessages.toString(),
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                                textStyle: TextStyle(
-                                    fontSize: 14, color: Colors.white)),
-                          ),
-                          radius: 12,
-                          backgroundColor: Theme.of(context).accentColor,
-                        );
-                } else {
-                  return Text('');
-                }
-              },
-            ),
-          ],
-        ),
-        onTap: () => selectConversation(context, this.fetchedName),
+                return unreadMessages == 0
+                    ? Text('')
+                    : CircleAvatar(
+                        child: Text(
+                          unreadMessages.toString(),
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                              textStyle:
+                                  TextStyle(fontSize: 12, color: Colors.white)),
+                        ),
+                        radius: 10,
+                        backgroundColor: Theme.of(context).accentColor,
+                      );
+              } else {
+                return Text('');
+              }
+            },
+          ),
+        ],
       ),
+      onTap: () => selectConversation(context, this.fetchedName),
     );
   }
 }

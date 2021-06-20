@@ -35,7 +35,7 @@ class _MyTicketCardState extends State<MyTicketCard> {
 
     return Container(
       height: size.height * 0.26,
-      width: size.width * 0.95,
+      width: size.width * 0.9,
       margin: EdgeInsets.symmetric(horizontal: 8),
       child: Card(
         shape: RoundedRectangleBorder(
@@ -70,7 +70,7 @@ class _MyTicketCardState extends State<MyTicketCard> {
                       textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
-                          color: Colors.black),
+                          color: theme.primaryColorDark),
                     ),
                   ),
                 ],
@@ -114,7 +114,15 @@ class _MyTicketCardState extends State<MyTicketCard> {
                           backgroundColor: Theme.of(context).backgroundColor,
                           onTap: this.widget.contributorCardOnTap);
                     } else {
-                      return Text('No contributors found.');
+                      return Text(
+                        'No contributors yet.',
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            color: theme.primaryColorDark,
+                            fontSize: 14,
+                          ),
+                        ),
+                      );
                     }
                   } else {
                     return Container();
