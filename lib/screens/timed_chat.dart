@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:raven/widgets/chat_screen/message_bubble.dart';
+import 'package:raven/widgets/timed_chat_screen/message_bubble_timed_chat.dart';
 import 'package:raven/widgets/timed_chat_screen/timer_card.dart';
 
 class TimedChatScreen extends StatefulWidget {
@@ -45,8 +45,7 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
     await _timedChatsCollection.add({
       'time': DateTime.now(),
       'sender': _auth.currentUser!.uid,
-      'text': textController.text,
-      'read': false
+      'text': textController.text
     });
     textController.clear();
     scrollController.animateTo(scrollController.position.minScrollExtent,
@@ -153,7 +152,8 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
                             controller: scrollController,
                             reverse: true,
                             itemCount: documents.length,
-                            itemBuilder: (context, index) => MessageBubble(
+                            itemBuilder: (context, index) =>
+                                MessageBubbleTimedChat(
                               conversationId: widget.conversationId,
                               messageId: documents[index].id,
                               key: ValueKey(documents[index].id),

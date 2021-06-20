@@ -19,7 +19,7 @@ class _ChatScreenState extends State<ChatScreen> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('users');
-  final TextEditingController textController = new TextEditingController();
+  late TextEditingController textController;
   final ScrollController scrollController = ScrollController();
 
   late CollectionReference _messagesCollection;
@@ -29,6 +29,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
+    textController = new TextEditingController();
     _messagesCollection = FirebaseFirestore.instance
         .collection('conversations/${widget.conversationId}/messages');
     fetchContactName();
@@ -198,11 +199,15 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   IconButton(
-                    onPressed: textController.text.isEmpty
-                        ? () {
-                            print('ok');
-                          }
-                        : () => sendMessage(),
+                    onPressed: () {
+                      if (textController.text.isEmpty) {
+                        print(textController.text.isEmpty);
+                        print(textController.text);
+                        print('ok');
+                      } else {
+                        sendMessage();
+                      }
+                    },
                     icon: Icon(Icons.send_rounded),
                     color: theme.accentColor,
                     iconSize: 30.0,
