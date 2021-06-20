@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/screens/chat.dart';
-import 'package:raven/widgets/close_friends_screen.dart/close_friend_action_button.dart';
+import 'package:raven/widgets/close_friends_screen/close_friend_action_button.dart';
 
 enum ContactRegisteredStatus {
   REGISTERED,

@@ -1,7 +1,7 @@
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:raven/widgets/contacts_screen.dart/contact_card.dart';
+import 'package:raven/widgets/contacts_screen/contact_card.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ContactsScreen extends StatefulWidget {

@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:raven/widgets/friend_transactions_screen.dart/friend_ticket_card.dart';
-import 'package:raven/widgets/friend_transactions_screen.dart/friend_transaction_card.dart';
+import 'package:raven/widgets/friend_transactions_screen/friend_ticket_card.dart';
+import 'package:raven/widgets/friend_transactions_screen/friend_transaction_card.dart';
 
 class FriendTransactionsScreen extends StatefulWidget {
   final String friendId;
@@ -21,6 +21,25 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
       FirebaseFirestore.instance.collection('tickets');
   CollectionReference _transactionsCollection =
       FirebaseFirestore.instance.collection('transactions');
+
+  CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection('users');
+
+  String fetchedName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchContactName();
+  }
+
+  fetchContactName() async {
+    final snapshot = await _userCollection.doc(widget.friendId).get();
+    final data = snapshot.data() as Map<String, dynamic>;
+    setState(() {
+      fetchedName = "${data['firstName']} ${data['lastName']}";
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +61,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
           color: theme.primaryColorDark,
         ),
         title: Text(
-          'Transactions',
+          fetchedName,
           style: GoogleFonts.poppins(
             textStyle: TextStyle(
               fontWeight: FontWeight.bold,
@@ -51,14 +70,6 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
             ),
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.add_circle_outline_rounded),
-            iconSize: 30,
-            color: theme.primaryColorDark,
-          )
-        ],
         centerTitle: true,
       ),
       body: Column(
@@ -70,6 +81,8 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
               stream: _ticketsCollection
                   .where('userId', isEqualTo: widget.friendId)
                   .where('isActive', isEqualTo: true)
+                  .where('visibleTo', arrayContains: _auth.currentUser!.uid)
+                  .orderBy('createdAt', descending: true)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
@@ -84,6 +97,8 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                     scrollDirection: Axis.horizontal,
                     itemCount: documents.length,
                     itemBuilder: (context, index) => FriendTicketCard(
+                      friendId: widget.friendId,
+                      friendName: fetchedName,
                       ticketId: documents[index].id,
                       description: documents[index]['description'],
                       amountRaised: double.parse(
@@ -92,33 +107,6 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                           documents[index]['totalAmount'].toString()),
                     ),
                   );
-                  // return ListWheelScrollView.useDelegate(
-                  //   itemExtent: 100.0,
-                  //   diameterRatio: 2.5,
-
-                  //   magnification: 1.5,
-                  //   // overAndUnderCenterOpacity: 1,
-                  //   offAxisFraction: 0.1,
-                  //   useMagnifier: true,
-                  //   physics: PageScrollPhysics(),
-                  //   // onSelectedItemChanged: (i) => print("Changed $i"),
-                  //   // renderChildrenOutsideViewport: false,
-                  //   // squeeze: 1.5,
-                  //   childDelegate: ListWheelChildBuilderDelegate(
-                  //     builder: (context, index) {
-                  //       return MyTicketCard(
-                  //         description: documents[index]['description'],
-                  //         amountRaised: double.parse(documents[index]
-                  //                 ['amountRaised']
-                  //             .toString()),
-                  //         totalAmount: double.parse(
-                  //             documents[index]['totalAmount'].toString()),
-                  //         contributorCardOnTap:
-                  //             _setShowContributorsToTrue,
-                  //       );
-                  //     },
-                  //   ),
-                  // );
                 } else {
                   return Container();
                 }
@@ -148,6 +136,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                       .where('userIds.${_auth.currentUser!.uid}',
                           isEqualTo: true)
                       .where('userIds.${widget.friendId}', isEqualTo: true)
+                      .orderBy('createdAt', descending: true)
                       .snapshots(),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasError) {

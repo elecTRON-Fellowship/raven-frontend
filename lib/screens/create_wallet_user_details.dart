@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/screens/address_details_screen.dart';
-import 'package:raven/user_singleton.dart';
+import 'package:raven/models/user_singleton.dart';
 
 class UserDetailsScreen extends StatefulWidget {
   @override

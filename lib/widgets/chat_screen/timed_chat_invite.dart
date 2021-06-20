@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/screens/timed_chat.dart';
 
 class TimedChatInvite extends StatefulWidget {
-  // final String timedChatStatus;
   final String conversationId;
   final String messageId;
   final Key key;
@@ -14,9 +13,7 @@ class TimedChatInvite extends StatefulWidget {
   final DateTime time;
 
   TimedChatInvite(
-      {
-      // required this.timedChatStatus,
-      required this.conversationId,
+      {required this.conversationId,
       required this.messageId,
       required this.key,
       required this.sender,

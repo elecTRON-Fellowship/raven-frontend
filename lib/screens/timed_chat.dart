@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:raven/widgets/chat_screen.dart/message_bubble.dart';
-import 'package:raven/widgets/timed_chat_screen.dart/timer_card.dart';
+import 'package:raven/widgets/chat_screen/message_bubble.dart';
+import 'package:raven/widgets/timed_chat_screen/timer_card.dart';
 
 class TimedChatScreen extends StatefulWidget {
   final String conversationId;
@@ -30,11 +30,14 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
     super.initState();
     _timedChatsCollection = FirebaseFirestore.instance
         .collection('conversations/${widget.conversationId}/timedChats');
+    doThis();
   }
 
-  @override
-  void dispose() async {
-    super.dispose();
+  void doThis() async {
+    await FirebaseFirestore.instance
+        .collection('conversations/${widget.conversationId}/messages')
+        .doc(widget.messageId)
+        .update({'status': 'FINISHED'});
   }
 
   void sendMessage() async {
@@ -53,15 +56,8 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
   void deleteAllMessages() async {
     final snapshot = await _timedChatsCollection.get();
     snapshot.docs.forEach((doc) async {
-      _timedChatsCollection.doc(doc.id).delete();
+      await _timedChatsCollection.doc(doc.id).delete();
     });
-  }
-
-  void setTimedChatStatusToFinished() async {
-    await FirebaseFirestore.instance
-        .collection('conversations/${widget.conversationId}/messages')
-        .doc(widget.messageId)
-        .update({'status': 'FINISHED'});
   }
 
   Future<bool> _onBackPressed(context) async {
@@ -77,7 +73,6 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
           TextButton(
             onPressed: () {
               deleteAllMessages();
-              setTimedChatStatusToFinished();
               Navigator.pop(context, true);
             },
             child: Text('Yes'),
@@ -93,38 +88,29 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
       onWillPop: () => _onBackPressed(context),
       child: Scaffold(
         backgroundColor: Theme.of(context).primaryColor,
-        appBar: PreferredSize(
-          preferredSize:
-              Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AppBar(
-                elevation: 0.0,
-                backgroundColor: Colors.transparent,
-                leading: IconButton(
-                  onPressed: () async {
-                    _onBackPressed(context).then((value) {
-                      if (value) Navigator.of(context).pop();
-                    });
-                  },
-                  icon: Icon(Icons.arrow_back_rounded),
-                  iconSize: 30,
-                  color: Color.fromRGBO(17, 128, 168, 1.0),
-                ),
-                titleSpacing: 0,
-                title: Text(
-                  'Coffee Break',
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 26,
-                      color: Color.fromRGBO(17, 128, 168, 1.0),
-                    ),
-                  ),
-                ),
+        appBar: AppBar(
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          leading: IconButton(
+            onPressed: () async {
+              _onBackPressed(context).then((value) {
+                if (value) Navigator.of(context).pop();
+              });
+            },
+            icon: Icon(Icons.arrow_back_rounded),
+            iconSize: 30,
+            color: Theme.of(context).primaryColorDark,
+          ),
+          titleSpacing: 0,
+          title: Text(
+            'Coffee Break',
+            style: GoogleFonts.poppins(
+              textStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 26,
+                color: Theme.of(context).primaryColorDark,
               ),
-            ],
+            ),
           ),
         ),
         body: GestureDetector(

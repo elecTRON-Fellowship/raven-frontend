@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:raven/user_singleton.dart';
+import 'package:raven/models/user_singleton.dart';
 
 class RequestsSingleton {
   var userSingleton = UserDataSingleton();
