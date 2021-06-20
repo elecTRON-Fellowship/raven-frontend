@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/widgets/contacts_screen/contact_card.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:uuid/uuid.dart';
 
 class ContactsScreen extends StatefulWidget {
   const ContactsScreen({Key? key}) : super(key: key);
@@ -74,7 +75,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
             Navigator.of(context).pop();
           },
           icon: Icon(Icons.arrow_back_rounded),
-          iconSize: 30,
+          iconSize: 25,
           color: Theme.of(context).primaryColorDark,
         ),
         elevation: 0.0,
@@ -86,7 +87,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
           style: GoogleFonts.poppins(
             textStyle: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 24,
+              fontSize: 20,
               color: Theme.of(context).primaryColorDark,
             ),
           ),
@@ -96,7 +97,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
           IconButton(
             onPressed: () => fetchContacts(),
             icon: Icon(Icons.sync_rounded),
-            iconSize: 30,
+            iconSize: 25,
             color: Theme.of(context).primaryColorDark,
           )
         ],
@@ -108,12 +109,14 @@ class _ContactsScreenState extends State<ContactsScreen> {
         child: Column(
           children: [
             Container(
-              width: double.infinity,
+              width: MediaQuery.of(context).size.width * 0.9,
               padding: const EdgeInsets.all(10),
               child: TextField(
                 controller: searchController,
                 style: GoogleFonts.poppins(
-                  textStyle: TextStyle(),
+                  textStyle: TextStyle(
+                    color: Theme.of(context).primaryColorDark,
+                  ),
                 ),
                 decoration: InputDecoration(
                   prefixIcon: Icon(
@@ -124,19 +127,19 @@ class _ContactsScreenState extends State<ContactsScreen> {
                   filled: true,
                   contentPadding: EdgeInsets.all(13),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(30),
                     borderSide: BorderSide(
-                      color: Colors.transparent,
+                      color: Theme.of(context).primaryColorDark,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(30),
                     borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).primaryColorDark,
                       width: 2,
                     ),
                   ),
-                  labelText: "Search",
+                  hintText: "Search",
                   labelStyle: TextStyle(
                     color: Theme.of(context).primaryColorDark,
                   ),
@@ -145,7 +148,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 8,
             ),
             Expanded(
               child: Container(
@@ -163,7 +166,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
                     topRight: Radius.circular(30),
                   ),
                   child: ListView.builder(
-                    padding: EdgeInsets.all(10),
+                    key: ValueKey(Uuid().v4()),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     itemCount: searchController.text.isEmpty
                         ? contacts.length
                         : filteredContacts.length,

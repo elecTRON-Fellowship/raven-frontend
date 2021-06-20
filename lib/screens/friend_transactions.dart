@@ -31,13 +31,44 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
   void initState() {
     super.initState();
     fetchContactName();
+    fetchTransactions();
   }
+
+  List transactionList = [];
 
   fetchContactName() async {
     final snapshot = await _userCollection.doc(widget.friendId).get();
     final data = snapshot.data() as Map<String, dynamic>;
     setState(() {
       fetchedName = "${data['firstName']} ${data['lastName']}";
+    });
+  }
+
+  void refreshTransactions() {
+    fetchTransactions();
+  }
+
+  void fetchTransactions() async {
+    var transactionsSnapshot = await _transactionsCollection
+        .where('userIdsMap.${_auth.currentUser!.uid}', isEqualTo: true)
+        .where('userIdsMap.${widget.friendId}', isEqualTo: true)
+        .get();
+
+    var documents = transactionsSnapshot.docs.toList();
+
+    print(documents[0].data());
+
+    setState(() {
+      documents.sort((item1, item2) {
+        var one = item1.data() as Map;
+        var two = item2.data() as Map;
+
+        var m = DateTime.parse(one['createdAt'].toDate().toString());
+        var n = DateTime.parse(two['createdAt'].toDate().toString());
+
+        return n.compareTo(m);
+      });
+      transactionList = [...documents];
     });
   }
 
@@ -57,7 +88,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
             Navigator.of(context).pop();
           },
           icon: Icon(Icons.arrow_back_rounded),
-          iconSize: 30,
+          iconSize: 25,
           color: theme.primaryColorDark,
         ),
         title: Text(
@@ -65,7 +96,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
           style: GoogleFonts.poppins(
             textStyle: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 24,
+              fontSize: 20,
               color: theme.primaryColorDark,
             ),
           ),
@@ -97,6 +128,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                     scrollDirection: Axis.horizontal,
                     itemCount: documents.length,
                     itemBuilder: (context, index) => FriendTicketCard(
+                      contributeCallback: refreshTransactions,
                       friendId: widget.friendId,
                       friendName: fetchedName,
                       ticketId: documents[index].id,
@@ -131,42 +163,21 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                   topLeft: Radius.circular(30),
                   topRight: Radius.circular(30),
                 ),
-                child: StreamBuilder<QuerySnapshot>(
-                  stream: _transactionsCollection
-                      .where('userIds.${_auth.currentUser!.uid}',
-                          isEqualTo: true)
-                      .where('userIds.${widget.friendId}', isEqualTo: true)
-                      .orderBy('createdAt', descending: true)
-                      .snapshots(),
-                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasError) {
-                      return Center(child: Text('Something went wrong'));
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    if (snapshot.hasData) {
-                      final documents = (snapshot.data)!.docs;
-                      return ListView.builder(
-                        padding: EdgeInsets.all(15),
-                        itemCount: documents.length,
-                        itemBuilder: (context, index) => FriendTransactionCard(
-                          status: documents[index]['sender'] ==
-                                  _auth.currentUser!.uid
-                              ? 'Sent'
-                              : 'Received',
-                          description: documents[index]['description'],
-                          amount: double.parse(
-                              documents[index]['amount'].toString()),
-                          date: DateTime.parse(documents[index]['createdAt']
-                              .toDate()
-                              .toString()),
-                        ),
-                      );
-                    } else {
-                      return Container();
-                    }
-                  },
+                child: ListView.builder(
+                  padding: EdgeInsets.all(15),
+                  itemCount: transactionList.length,
+                  itemBuilder: (context, index) => FriendTransactionCard(
+                    status: transactionList[index]['sender'] ==
+                            _auth.currentUser!.uid
+                        ? 'Sent'
+                        : 'Received',
+                    description: transactionList[index]['description'],
+                    amount: double.parse(
+                        transactionList[index]['amount'].toString()),
+                    date: DateTime.parse(transactionList[index]['createdAt']
+                        .toDate()
+                        .toString()),
+                  ),
                 ),
               ),
             ),

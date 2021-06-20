@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -59,32 +60,84 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
     });
   }
 
-  Future<bool> _onBackPressed(context) async {
+  Future<bool> _onBackPressed(context, theme) async {
     return await showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Are you sure?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text('No'),
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: 5,
+          sigmaY: 5,
+        ),
+        child: AlertDialog(
+          backgroundColor: theme.backgroundColor,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
           ),
-          TextButton(
-            onPressed: () {
-              deleteAllMessages();
-              Navigator.pop(context, true);
-            },
-            child: Text('Yes'),
+          title: Text(
+            "Are you sure?",
+            style: GoogleFonts.poppins(
+              textStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: theme.primaryColorDark,
+              ),
+            ),
+            textAlign: TextAlign.center,
           ),
-        ],
+          content: Text(
+            "Going back will end the session.",
+            textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(
+              textStyle: TextStyle(
+                fontSize: 18,
+                color: theme.primaryColor,
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(
+                'No',
+                style: GoogleFonts.poppins(
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: theme.accentColor,
+                  ),
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                deleteAllMessages();
+                Navigator.pop(context, true);
+              },
+              child: Text(
+                'Yes',
+                style: GoogleFonts.poppins(
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: theme.accentColor,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+
     return WillPopScope(
-      onWillPop: () => _onBackPressed(context),
+      onWillPop: () => _onBackPressed(context, theme),
       child: Scaffold(
         backgroundColor: Theme.of(context).primaryColor,
         appBar: AppBar(
@@ -92,21 +145,21 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
           backgroundColor: Colors.transparent,
           leading: IconButton(
             onPressed: () async {
-              _onBackPressed(context).then((value) {
+              _onBackPressed(context, theme).then((value) {
                 if (value) Navigator.of(context).pop();
               });
             },
             icon: Icon(Icons.arrow_back_rounded),
-            iconSize: 30,
+            iconSize: 25,
             color: Theme.of(context).primaryColorDark,
           ),
-          titleSpacing: 0,
+          centerTitle: true,
           title: Text(
             'Coffee Break',
             style: GoogleFonts.poppins(
               textStyle: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 26,
+                fontSize: 20,
                 color: Theme.of(context).primaryColorDark,
               ),
             ),
@@ -184,24 +237,26 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
                             controller: textController,
                             textInputAction: TextInputAction.newline,
                             minLines: 1,
-                            maxLines: 5,
+                            maxLines: 3,
                             style: GoogleFonts.poppins(
-                              textStyle: TextStyle(),
+                              textStyle: TextStyle(
+                                fontSize: 14.0,
+                                color: theme.primaryColorDark,
+                              ),
                             ),
                             decoration: InputDecoration(
-                              fillColor: Color.fromRGBO(194, 222, 232, 1.0),
-                              filled: true,
-                              contentPadding: EdgeInsets.all(13),
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 10),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(16.0),
                                 borderSide: BorderSide(
-                                  color: Colors.transparent,
+                                  color: theme.primaryColorDark,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(16.0),
                                 borderSide: BorderSide(
-                                  color: Theme.of(context).primaryColorDark,
+                                  color: theme.primaryColorDark,
                                   width: 2,
                                 ),
                               ),

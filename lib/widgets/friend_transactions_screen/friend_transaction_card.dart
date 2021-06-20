@@ -44,7 +44,7 @@ class FriendTransactionCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  DateFormat.yMd().add_jm().format(this.date),
+                  DateFormat.yMd().format(this.date),
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(
                       fontSize: 14,

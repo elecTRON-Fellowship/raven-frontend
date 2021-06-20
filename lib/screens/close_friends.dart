@@ -2,6 +2,7 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/widgets/close_friends_screen/close_friend_card.dart';
+import 'package:uuid/uuid.dart';
 
 class CloseFriendsScreen extends StatefulWidget {
   const CloseFriendsScreen({Key? key}) : super(key: key);
@@ -73,7 +74,7 @@ class _CloseFriendsScreenState extends State<CloseFriendsScreen> {
             Navigator.of(context).pop();
           },
           icon: Icon(Icons.arrow_back_rounded),
-          iconSize: 30,
+          iconSize: 25,
           color: Theme.of(context).primaryColorDark,
         ),
         elevation: 0.0,
@@ -85,7 +86,7 @@ class _CloseFriendsScreenState extends State<CloseFriendsScreen> {
           style: GoogleFonts.poppins(
             textStyle: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 24,
+              fontSize: 20,
               color: Theme.of(context).primaryColorDark,
             ),
           ),
@@ -95,7 +96,7 @@ class _CloseFriendsScreenState extends State<CloseFriendsScreen> {
           IconButton(
             onPressed: () => fetchContacts(),
             icon: Icon(Icons.sync_rounded),
-            iconSize: 30,
+            iconSize: 25,
             color: Theme.of(context).primaryColorDark,
           )
         ],
@@ -107,12 +108,14 @@ class _CloseFriendsScreenState extends State<CloseFriendsScreen> {
         child: Column(
           children: [
             Container(
-              width: double.infinity,
+              width: MediaQuery.of(context).size.width * 0.9,
               padding: const EdgeInsets.all(10),
               child: TextField(
                 controller: searchController,
                 style: GoogleFonts.poppins(
-                  textStyle: TextStyle(),
+                  textStyle: TextStyle(
+                    color: Theme.of(context).primaryColorDark,
+                  ),
                 ),
                 decoration: InputDecoration(
                   prefixIcon: Icon(
@@ -123,19 +126,19 @@ class _CloseFriendsScreenState extends State<CloseFriendsScreen> {
                   filled: true,
                   contentPadding: EdgeInsets.all(13),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(30),
                     borderSide: BorderSide(
-                      color: Colors.transparent,
+                      color: Theme.of(context).primaryColorDark,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(30),
                     borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).primaryColorDark,
                       width: 2,
                     ),
                   ),
-                  labelText: "Search",
+                  hintText: "Search",
                   labelStyle: TextStyle(
                     color: Theme.of(context).primaryColorDark,
                   ),
@@ -144,7 +147,7 @@ class _CloseFriendsScreenState extends State<CloseFriendsScreen> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 8,
             ),
             Expanded(
               child: Container(
@@ -162,7 +165,7 @@ class _CloseFriendsScreenState extends State<CloseFriendsScreen> {
                     topRight: Radius.circular(30),
                   ),
                   child: ListView.builder(
-                    padding: EdgeInsets.all(10),
+                    key: ValueKey(Uuid().v4()),
                     itemCount: searchController.text.isEmpty
                         ? contacts.length
                         : filteredContacts.length,

@@ -56,10 +56,9 @@ class _TimerCardState extends State<TimerCard> {
       children: [
         Center(
           child: Text(
-            '☕ $minutesString:$secondsString',
+            '$minutesString:$secondsString',
             style: GoogleFonts.poppins(
               textStyle: TextStyle(
-                fontWeight: FontWeight.bold,
                 fontSize: 26,
                 color: Theme.of(context).primaryColorDark,
               ),
@@ -69,11 +68,16 @@ class _TimerCardState extends State<TimerCard> {
         SizedBox(
           height: 10,
         ),
-        LinearProgressIndicator(
-          value: _secondsRemaining / 600,
-          color: Theme.of(context).primaryColorDark,
-          backgroundColor: Theme.of(context).backgroundColor,
-          minHeight: 6,
+        Container(
+          width: MediaQuery.of(context).size.width * 0.9,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: LinearProgressIndicator(
+              value: _secondsRemaining / 600,
+              color: Theme.of(context).primaryColorDark,
+              backgroundColor: Theme.of(context).backgroundColor,
+            ),
+          ),
         ),
       ],
     );

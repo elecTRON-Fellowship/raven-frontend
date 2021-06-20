@@ -22,6 +22,7 @@ class _EndDrawerState extends State<EndDrawer> {
         child: Drawer(
           elevation: 3.0,
           child: ListView(
+            padding: EdgeInsets.only(left: 13, top: 30),
             children: [
               ListTile(
                 title: Text(

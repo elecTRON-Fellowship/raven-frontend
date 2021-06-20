@@ -136,29 +136,17 @@ class _CloseFriendActionButtonState extends State<CloseFriendActionButton> {
             color: Theme.of(context).primaryColor,
           )
         : status == CloseFriendStatus.CLOSE_FRIEND
-            ? TextButton(
+            ? IconButton(
                 onPressed: removeFromCloseFriends,
-                child: Text(
-                  'REMOVE',
-                  style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                    color: Theme.of(context).accentColor,
-                  )),
-                ),
+                icon: Icon(Icons.remove_circle_outline_rounded),
+                iconSize: 30,
+                color: Theme.of(context).accentColor,
               )
-            : TextButton(
+            : IconButton(
                 onPressed: addToCloseFriends,
-                child: Text(
-                  'ADD',
-                  style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                    color: Theme.of(context).accentColor,
-                  )),
-                ),
+                iconSize: 30,
+                icon: Icon(Icons.add_circle_outline_rounded),
+                color: Theme.of(context).accentColor,
               );
   }
 }

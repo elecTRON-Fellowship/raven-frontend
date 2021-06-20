@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FriendTicketCard extends StatefulWidget {
+  final Function contributeCallback;
   final String friendId;
   final String friendName;
   final String ticketId;
@@ -14,7 +15,8 @@ class FriendTicketCard extends StatefulWidget {
   final double totalAmount;
 
   FriendTicketCard(
-      {required this.friendId,
+      {required this.contributeCallback,
+      required this.friendId,
       required this.friendName,
       required this.ticketId,
       required this.description,
@@ -51,10 +53,21 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
     //update friend ticket
     final ticketSnapshot = await _ticketsCollection.doc(widget.ticketId).get();
     final data = ticketSnapshot.data() as Map;
-    await _ticketsCollection.doc(widget.ticketId).update({
-      'amountRaised': double.parse(data['amountRaised'].toString()) +
-          double.parse(ticketAmountController.text.toString())
-    });
+
+    if (double.parse(data['amountRaised'].toString()) +
+            double.parse(ticketAmountController.text.toString()) >=
+        double.parse(data['totalAmount'].toString())) {
+      await _ticketsCollection.doc(widget.ticketId).update({
+        'amountRaised': double.parse(data['amountRaised'].toString()) +
+            double.parse(ticketAmountController.text.toString()),
+        'isActive': false
+      });
+    } else {
+      await _ticketsCollection.doc(widget.ticketId).update({
+        'amountRaised': double.parse(data['amountRaised'].toString()) +
+            double.parse(ticketAmountController.text.toString())
+      });
+    }
 
     //update contributors on ticket
     await _contributorsCollection.add({
@@ -70,13 +83,18 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
       'description': widget.description,
       'ticketId': widget.ticketId,
       'sender': _auth.currentUser!.uid,
-      'userIds': {
+      'userIds': [
+        _auth.currentUser!.uid,
+        widget.friendId,
+      ],
+      'userIdsMap': {
         _auth.currentUser!.uid: true,
         widget.friendId: true,
       }
     });
 
     ticketAmountController.clear();
+    widget.contributeCallback();
     Navigator.of(context, rootNavigator: true).pop();
   }
 
@@ -87,7 +105,7 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
 
     return Container(
       height: size.height * 0.26,
-      width: size.width * 0.95,
+      width: size.width * 0.9,
       margin: EdgeInsets.symmetric(horizontal: 8),
       child: Card(
         shape: RoundedRectangleBorder(
@@ -122,7 +140,7 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                       textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
-                          color: Colors.black),
+                          color: theme.primaryColorDark),
                     ),
                   ),
                 ],
@@ -197,11 +215,8 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
               backgroundColor: theme.backgroundColor,
               elevation: 0,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  side: BorderSide(
-                    color: theme.primaryColor,
-                    width: 2,
-                  )),
+                borderRadius: BorderRadius.circular(20.0),
+              ),
               child: Container(
                 height: size.height * 0.62,
                 width: size.width * 0.6,
@@ -382,11 +397,8 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
             backgroundColor: theme.backgroundColor,
             elevation: 0,
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                side: BorderSide(
-                  color: theme.primaryColor,
-                  width: 2,
-                )),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
             title: Text(
               "Making payment",
               style: GoogleFonts.poppins(

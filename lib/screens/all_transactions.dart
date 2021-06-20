@@ -53,7 +53,7 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
           ),
           child: StreamBuilder(
             stream: _transactionsCollection
-                .where('userIds.${_auth.currentUser!.uid}', isEqualTo: true)
+                .where('userIds', arrayContains: _auth.currentUser!.uid)
                 .orderBy('createdAt', descending: true)
                 .snapshots(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -62,24 +62,41 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
               }
               if (snapshot.hasData) {
                 final documents = (snapshot.data)!.docs;
-                return ListView.builder(
-                  padding: EdgeInsets.all(15),
-                  itemCount: documents.length,
-                  itemBuilder: (context, index) => TransactionCard(
-                    friendUserId:
-                        (documents[index]['userIds'].keys.toList())[0] ==
-                                _auth.currentUser!.uid
-                            ? (documents[index]['userIds'].keys.toList())[1]
-                            : (documents[index]['userIds'].keys.toList())[0],
-                    amount: double.parse(documents[index]['amount'].toString()),
-                    date: DateTime.parse(
-                        documents[index]['createdAt'].toDate().toString()),
-                    description: documents[index]['description'],
-                    status: documents[index]['sender'] == _auth.currentUser!.uid
-                        ? 'Sent'
-                        : 'Received',
-                  ),
-                );
+                if (documents.isNotEmpty) {
+                  return ListView.builder(
+                    padding: EdgeInsets.all(15),
+                    itemCount: documents.length,
+                    itemBuilder: (context, index) => TransactionCard(
+                      friendUserId: (documents[index]['userIds'][0]) ==
+                              _auth.currentUser!.uid
+                          ? (documents[index]['userIds'][1])
+                          : (documents[index]['userIds'][0]),
+                      amount:
+                          double.parse(documents[index]['amount'].toString()),
+                      date: DateTime.parse(
+                          documents[index]['createdAt'].toDate().toString()),
+                      description: documents[index]['description'],
+                      status:
+                          documents[index]['sender'] == _auth.currentUser!.uid
+                              ? 'Sent'
+                              : 'Received',
+                    ),
+                  );
+                } else {
+                  return Center(
+                    child: Text(
+                      'No transactions to show.',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          color: theme.primaryColor,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 17,
+                        ),
+                      ),
+                    ),
+                  );
+                }
               } else {
                 return Container();
               }

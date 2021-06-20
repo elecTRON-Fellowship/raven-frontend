@@ -119,7 +119,6 @@ class _TicketsScreenState extends State<TicketsScreen> {
               children: [
                 Container(
                   height: size.height * 0.28,
-                  width: size.width,
                   child: StreamBuilder<QuerySnapshot>(
                     stream: _ticketsCollection
                         .where('userId', isEqualTo: _auth.currentUser!.uid)
@@ -135,20 +134,49 @@ class _TicketsScreenState extends State<TicketsScreen> {
                       }
                       if (snapshot.hasData) {
                         final documents = (snapshot.data)!.docs;
-                        return ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: documents.length,
-                          itemBuilder: (context, index) => MyTicketCard(
-                            ticketId: documents[index].id,
-                            description: documents[index]['description'],
-                            amountRaised: double.parse(
-                                documents[index]['amountRaised'].toString()),
-                            totalAmount: double.parse(
-                                documents[index]['totalAmount'].toString()),
-                            contributorCardOnTap: () =>
-                                _setShowContributorsToTrue(documents[index].id),
-                          ),
-                        );
+                        if (documents.isNotEmpty) {
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: documents.length,
+                            itemBuilder: (context, index) => MyTicketCard(
+                              ticketId: documents[index].id,
+                              description: documents[index]['description'],
+                              amountRaised: double.parse(
+                                  documents[index]['amountRaised'].toString()),
+                              totalAmount: double.parse(
+                                  documents[index]['totalAmount'].toString()),
+                              contributorCardOnTap: () =>
+                                  _setShowContributorsToTrue(
+                                      documents[index].id),
+                            ),
+                          );
+                        } else {
+                          return Container(
+                            height: size.height * 0.26,
+                            width: size.width * 0.9,
+                            margin: EdgeInsets.symmetric(horizontal: 8),
+                            child: Card(
+                              elevation: 3.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              color: theme.backgroundColor,
+                              child: Center(
+                                child: Text(
+                                  'No active tickets.\nClick on the + icon to create one.',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.poppins(
+                                    textStyle: TextStyle(
+                                      color: theme.primaryColor,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }
                       } else {
                         return Container();
                       }
@@ -160,6 +188,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                 ),
                 Expanded(
                   child: Container(
+                    width: double.infinity,
                     margin: EdgeInsets.only(top: 15),
                     decoration: BoxDecoration(
                       color: theme.backgroundColor,
@@ -189,23 +218,42 @@ class _TicketsScreenState extends State<TicketsScreen> {
                           }
                           if (snapshot.hasData) {
                             final documents = (snapshot.data)!.docs;
-                            return GridView.builder(
-                              itemCount: documents.length,
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 20, horizontal: 25),
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                mainAxisSpacing: 0,
-                                crossAxisSpacing: 15,
-                                childAspectRatio: 1,
-                              ),
-                              itemBuilder: (context, index) {
-                                return FriendTicketIcon(
-                                  friendId: documents[index].id,
-                                );
-                              },
-                            );
+                            if (documents.isNotEmpty) {
+                              return GridView.builder(
+                                itemCount: documents.length,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 20, horizontal: 25),
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  mainAxisSpacing: 0,
+                                  crossAxisSpacing: 15,
+                                  childAspectRatio: 1,
+                                ),
+                                itemBuilder: (context, index) {
+                                  return FriendTicketIcon(
+                                    friendId: documents[index].id,
+                                  );
+                                },
+                              );
+                            } else {
+                              return Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text(
+                                    'Tickets created by contacts who have you as a close friend will apear here.',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.poppins(
+                                      textStyle: TextStyle(
+                                        color: theme.primaryColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
                           } else {
                             return Container();
                           }
@@ -300,11 +348,10 @@ class _TicketsScreenState extends State<TicketsScreen> {
           ),
           child: Container(
             width: size.width * 0.75,
-            height: size.height * 0.51,
+            height: size.height * 0.56,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20.0),
               color: theme.backgroundColor,
-              border: Border.all(color: theme.primaryColor, width: 2),
             ),
             child: Form(
               key: _formKey,

@@ -59,9 +59,6 @@ class _CloseFriendCardState extends State<CloseFriendCard> {
         .get();
 
     if (snapshot.size > 0) {
-      final docs = snapshot.docs;
-      print(docs);
-
       setState(() {
         showLoading = false;
         status = ContactRegisteredStatus.REGISTERED;
@@ -76,69 +73,66 @@ class _CloseFriendCardState extends State<CloseFriendCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-            side: BorderSide(color: Theme.of(context).primaryColor)),
-        child: ListTile(
-          leading: CircleAvatar(
-            backgroundColor: Theme.of(context).accentColor,
-            child: Text(
-              this.widget.name.isNotEmpty
-                  ? this
-                      .widget
-                      .name
-                      .trim()
-                      .split(' ')
-                      .map((l) => l[0])
-                      .take(2)
-                      .join()
-                  : '',
-              style: GoogleFonts.poppins(
-                  textStyle: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: Colors.white,
-              )),
-            ),
-          ),
-          title: Text(
-            this.widget.name,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.poppins(
-                textStyle: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Theme.of(context).primaryColorDark,
-            )),
-          ),
-          subtitle: Text(
-            this.widget.number,
-            style: GoogleFonts.poppins(
-                textStyle: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor: Theme.of(context).accentColor,
+        child: Text(
+          this.widget.name.isNotEmpty
+              ? this
+                  .widget
+                  .name
+                  .trim()
+                  .split(' ')
+                  .map((l) => l[0])
+                  .take(2)
+                  .join()
+              : '',
+          style: GoogleFonts.poppins(
+              textStyle: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            color: Colors.white,
+          )),
+        ),
+        radius: 24,
+      ),
+      title: Text(
+        this.widget.name,
+        overflow: TextOverflow.ellipsis,
+        style: GoogleFonts.poppins(
+            textStyle: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+          color: Theme.of(context).primaryColorDark,
+        )),
+      ),
+      subtitle: Text(
+        this.widget.number,
+        style: GoogleFonts.poppins(
+            textStyle: TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 14,
+          color: Theme.of(context).primaryColor,
+        )),
+      ),
+      trailing: showLoading
+          ? CircularProgressIndicator(
               color: Theme.of(context).primaryColor,
-            )),
-          ),
-          trailing: showLoading
-              ? CircularProgressIndicator(
-                  color: Theme.of(context).primaryColor,
-                )
-              : status == ContactRegisteredStatus.REGISTERED
-                  ? CloseFriendActionButton(number: widget.number)
-                  : TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        'Invite',
-                        style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          color: Theme.of(context).primaryColor,
-                        )),
-                      ),
-                    ),
-        ));
+            )
+          : status == ContactRegisteredStatus.REGISTERED
+              ? CloseFriendActionButton(number: widget.number)
+              : TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Invite',
+                    style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                      color: Theme.of(context).primaryColor,
+                    )),
+                  ),
+                ),
+    );
   }
 }
