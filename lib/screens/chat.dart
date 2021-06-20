@@ -20,7 +20,7 @@ class _ChatScreenState extends State<ChatScreen> {
   CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('users');
   late TextEditingController textController;
-  final ScrollController scrollController = ScrollController();
+  late ScrollController scrollController;
 
   late CollectionReference _messagesCollection;
 
@@ -29,6 +29,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
+    scrollController = ScrollController();
     textController = new TextEditingController();
     _messagesCollection = FirebaseFirestore.instance
         .collection('conversations/${widget.conversationId}/messages');
@@ -71,29 +72,38 @@ class _ChatScreenState extends State<ChatScreen> {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
 
+    final appBar = AppBar(
+      elevation: 0.0,
+      backgroundColor: theme.primaryColor,
+      centerTitle: true,
+      title: Text(
+        fetchedName,
+        style: GoogleFonts.poppins(
+            textStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: theme.primaryColorDark)),
+      ),
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.credit_card_rounded),
+          iconSize: 25,
+          color: theme.primaryColorDark,
+        ),
+      ],
+      leading: IconButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        icon: Icon(Icons.arrow_back_rounded),
+        color: theme.primaryColorDark,
+      ),
+    );
+
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: theme.primaryColor,
-        centerTitle: true,
-        title: Text(
-          fetchedName,
-          style: GoogleFonts.poppins(
-              textStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
-                  color: theme.primaryColorDark)),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.credit_card_rounded),
-            iconSize: 30,
-            color: theme.primaryColorDark,
-          ),
-        ],
-      ),
+      appBar: appBar,
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).requestFocus(new FocusNode());
@@ -102,8 +112,6 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             Expanded(
               child: Container(
-                margin: EdgeInsets.only(top: 15),
-                padding: EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   color: Theme.of(context).backgroundColor,
                   borderRadius: BorderRadius.only(
@@ -164,7 +172,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+              padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               color: Theme.of(context).backgroundColor,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,22 +182,25 @@ class _ChatScreenState extends State<ChatScreen> {
                       controller: textController,
                       textInputAction: TextInputAction.newline,
                       minLines: 1,
-                      maxLines: 5,
+                      maxLines: 3,
                       style: GoogleFonts.poppins(
-                        textStyle: TextStyle(),
+                        textStyle: TextStyle(
+                          fontSize: 14.0,
+                          color: theme.primaryColorDark,
+                        ),
                       ),
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(13),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16.0),
                           borderSide: BorderSide(
-                            color: theme.primaryColor,
+                            color: theme.primaryColorDark,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16.0),
                           borderSide: BorderSide(
-                            color: theme.primaryColor,
+                            color: theme.primaryColorDark,
                             width: 2,
                           ),
                         ),
@@ -200,23 +211,19 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   IconButton(
                     onPressed: () {
-                      if (textController.text.isEmpty) {
-                        print(textController.text.isEmpty);
-                        print(textController.text);
-                        print('ok');
-                      } else {
+                      if (textController.text.isNotEmpty) {
                         sendMessage();
                       }
                     },
                     icon: Icon(Icons.send_rounded),
-                    color: theme.accentColor,
+                    color: theme.primaryColorDark,
                     iconSize: 30.0,
                     padding: EdgeInsets.only(left: 15),
                   ),
                   IconButton(
                     onPressed: () => sendTimedChatInvitation(),
                     icon: Icon(Icons.timer_rounded),
-                    color: theme.accentColor,
+                    color: theme.primaryColorDark,
                     iconSize: 30.0,
                     padding: EdgeInsets.only(left: 15),
                   ),

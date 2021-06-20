@@ -76,158 +76,185 @@ class _TimedChatInviteState extends State<TimedChatInvite> {
           final status = data['status'];
 
           if (status == 'PENDING') {
-            return Column(
-              crossAxisAlignment:
-                  isSent ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-              children: [
-                isSent
-                    ? Text('You sent an invitation',
-                        style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                                fontSize: 15,
-                                color: Theme.of(context).accentColor)))
-                    : Text('You received an invitation',
-                        style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                                fontSize: 15,
-                                color: Theme.of(context).accentColor))),
-                Container(
-                  decoration: BoxDecoration(
-                    color: isSent
-                        ? Theme.of(context).accentColor
-                        : Color.fromRGBO(144, 180, 206, 0.5),
-                    borderRadius: isSent
-                        ? BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            bottomLeft: Radius.circular(30),
-                            bottomRight: Radius.circular(30),
-                          )
-                        : BorderRadius.only(
-                            topRight: Radius.circular(30),
-                            bottomLeft: Radius.circular(30),
-                            bottomRight: Radius.circular(30),
-                          ),
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: Column(
+                crossAxisAlignment:
+                    isSent ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                children: [
+                  isSent
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text('You sent an invitation',
+                              style: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                      fontSize: 13,
+                                      color: Theme.of(context).accentColor))),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text('You received an invitation',
+                              style: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                      fontSize: 13,
+                                      color: Theme.of(context).accentColor))),
+                        ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    margin: isSent
+                        ? EdgeInsets.only(right: 10)
+                        : EdgeInsets.only(left: 10),
+                    decoration: BoxDecoration(
+                      color: isSent
+                          ? Theme.of(context).accentColor
+                          : Color.fromRGBO(144, 180, 206, 0.5),
+                      borderRadius: isSent
+                          ? BorderRadius.only(
+                              topLeft: Radius.circular(16),
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16),
+                            )
+                          : BorderRadius.only(
+                              topRight: Radius.circular(16),
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16),
+                            ),
+                    ),
+                    child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 2, horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Up for a coffee break?',
+                              style: GoogleFonts.poppins(
+                                  textStyle: isSent
+                                      ? TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white)
+                                      : TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context)
+                                              .primaryColorDark)),
+                            ),
+                            isSent
+                                ? IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.timer_rounded,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : Row(
+                                    children: [
+                                      IconButton(
+                                          color: Theme.of(context)
+                                              .primaryColorDark,
+                                          onPressed: () {
+                                            acceptTimedChatInvitation();
+                                          },
+                                          icon: Icon(Icons
+                                              .check_circle_outline_rounded)),
+                                      IconButton(
+                                          color: Theme.of(context)
+                                              .primaryColorDark,
+                                          onPressed: () {
+                                            declineTimedChatInvitation();
+                                          },
+                                          icon: Icon(Icons.cancel_outlined)),
+                                    ],
+                                  )
+                          ],
+                        )),
                   ),
-                  child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 13),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Up for a coffee break?',
-                            style: GoogleFonts.poppins(
-                                textStyle: isSent
-                                    ? TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white)
-                                    : TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context)
-                                            .primaryColorDark)),
-                          ),
-                          isSent
-                              ? IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.timer_rounded,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : Row(
-                                  children: [
-                                    IconButton(
-                                        color:
-                                            Theme.of(context).primaryColorDark,
-                                        onPressed: () {
-                                          acceptTimedChatInvitation();
-                                        },
-                                        icon: Icon(Icons.check_circle_rounded)),
-                                    IconButton(
-                                        color:
-                                            Theme.of(context).primaryColorDark,
-                                        onPressed: () {
-                                          declineTimedChatInvitation();
-                                        },
-                                        icon: Icon(Icons.cancel_rounded)),
-                                  ],
-                                )
-                        ],
-                      )),
-                ),
-              ],
+                ],
+              ),
             );
           } else if (status == 'DECLINED') {
-            return Column(
-              crossAxisAlignment:
-                  isSent ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-              children: [
-                isSent
-                    ? Text('Your invitation was declined',
-                        style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                                fontSize: 15,
-                                color: Theme.of(context).accentColor)))
-                    : Text('You declined an invitation',
-                        style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                                fontSize: 15,
-                                color: Theme.of(context).accentColor))),
-                Container(
-                  decoration: BoxDecoration(
-                    color: isSent
-                        ? Theme.of(context).accentColor
-                        : Color.fromRGBO(144, 180, 206, 0.5),
-                    borderRadius: isSent
-                        ? BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            bottomLeft: Radius.circular(30),
-                            bottomRight: Radius.circular(30),
-                          )
-                        : BorderRadius.only(
-                            topRight: Radius.circular(30),
-                            bottomLeft: Radius.circular(30),
-                            bottomRight: Radius.circular(30),
-                          ),
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: Column(
+                crossAxisAlignment:
+                    isSent ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                children: [
+                  isSent
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text('Your invitation was declined',
+                              style: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                      fontSize: 13,
+                                      color: Theme.of(context).accentColor))),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text('You declined an invitation',
+                              style: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                      fontSize: 13,
+                                      color: Theme.of(context).accentColor))),
+                        ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    margin: isSent
+                        ? EdgeInsets.only(right: 10)
+                        : EdgeInsets.only(left: 10),
+                    decoration: BoxDecoration(
+                      color: isSent
+                          ? Theme.of(context).accentColor
+                          : Color.fromRGBO(144, 180, 206, 0.5),
+                      borderRadius: isSent
+                          ? BorderRadius.only(
+                              topLeft: Radius.circular(16),
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16),
+                            )
+                          : BorderRadius.only(
+                              topRight: Radius.circular(16),
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16),
+                            ),
+                    ),
+                    child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 2, horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Up for a coffee break?',
+                              style: GoogleFonts.poppins(
+                                  textStyle: isSent
+                                      ? TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white)
+                                      : TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context)
+                                              .primaryColorDark)),
+                            ),
+                            isSent
+                                ? IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.cancel_rounded,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : IconButton(
+                                    color: Theme.of(context).primaryColorDark,
+                                    onPressed: () {},
+                                    icon: Icon(Icons.cancel_rounded))
+                          ],
+                        )),
                   ),
-                  child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 13),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Up for a coffee break?',
-                            style: GoogleFonts.poppins(
-                                textStyle: isSent
-                                    ? TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white)
-                                    : TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context)
-                                            .primaryColorDark)),
-                          ),
-                          isSent
-                              ? IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.timer_rounded,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : IconButton(
-                                  color: Theme.of(context).primaryColorDark,
-                                  onPressed: () {},
-                                  icon: Icon(Icons.cancel_rounded))
-                        ],
-                      )),
-                ),
-              ],
+                ],
+              ),
             );
           } else if (status == 'ACCEPTED') {
             WidgetsBinding.instance!.addPostFrameCallback((_) {
@@ -242,74 +269,87 @@ class _TimedChatInviteState extends State<TimedChatInvite> {
             });
             return Container();
           } else {
-            return Column(
-              crossAxisAlignment:
-                  isSent ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-              children: [
-                isSent
-                    ? Text('Your invitation was accepted',
-                        style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                                fontSize: 15,
-                                color: Theme.of(context).accentColor)))
-                    : Text('You accepted an invitation',
-                        style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                                fontSize: 15,
-                                color: Theme.of(context).accentColor))),
-                Container(
-                  decoration: BoxDecoration(
-                    color: isSent
-                        ? Theme.of(context).accentColor
-                        : Color.fromRGBO(144, 180, 206, 0.5),
-                    borderRadius: isSent
-                        ? BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            bottomLeft: Radius.circular(30),
-                            bottomRight: Radius.circular(30),
-                          )
-                        : BorderRadius.only(
-                            topRight: Radius.circular(30),
-                            bottomLeft: Radius.circular(30),
-                            bottomRight: Radius.circular(30),
-                          ),
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: Column(
+                crossAxisAlignment:
+                    isSent ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                children: [
+                  isSent
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text('Your invitation was accepted',
+                              style: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                      fontSize: 13,
+                                      color: Theme.of(context).accentColor))),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text('You accepted an invitation',
+                              style: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                      fontSize: 13,
+                                      color: Theme.of(context).accentColor))),
+                        ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    margin: isSent
+                        ? EdgeInsets.only(right: 10)
+                        : EdgeInsets.only(left: 10),
+                    decoration: BoxDecoration(
+                      color: isSent
+                          ? Theme.of(context).accentColor
+                          : Color.fromRGBO(144, 180, 206, 0.5),
+                      borderRadius: isSent
+                          ? BorderRadius.only(
+                              topLeft: Radius.circular(16),
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16),
+                            )
+                          : BorderRadius.only(
+                              topRight: Radius.circular(16),
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16),
+                            ),
+                    ),
+                    child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 2, horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Up for a coffee break?',
+                              style: GoogleFonts.poppins(
+                                  textStyle: isSent
+                                      ? TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white)
+                                      : TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context)
+                                              .primaryColorDark)),
+                            ),
+                            isSent
+                                ? IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.check_circle_rounded,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : IconButton(
+                                    color: Theme.of(context).primaryColorDark,
+                                    onPressed: () {},
+                                    icon: Icon(Icons.check_circle_rounded))
+                          ],
+                        )),
                   ),
-                  child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 13),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Up for a coffee break?',
-                            style: GoogleFonts.poppins(
-                                textStyle: isSent
-                                    ? TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white)
-                                    : TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context)
-                                            .primaryColorDark)),
-                          ),
-                          isSent
-                              ? IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.check_circle_rounded,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : IconButton(
-                                  color: Theme.of(context).primaryColorDark,
-                                  onPressed: () {},
-                                  icon: Icon(Icons.check_circle_rounded))
-                        ],
-                      )),
-                ),
-              ],
+                ],
+              ),
             );
           }
         } else {
