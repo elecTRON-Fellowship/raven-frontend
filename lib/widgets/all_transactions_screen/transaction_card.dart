@@ -47,14 +47,15 @@ class _TransactionCardState extends State<TransactionCard> {
     final size = MediaQuery.of(context).size;
 
     return Container(
-      height: size.height * 0.15,
+      margin: EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
           border: Border.all(color: theme.primaryColorDark)),
       width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
+      child: ExpansionTile(
+        tilePadding: EdgeInsets.all(8),
+        childrenPadding: EdgeInsets.all(8),
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
@@ -92,56 +93,67 @@ class _TransactionCardState extends State<TransactionCard> {
                 ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  this.widget.status,
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                      fontSize: 14,
-                      color: theme.accentColor,
-                    ),
-                  ),
+            Text(
+              DateFormat.yMd().format(this.widget.date),
+              style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+                  fontSize: 15,
+                  color: theme.accentColor,
                 ),
-                Text(
-                  DateFormat.yMd().add_jm().format(this.widget.date),
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                      fontSize: 14,
-                      color: theme.accentColor,
-                    ),
-                  ),
-                )
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  this.widget.description,
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15,
-                      color: theme.primaryColorDark,
-                    ),
-                  ),
-                ),
-                Text(
-                  '₹${this.widget.amount.toStringAsFixed(2)}',
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.black,
-                    ),
-                  ),
-                )
-              ],
+              ),
             )
           ],
         ),
+        subtitle: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              this.widget.status,
+              style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+                  fontSize: 15,
+                  color: theme.accentColor,
+                ),
+              ),
+            ),
+            Text(
+              '₹${this.widget.amount.toStringAsFixed(2)}',
+              style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
+        ),
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                this.widget.description,
+                style: GoogleFonts.poppins(
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 15,
+                    color: theme.primaryColorDark,
+                  ),
+                ),
+              ),
+              Text(
+                DateFormat.jm().format(this.widget.date),
+                style: GoogleFonts.poppins(
+                  textStyle: TextStyle(
+                    fontSize: 14,
+                    color: theme.accentColor,
+                  ),
+                ),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }

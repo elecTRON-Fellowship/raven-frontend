@@ -30,7 +30,7 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
         backgroundColor: theme.primaryColor,
         centerTitle: true,
         title: Text(
-          'History',
+          'Transactions',
           style: GoogleFonts.poppins(
               textStyle: TextStyle(
                   fontWeight: FontWeight.bold,
