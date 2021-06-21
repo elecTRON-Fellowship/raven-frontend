@@ -21,7 +21,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
   @override
   void initState() {
     super.initState();
-    fetchContacts();
+    //fetchContacts();
+    checkpermissionContacts();
     searchController.addListener(() {
       filterContacts();
     });
@@ -45,6 +46,16 @@ class _ContactsScreenState extends State<ContactsScreen> {
     setState(() {
       contacts = _validContacts;
     });
+  }
+
+  checkpermissionContacts() async {
+    var contactStatus = await Permission.contacts.status;
+
+    print(contactStatus);
+
+    if (!contactStatus.isGranted) await Permission.contacts.request();
+
+    if (await Permission.contacts.isGranted) fetchContacts();
   }
 
   void filterContacts() {
@@ -95,7 +106,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () => fetchContacts(),
+            //onPressed: () => fetchContacts(),
+            onPressed: () => checkpermissionContacts(),
             icon: Icon(Icons.sync_rounded),
             iconSize: 25,
             color: Theme.of(context).primaryColorDark,

@@ -107,7 +107,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
         children: [
           Container(
             height: size.height * 0.28,
-            width: size.width,
+            //width: size.width,
             child: StreamBuilder<QuerySnapshot>(
               stream: _ticketsCollection
                   .where('userId', isEqualTo: widget.friendId)
@@ -124,21 +124,49 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                 }
                 if (snapshot.hasData) {
                   final documents = (snapshot.data)!.docs;
-                  return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: documents.length,
-                    itemBuilder: (context, index) => FriendTicketCard(
-                      contributeCallback: refreshTransactions,
-                      friendId: widget.friendId,
-                      friendName: fetchedName,
-                      ticketId: documents[index].id,
-                      description: documents[index]['description'],
-                      amountRaised: double.parse(
-                          documents[index]['amountRaised'].toString()),
-                      totalAmount: double.parse(
-                          documents[index]['totalAmount'].toString()),
-                    ),
-                  );
+                  if (documents.isNotEmpty) {
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: documents.length,
+                      itemBuilder: (context, index) => FriendTicketCard(
+                        contributeCallback: refreshTransactions,
+                        friendId: widget.friendId,
+                        friendName: fetchedName,
+                        ticketId: documents[index].id,
+                        description: documents[index]['description'],
+                        amountRaised: double.parse(
+                            documents[index]['amountRaised'].toString()),
+                        totalAmount: double.parse(
+                            documents[index]['totalAmount'].toString()),
+                      ),
+                    );
+                  } else
+                    return Container(
+                      height: size.height * 0.26,
+                      width: size.width * 0.9,
+                      margin: EdgeInsets.symmetric(horizontal: 8),
+                      child: Card(
+                        elevation: 3.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        color: theme.backgroundColor,
+                        child: Center(
+                          child: Text(
+                            "$fetchedName doesn't have any active tickets.",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                color: theme.primaryColor,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  ;
                 } else {
                   return Container();
                 }

@@ -24,6 +24,12 @@ class _FriendTicketIconState extends State<FriendTicketIcon> {
     fetchContributorName();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    fetchedName = "";
+  }
+
   fetchContributorName() async {
     final snapshot = await _userCollection.doc(widget.friendId).get();
     final data = snapshot.data() as Map<String, dynamic>;

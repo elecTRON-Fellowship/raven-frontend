@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/screens/friend_transactions.dart';
 import 'package:raven/widgets/chat_screen/message_bubble.dart';
 import 'package:raven/widgets/chat_screen/timed_chat_invite.dart';
 
@@ -86,7 +87,12 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) =>
+                  FriendTransactionsScreen(friendId: widget.friendId),
+            ));
+          },
           icon: Icon(Icons.credit_card_rounded),
           iconSize: 25,
           color: theme.primaryColorDark,

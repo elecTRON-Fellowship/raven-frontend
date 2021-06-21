@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/screens/all_transactions.dart';
+import 'package:raven/widgets/common/end_drawer.dart';
 import 'package:raven/widgets/tickets_screen/friend_ticket_icon.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_card.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_contributors.dart';
@@ -62,6 +63,25 @@ class _TicketsScreenState extends State<TicketsScreen> {
     ticketDescriptionController.clear();
     ticketAmountController.clear();
     Navigator.of(context).pop();
+  }
+
+  int _selectedNavBarIndex = 1;
+
+  void _onIndexChanged(index, ctx) {
+    setState(() {
+      _selectedNavBarIndex = index;
+      print(_selectedNavBarIndex);
+    });
+    if (_selectedNavBarIndex == 0) {
+      Navigator.of(context).pop();
+    }
+    if (_selectedNavBarIndex == 3) {
+      print("This is running");
+      Scaffold.of(ctx).openEndDrawer();
+      setState(() {
+        _selectedNavBarIndex = 1;
+      });
+    }
   }
 
   @override
@@ -273,60 +293,48 @@ class _TicketsScreenState extends State<TicketsScreen> {
             ),
         ],
       ),
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-        color: theme.backgroundColor,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
-          child: BottomNavigationBar(
-            currentIndex: 1,
-            onTap: (index) {
-              if (index == 0) Navigator.of(context).pop();
-            },
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            backgroundColor: theme.primaryColor,
-            type: BottomNavigationBarType.fixed,
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.message_rounded,
-                  size: 30,
-                  color: Colors.white,
-                ),
-                label: 'Conversations',
+      endDrawer: EndDrawer(),
+      bottomNavigationBar: Builder(
+        builder: (ctx) => BottomNavigationBar(
+          elevation: 2,
+          currentIndex: _selectedNavBarIndex,
+          onTap: (index) => _onIndexChanged(index, ctx),
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          backgroundColor: theme.primaryColor,
+          selectedItemColor: theme.primaryColorDark,
+          unselectedItemColor: Colors.white,
+          type: BottomNavigationBarType.fixed,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.message_rounded,
+                size: 30,
               ),
-              BottomNavigationBarItem(
-                activeIcon: Icon(
-                  Icons.account_balance_wallet_rounded,
-                  size: 30,
-                  color: theme.primaryColorDark,
-                ),
-                icon: Icon(
-                  Icons.account_balance_wallet_rounded,
-                  size: 30,
-                  color: Colors.white,
-                ),
-                label: 'Tickets',
+              label: 'Conversations',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.account_balance_wallet_rounded,
+                size: 30,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.local_taxi_rounded,
-                  size: 30,
-                  color: Colors.white,
-                ),
-                label: 'Uber',
+              label: 'Tickets',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.local_taxi_rounded,
+                size: 30,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.settings_rounded,
-                  size: 30,
-                  color: Colors.white,
-                ),
-                label: 'Settings',
+              label: 'Uber',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.settings_rounded,
+                size: 30,
               ),
-            ],
-          ),
+              label: 'Settings',
+            ),
+          ],
         ),
       ),
     );

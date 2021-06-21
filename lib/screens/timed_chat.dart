@@ -225,7 +225,7 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                 color: Theme.of(context).backgroundColor,
                 child: Column(
                   children: [

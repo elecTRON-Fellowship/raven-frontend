@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/widgets/common/end_drawer.dart';
@@ -18,6 +17,28 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
       FirebaseFirestore.instance.collection('conversations');
 
   bool showLoading = false;
+
+  int _selectedNavBarIndex = 0;
+
+  void _onIndexChanged(index, ctx) {
+    setState(() {
+      _selectedNavBarIndex = index;
+      print(_selectedNavBarIndex);
+    });
+    if (_selectedNavBarIndex == 1) {
+      Navigator.of(context).pushNamed('/tickets');
+      setState(() {
+        _selectedNavBarIndex = 0;
+      });
+    }
+    if (_selectedNavBarIndex == 3) {
+      print("This is running");
+      Scaffold.of(ctx).openEndDrawer();
+      setState(() {
+        _selectedNavBarIndex = 0;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +76,6 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
 
     return Scaffold(
       backgroundColor: theme.primaryColor,
-      // extendBodyBehindAppBar: true,
       appBar: appBar,
       body: Container(
         height: size.height - appBar.preferredSize.height,
@@ -95,72 +115,50 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
           },
         ),
       ),
-
+      endDrawer: EndDrawer(),
       bottomNavigationBar: Builder(
-        builder: (ctx) => Container(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-          color: theme.backgroundColor,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: BottomNavigationBar(
-              currentIndex: 0,
-              onTap: (index) async {
-                if (index == 1) Navigator.of(context).pushNamed('/tickets');
-                if (index == 3) {
-                  // await _auth.signOut();
-                  // Navigator.of(context)
-                  //     .pushNamedAndRemoveUntil('/auth', (route) => false);
-                  Scaffold.of(ctx).openEndDrawer();
-                }
-              },
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
-              backgroundColor: theme.primaryColor,
-              type: BottomNavigationBarType.fixed,
-              items: [
-                BottomNavigationBarItem(
-                  activeIcon: Icon(
-                    Icons.message_rounded,
-                    size: 30,
-                    color: theme.primaryColorDark,
-                  ),
-                  icon: Icon(
-                    Icons.message_rounded,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                  label: 'Conversations',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.account_balance_wallet_rounded,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                  label: 'Tickets',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.local_taxi_rounded,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                  label: 'Uber',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.settings_rounded,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                  label: 'Settings',
-                ),
-              ],
+        builder: (ctx) => BottomNavigationBar(
+          elevation: 2,
+          currentIndex: _selectedNavBarIndex,
+          onTap: (index) => _onIndexChanged(index, ctx),
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          backgroundColor: theme.primaryColor,
+          selectedItemColor: theme.primaryColorDark,
+          unselectedItemColor: Colors.white,
+          type: BottomNavigationBarType.fixed,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.message_rounded,
+                size: 30,
+              ),
+              label: 'Conversations',
             ),
-          ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.account_balance_wallet_rounded,
+                size: 30,
+              ),
+              label: 'Tickets',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.local_taxi_rounded,
+                size: 30,
+              ),
+              label: 'Uber',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.settings_rounded,
+                size: 30,
+              ),
+              label: 'Settings',
+            ),
+          ],
         ),
       ),
-      endDrawer: EndDrawer(),
     );
   }
 }
