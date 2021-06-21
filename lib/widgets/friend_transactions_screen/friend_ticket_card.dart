@@ -219,7 +219,7 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
               ),
               child: Container(
                 height: size.height * 0.62,
-                width: size.width * 0.6,
+                width: size.width * 0.8,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

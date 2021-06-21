@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +28,10 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
       FirebaseFirestore.instance.collection('users');
 
   String fetchedName = '';
+
+  final _descriptionController = TextEditingController();
+  final _amountController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -102,12 +108,21 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              _createSendDialog(context, theme, size);
+            },
+            icon: Icon(Icons.add_circle_outline_rounded),
+            iconSize: 25,
+            color: theme.primaryColorDark,
+          ),
+        ],
       ),
       body: Column(
         children: [
           Container(
             height: size.height * 0.28,
-            //width: size.width,
             child: StreamBuilder<QuerySnapshot>(
               stream: _ticketsCollection
                   .where('userId', isEqualTo: widget.friendId)
@@ -214,4 +229,285 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
       ),
     );
   }
+
+  _createSendDialog(BuildContext context, final theme, final size) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: 5,
+              sigmaY: 5,
+            ),
+            child: Dialog(
+              backgroundColor: theme.backgroundColor,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: Form(
+                key: _formKey,
+                child: Container(
+                  height: size.height * 0.7,
+                  width: size.width * 0.8,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(
+                        height: size.height * 0.02,
+                      ),
+                      Text(
+                        "Sending Money to",
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: theme.primaryColor,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.01,
+                      ),
+                      Text(
+                        fetchedName,
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: theme.primaryColorDark,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.01,
+                      ),
+                      Container(
+                        width: size.width * 0.6,
+                        child: TextFormField(
+                          textCapitalization: TextCapitalization.sentences,
+                          controller: _descriptionController,
+                          maxLines: 3,
+                          minLines: 3,
+                          maxLength: 60,
+                          keyboardType: TextInputType.text,
+                          textInputAction: TextInputAction.next,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: theme.primaryColorDark,
+                          ),
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.all(10.0),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              borderSide: BorderSide(
+                                color: theme.primaryColorDark,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              borderSide: BorderSide(
+                                color: theme.primaryColorDark,
+                                width: 2,
+                              ),
+                            ),
+                            hintText: "Need money for.....",
+                            hintStyle: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                fontSize: 18.0,
+                                color: theme.primaryColor,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Required";
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.02,
+                      ),
+                      Container(
+                        width: size.width * 0.5,
+                        child: TextFormField(
+                          controller: _amountController,
+                          textAlign: TextAlign.center,
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.done,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: theme.primaryColorDark,
+                          ),
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.all(10.0),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              borderSide: BorderSide(
+                                color: theme.primaryColorDark,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              borderSide: BorderSide(
+                                color: theme.primaryColorDark,
+                                width: 2,
+                              ),
+                            ),
+                            hintText: "Amount",
+                            hintStyle: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                fontSize: 18.0,
+                                color: theme.primaryColor,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (double.tryParse(value.toString()) == null) {
+                              return "Enter a valid amount";
+                            } else if (double.parse(value.toString()) <= 0) {
+                              return "Amount can't be 0";
+                            } else if (double.parse(value.toString()) >
+                                9999.00) {
+                              return "Max amount allowed is 9999.00";
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.02,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            Navigator.of(context, rootNavigator: true).pop();
+                            showAlertDialog(context, theme);
+                          }
+                        },
+                        child: Text(
+                          "Send Money",
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22,
+                            ),
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(
+                            size.width * 0.55,
+                            size.height * 0.065,
+                          ),
+                          onPrimary: theme.backgroundColor,
+                          primary: theme.accentColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.02,
+                      ),
+                      Text(
+                        "Wallet Balance: 100000",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            fontSize: 18,
+                            color: theme.primaryColorDark,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.01,
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "Add money to wallet",
+                          style: GoogleFonts.poppins(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: theme.accentColor,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.02,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  showAlertDialog(BuildContext context, final theme) => showDialog(
+        context: context,
+        builder: (context) => BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: 5,
+            sigmaY: 5,
+          ),
+          child: AlertDialog(
+            backgroundColor: theme.backgroundColor,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            title: Text(
+              "Making payment",
+              style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: theme.primaryColorDark,
+                ),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            content: Text(
+              "₹${double.parse(_amountController.text).toStringAsFixed(2)} will be deducted from your wallet",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+                  fontSize: 18,
+                  color: theme.primaryColor,
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                child: Text(
+                  "No",
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: theme.accentColor,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  //sendMoney(context);
+                },
+                child: Text(
+                  "Yes",
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: theme.accentColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
 }

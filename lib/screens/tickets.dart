@@ -356,7 +356,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
           ),
           child: Container(
             width: size.width * 0.75,
-            height: size.height * 0.56,
+            height: size.height * 0.57,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20.0),
               color: theme.backgroundColor,
@@ -419,6 +419,11 @@ class _TicketsScreenState extends State<TicketsScreen> {
                           ),
                         ),
                       ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Required";
+                        }
+                      },
                     ),
                   ),
                   SizedBox(
