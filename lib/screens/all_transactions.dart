@@ -34,7 +34,7 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
           style: GoogleFonts.poppins(
               textStyle: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 22,
+                  fontSize: 20,
                   color: theme.primaryColorDark)),
         ),
       ),

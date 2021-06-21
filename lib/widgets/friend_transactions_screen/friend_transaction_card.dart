@@ -57,13 +57,17 @@ class FriendTransactionCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  this.description,
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15,
-                      color: theme.primaryColorDark,
+                Container(
+                  width: size.width * 0.58,
+                  child: Text(
+                    this.description,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                        color: theme.primaryColorDark,
+                      ),
                     ),
                   ),
                 ),

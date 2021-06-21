@@ -224,21 +224,26 @@ class _TicketsScreenState extends State<TicketsScreen> {
                       height: size.height * 0.26,
                       width: size.width * 0.9,
                       margin: EdgeInsets.symmetric(horizontal: 8),
-                      child: Card(
-                        elevation: 3.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        color: theme.backgroundColor,
-                        child: Center(
-                          child: Text(
-                            'No active tickets.\nClick on the + icon to create one.',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                color: theme.primaryColor,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
+                      child: GestureDetector(
+                        onTap: () {
+                          showOverlay(theme, size);
+                        },
+                        child: Card(
+                          elevation: 3.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          color: theme.backgroundColor,
+                          child: Center(
+                            child: Text(
+                              'No active tickets.',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                  color: theme.primaryColor,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18,
+                                ),
                               ),
                             ),
                           ),

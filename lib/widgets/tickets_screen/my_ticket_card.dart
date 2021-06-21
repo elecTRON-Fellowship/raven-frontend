@@ -89,6 +89,7 @@ class _MyTicketCardState extends State<MyTicketCard> {
               ),
               Text(
                 this.widget.description,
+                textAlign: TextAlign.center,
                 style: GoogleFonts.poppins(
                   textStyle: TextStyle(
                     fontWeight: FontWeight.w500,
@@ -101,6 +102,7 @@ class _MyTicketCardState extends State<MyTicketCard> {
                 height: 13,
               ),
               Container(
+                width: size.width * 0.7,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     border: Border.all(color: theme.primaryColorDark)),
@@ -133,12 +135,17 @@ class _MyTicketCardState extends State<MyTicketCard> {
                                 double.parse(data['amount'].toString()),
                                 theme.backgroundColor));
                       } else {
-                        return Text(
-                          'No contributors yet.',
-                          style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                              color: theme.primaryColorDark,
-                              fontSize: 14,
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24.0, vertical: 8),
+                          child: Text(
+                            'No contributors yet.',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                color: theme.primaryColorDark,
+                                fontSize: 14,
+                              ),
                             ),
                           ),
                         );
@@ -158,6 +165,7 @@ class _MyTicketCardState extends State<MyTicketCard> {
 
   void showOverlay(final theme, final size, contributorId, amountContributed,
       backgroundColor) {
+    print('OVERLAYYYYYYYY');
     showDialog(
       context: context,
       builder: (context) => BackdropFilter(

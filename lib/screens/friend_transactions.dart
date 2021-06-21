@@ -248,7 +248,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
               child: Form(
                 key: _formKey,
                 child: Container(
-                  height: size.height * 0.57,
+                  height: size.height * 0.58,
                   width: size.width * 0.8,
                   child: SingleChildScrollView(
                     child: Column(

@@ -34,6 +34,7 @@ class _MyTicketContributorCardState extends State<MyTicketContributorCard> {
   fetchContributorName() async {
     final snapshot = await _userCollection.doc(widget.contributorId).get();
     final data = snapshot.data() as Map<String, dynamic>;
+    if (!mounted) return;
     setState(() {
       fetchedName = "${data['firstName']} ${data['lastName']}";
     });

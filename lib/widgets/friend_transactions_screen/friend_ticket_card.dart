@@ -150,6 +150,7 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
               ),
               Text(
                 this.widget.description,
+                textAlign: TextAlign.center,
                 style: GoogleFonts.poppins(
                   textStyle: TextStyle(
                     fontWeight: FontWeight.w500,
@@ -218,167 +219,169 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                 borderRadius: BorderRadius.circular(20.0),
               ),
               child: Container(
-                height: size.height * 0.62,
+                height: size.height * 0.65,
                 width: size.width * 0.8,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    SizedBox(
-                      height: size.height * 0.02,
-                    ),
-                    Text(
-                      "Sending Money to",
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: theme.primaryColor,
-                        ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(
+                        height: size.height * 0.02,
                       ),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.02,
-                    ),
-                    Text(
-                      widget.friendName,
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: theme.primaryColorDark,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.02,
-                    ),
-                    Container(
-                      width: size.width * 0.48,
-                      child: Text(
-                        widget.description,
-                        textAlign: TextAlign.center,
+                      Text(
+                        "Sending Money to",
                         style: GoogleFonts.poppins(
                           textStyle: TextStyle(
-                            fontSize: 18,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                             color: theme.primaryColor,
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.04,
-                    ),
-                    Container(
-                      width: size.width * 0.5,
-                      child: Form(
-                        key: _formKey,
-                        child: TextFormField(
-                          controller: ticketAmountController,
+                      SizedBox(
+                        height: size.height * 0.02,
+                      ),
+                      Text(
+                        widget.friendName,
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: theme.primaryColorDark,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.02,
+                      ),
+                      Container(
+                        width: size.width * 0.48,
+                        child: Text(
+                          widget.description,
                           textAlign: TextAlign.center,
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.done,
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              fontSize: 18,
+                              color: theme.primaryColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.04,
+                      ),
+                      Container(
+                        width: size.width * 0.5,
+                        child: Form(
+                          key: _formKey,
+                          child: TextFormField(
+                            controller: ticketAmountController,
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            textInputAction: TextInputAction.done,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: theme.primaryColorDark,
+                            ),
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.all(10.0),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                                borderSide: BorderSide(
+                                  color: theme.primaryColorDark,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                                borderSide: BorderSide(
+                                  color: theme.primaryColorDark,
+                                  width: 2,
+                                ),
+                              ),
+                              hintText: "Amount",
+                              hintStyle: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                  fontSize: 18.0,
+                                  color: theme.primaryColor,
+                                ),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (double.tryParse(value.toString()) == null) {
+                                return "Enter a valid amount";
+                              } else if (double.parse(value.toString()) <= 0) {
+                                return "Amount can't be 0";
+                              } else if (double.parse(value.toString()) >
+                                  9999.00) {
+                                return "Max amount allowed is 9999.00";
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.04,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            Navigator.of(context, rootNavigator: true).pop();
+                            showAlertDialog(context, theme);
+                          }
+                        },
+                        child: Text(
+                          "Send Money",
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22,
+                            ),
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(
+                            size.width * 0.55,
+                            size.height * 0.065,
+                          ),
+                          onPrimary: theme.backgroundColor,
+                          primary: theme.accentColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.02,
+                      ),
+                      Text(
+                        "Wallet Balance: 100000",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
                             fontSize: 18,
                             color: theme.primaryColorDark,
                           ),
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.all(10.0),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              borderSide: BorderSide(
-                                color: theme.primaryColorDark,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              borderSide: BorderSide(
-                                color: theme.primaryColorDark,
-                                width: 2,
-                              ),
-                            ),
-                            hintText: "Amount",
-                            hintStyle: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                fontSize: 18.0,
-                                color: theme.primaryColor,
-                              ),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (double.tryParse(value.toString()) == null) {
-                              return "Enter a valid amount";
-                            } else if (double.parse(value.toString()) <= 0) {
-                              return "Amount can't be 0";
-                            } else if (double.parse(value.toString()) >
-                                9999.00) {
-                              return "Max amount allowed is 9999.00";
-                            }
-                          },
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.04,
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          Navigator.of(context, rootNavigator: true).pop();
-                          showAlertDialog(context, theme);
-                        }
-                      },
-                      child: Text(
-                        "Send Money",
-                        style: GoogleFonts.poppins(
-                          textStyle: TextStyle(
+                      SizedBox(
+                        height: size.height * 0.01,
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "Add money to wallet",
+                          style: GoogleFonts.poppins(
+                            fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            fontSize: 22,
+                            color: theme.accentColor,
                           ),
                         ),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(
-                          size.width * 0.55,
-                          size.height * 0.065,
-                        ),
-                        onPrimary: theme.backgroundColor,
-                        primary: theme.accentColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
+                      SizedBox(
+                        height: size.height * 0.02,
                       ),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.02,
-                    ),
-                    Text(
-                      "Wallet Balance: 100000",
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
-                          fontSize: 18,
-                          color: theme.primaryColorDark,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.01,
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Add money to wallet",
-                        style: GoogleFonts.poppins(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: theme.accentColor,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.02,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

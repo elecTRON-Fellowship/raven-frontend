@@ -132,13 +132,17 @@ class _TransactionCardState extends State<TransactionCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                this.widget.description,
-                style: GoogleFonts.poppins(
-                  textStyle: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15,
-                    color: theme.primaryColorDark,
+              Container(
+                width: size.width * 0.6,
+                child: Text(
+                  this.widget.description,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
+                      color: theme.primaryColorDark,
+                    ),
                   ),
                 ),
               ),

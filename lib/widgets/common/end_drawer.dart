@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/screens/close_friends.dart';
+import 'package:raven/screens/tickets_history.dart';
 
 class EndDrawer extends StatefulWidget {
   const EndDrawer({Key? key}) : super(key: key);
@@ -60,6 +61,23 @@ class _EndDrawerState extends State<EndDrawer> {
                           color: Theme.of(context).primaryColor)),
                 ),
                 onTap: () {},
+              ),
+              ListTile(
+                title: Text(
+                  'Closed Tickets',
+                  style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 24,
+                          color: Theme.of(context).primaryColor)),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => TicketsHistoryScreen(),
+                    ),
+                  );
+                },
               ),
               ListTile(
                 title: Text(
