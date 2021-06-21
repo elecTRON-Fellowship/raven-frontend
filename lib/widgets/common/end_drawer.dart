@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/screens/close_friends.dart';
@@ -10,6 +11,7 @@ class EndDrawer extends StatefulWidget {
 }
 
 class _EndDrawerState extends State<EndDrawer> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -95,6 +97,21 @@ class _EndDrawerState extends State<EndDrawer> {
                           color: Theme.of(context).primaryColor)),
                 ),
                 onTap: () {},
+              ),
+              ListTile(
+                title: Text(
+                  'Log out',
+                  style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 24,
+                          color: Theme.of(context).primaryColor)),
+                ),
+                onTap: () async {
+                  await _auth.signOut();
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/auth', (route) => false);
+                },
               ),
             ],
           ),

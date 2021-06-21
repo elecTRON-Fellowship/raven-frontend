@@ -55,11 +55,13 @@ class _ContactCardState extends State<ContactCard> {
         .get();
 
     if (snapshot.size > 0) {
+      if (!mounted) return;
       setState(() {
         showLoading = false;
         status = ContactRegisteredStatus.REGISTERED;
       });
     } else {
+      if (!mounted) return;
       setState(() {
         showLoading = false;
         status = ContactRegisteredStatus.NOT_REGISTERED;

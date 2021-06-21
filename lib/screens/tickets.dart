@@ -85,6 +85,20 @@ class _TicketsScreenState extends State<TicketsScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    checkIfUserHasCreatedWallet();
+  }
+
+  void checkIfUserHasCreatedWallet() async {
+    final snapshot = await _userCollection.doc(_auth.currentUser!.uid).get();
+    final data = snapshot.data() as Map;
+    if (data['walletData'] == null) {
+      Navigator.of(context).pushReplacementNamed('/create-wallet-user-details');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;

@@ -81,7 +81,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
-            "Welcome",
+            "",
             style: GoogleFonts.poppins(
               textStyle: TextStyle(
                 color: theme.backgroundColor,
@@ -91,7 +91,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             ),
           ),
           Text(
-            "back to",
+            "Welcome to",
             style: GoogleFonts.poppins(
               textStyle: TextStyle(
                 color: theme.backgroundColor,
