@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,14 +7,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_contributor_card.dart';
 
 class MyTicketCard extends StatefulWidget {
-  final Function contributorCardOnTap;
   final String description;
   final double amountRaised;
   final double totalAmount;
   final String ticketId;
 
   MyTicketCard({
-    required this.contributorCardOnTap,
     required this.amountRaised,
     required this.description,
     required this.totalAmount,
@@ -24,6 +24,15 @@ class MyTicketCard extends StatefulWidget {
 }
 
 class _MyTicketCardState extends State<MyTicketCard> {
+  late CollectionReference _contributorsCollection;
+
+  @override
+  void initState() {
+    super.initState();
+    _contributorsCollection = FirebaseFirestore.instance
+        .collection('tickets/${widget.ticketId}/contributors');
+  }
+
   @override
   Widget build(BuildContext context) {
     FirebaseAuth _auth = FirebaseAuth.instance;
@@ -91,45 +100,113 @@ class _MyTicketCardState extends State<MyTicketCard> {
               SizedBox(
                 height: 13,
               ),
-              StreamBuilder<QuerySnapshot>(
-                stream: _contributorsCollection
-                    .orderBy('createdAt', descending: true)
-                    .limit(1)
-                    .snapshots(),
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasError) {
-                    return Center(child: Text('Something went wrong'));
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  if (snapshot.hasData) {
-                    final documents = (snapshot.data)!.docs;
-                    if (documents.isNotEmpty) {
-                      final data = documents[0].data() as Map<String, dynamic>;
-                      return MyTicketContributorCard(
-                          contributorId: data['userId'],
-                          amountContributed:
-                              double.parse(data['amount'].toString()),
-                          backgroundColor: Theme.of(context).backgroundColor,
-                          onTap: this.widget.contributorCardOnTap);
-                    } else {
-                      return Text(
-                        'No contributors yet.',
-                        style: GoogleFonts.poppins(
-                          textStyle: TextStyle(
-                            color: theme.primaryColorDark,
-                            fontSize: 14,
-                          ),
-                        ),
-                      );
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(color: theme.primaryColorDark)),
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: _contributorsCollection
+                      .orderBy('createdAt', descending: true)
+                      .limit(1)
+                      .snapshots(),
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Something went wrong'));
                     }
-                  } else {
-                    return Container();
-                  }
-                },
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasData) {
+                      final documents = (snapshot.data)!.docs;
+                      if (documents.isNotEmpty) {
+                        final data =
+                            documents[0].data() as Map<String, dynamic>;
+                        return MyTicketContributorCard(
+                            contributorId: data['userId'],
+                            amountContributed:
+                                double.parse(data['amount'].toString()),
+                            backgroundColor: Theme.of(context).backgroundColor,
+                            onTap: () => showOverlay(
+                                theme,
+                                size,
+                                data['userId'],
+                                double.parse(data['amount'].toString()),
+                                theme.backgroundColor));
+                      } else {
+                        return Text(
+                          'No contributors yet.',
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              color: theme.primaryColorDark,
+                              fontSize: 14,
+                            ),
+                          ),
+                        );
+                      }
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void showOverlay(final theme, final size, contributorId, amountContributed,
+      backgroundColor) {
+    showDialog(
+      context: context,
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: 5,
+          sigmaY: 5,
+        ),
+        child: Dialog(
+          backgroundColor: theme.backgroundColor,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Container(
+            width: size.width * 0.75,
+            height: size.height * 0.4,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              color: theme.backgroundColor,
+            ),
+            child: StreamBuilder<QuerySnapshot>(
+              stream: _contributorsCollection
+                  .orderBy('createdAt', descending: true)
+                  .snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Center(child: Text('Something went wrong'));
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasData) {
+                  final documents = (snapshot.data)!.docs;
+                  return ListView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                    itemCount: documents.length,
+                    itemBuilder: (context, index) => MyTicketContributorCard(
+                      contributorId: documents[index]['userId'],
+                      amountContributed:
+                          double.parse(documents[index]['amount'].toString()),
+                      backgroundColor: Theme.of(context).primaryColorLight,
+                      onTap: () {},
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            ),
           ),
         ),
       ),

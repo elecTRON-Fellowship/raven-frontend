@@ -46,10 +46,7 @@ class _MyTicketContributorCardState extends State<MyTicketContributorCard> {
 
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.symmetric(vertical: 5),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: theme.primaryColorDark)),
+      // margin: EdgeInsets.symmetric(vertical: 5),
       height: size.height * 0.055,
       child: InkWell(
         borderRadius: BorderRadius.circular(15),

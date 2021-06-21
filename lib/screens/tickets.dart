@@ -8,7 +8,6 @@ import 'package:raven/screens/all_transactions.dart';
 import 'package:raven/widgets/common/end_drawer.dart';
 import 'package:raven/widgets/tickets_screen/friend_ticket_icon.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_card.dart';
-import 'package:raven/widgets/tickets_screen/my_ticket_contributors.dart';
 
 class TicketsScreen extends StatefulWidget {
   const TicketsScreen({Key? key}) : super(key: key);
@@ -28,23 +27,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
       new TextEditingController();
   TextEditingController ticketAmountController = new TextEditingController();
 
-  bool _showContributors = false;
-  String _showContributorsTicketId = '';
   final _formKey = GlobalKey<FormState>();
-
-  void _setShowContributorsToTrue(String ticketId) {
-    setState(() {
-      _showContributors = true;
-      _showContributorsTicketId = ticketId;
-    });
-  }
-
-  void _setShowContributorsToFalse() {
-    setState(() {
-      _showContributors = false;
-      _showContributorsTicketId = '';
-    });
-  }
 
   void createTicket() async {
     final snapshot = await _userCollection.doc(_auth.currentUser!.uid).get();
@@ -143,168 +126,209 @@ class _TicketsScreenState extends State<TicketsScreen> {
     return Scaffold(
       backgroundColor: theme.primaryColor,
       appBar: appBar,
-      body: Stack(
+      body: Column(
         children: [
-          GestureDetector(
-            onTap: () {
-              _setShowContributorsToFalse();
-            },
-            child: Column(
-              children: [
-                Container(
-                  height: size.height * 0.28,
-                  child: StreamBuilder<QuerySnapshot>(
-                    stream: _ticketsCollection
-                        .where('userId', isEqualTo: _auth.currentUser!.uid)
-                        .where('isActive', isEqualTo: true)
-                        .orderBy('createdAt', descending: true)
-                        .snapshots(),
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError) {
-                        return Center(child: Text('Something went wrong'));
-                      }
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                      if (snapshot.hasData) {
-                        final documents = (snapshot.data)!.docs;
-                        if (documents.isNotEmpty) {
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: documents.length,
-                            itemBuilder: (context, index) => MyTicketCard(
-                              ticketId: documents[index].id,
-                              description: documents[index]['description'],
-                              amountRaised: double.parse(
-                                  documents[index]['amountRaised'].toString()),
-                              totalAmount: double.parse(
-                                  documents[index]['totalAmount'].toString()),
-                              contributorCardOnTap: () =>
-                                  _setShowContributorsToTrue(
-                                      documents[index].id),
-                            ),
-                          );
-                        } else {
-                          return Container(
-                            height: size.height * 0.26,
-                            width: size.width * 0.9,
-                            margin: EdgeInsets.symmetric(horizontal: 8),
-                            child: Card(
-                              elevation: 3.0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              color: theme.backgroundColor,
-                              child: Center(
-                                child: Text(
-                                  'No active tickets.\nClick on the + icon to create one.',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                    textStyle: TextStyle(
-                                      color: theme.primaryColor,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16,
-                                    ),
+          Container(
+            height: size.height * 0.28,
+            child: StreamBuilder<QuerySnapshot>(
+              stream: _ticketsCollection
+                  .where('userId', isEqualTo: _auth.currentUser!.uid)
+                  .where('isActive', isEqualTo: true)
+                  .orderBy('createdAt', descending: true)
+                  .snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Center(child: Text('Something went wrong'));
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasData) {
+                  final documents = (snapshot.data)!.docs;
+                  if (documents.isNotEmpty) {
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: documents.length,
+                      itemBuilder: (context, index) => Dismissible(
+                        background: Container(
+                          color: theme.primaryColor,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.delete_rounded,
+                                    color: theme.backgroundColor,
+                                    size: 22,
                                   ),
-                                ),
-                              ),
-                            ),
-                          );
-                        }
-                      } else {
-                        return Container();
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 13.0,
-                ),
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(top: 15),
-                    decoration: BoxDecoration(
-                      color: theme.backgroundColor,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30),
-                      ),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30),
-                      ),
-                      child: StreamBuilder<QuerySnapshot>(
-                        stream: _userCollection
-                            .where('closeFriends',
-                                arrayContains: _auth.currentUser!.uid)
-                            .snapshots(),
-                        builder:
-                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasError) {
-                            return Center(child: Text('Something went wrong'));
-                          }
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator());
-                          }
-                          if (snapshot.hasData) {
-                            final documents = (snapshot.data)!.docs;
-                            if (documents.isNotEmpty) {
-                              return GridView.builder(
-                                itemCount: documents.length,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 20, horizontal: 25),
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  mainAxisSpacing: 0,
-                                  crossAxisSpacing: 15,
-                                  childAspectRatio: 1,
-                                ),
-                                itemBuilder: (context, index) {
-                                  return FriendTicketIcon(
-                                    friendId: documents[index].id,
-                                  );
-                                },
-                              );
-                            } else {
-                              return Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text(
-                                    'Tickets created by contacts who have you as a close friend will apear here.',
-                                    textAlign: TextAlign.center,
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    'This ticket will be deleted.',
                                     style: GoogleFonts.poppins(
                                       textStyle: TextStyle(
-                                        color: theme.primaryColor,
+                                        color: theme.backgroundColor,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16,
                                       ),
                                     ),
                                   ),
-                                ),
-                              );
-                            }
-                          } else {
-                            return Container();
-                          }
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.delete_rounded,
+                                    color: theme.backgroundColor,
+                                    size: 22,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    'This ticket will be deleted.',
+                                    style: GoogleFonts.poppins(
+                                      textStyle: TextStyle(
+                                        color: theme.backgroundColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        direction: DismissDirection.vertical,
+                        key: ValueKey(documents[index].id),
+                        onDismissed: (direction) {
+                          showAlertDialog(context, theme, documents[index].id);
                         },
+                        child: MyTicketCard(
+                          ticketId: documents[index].id,
+                          description: documents[index]['description'],
+                          amountRaised: double.parse(
+                              documents[index]['amountRaised'].toString()),
+                          totalAmount: double.parse(
+                              documents[index]['totalAmount'].toString()),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              ],
+                    );
+                  } else {
+                    return Container(
+                      height: size.height * 0.26,
+                      width: size.width * 0.9,
+                      margin: EdgeInsets.symmetric(horizontal: 8),
+                      child: Card(
+                        elevation: 3.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        color: theme.backgroundColor,
+                        child: Center(
+                          child: Text(
+                            'No active tickets.\nClick on the + icon to create one.',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                color: theme.primaryColor,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                } else {
+                  return Container();
+                }
+              },
             ),
           ),
-          if (_showContributors)
-            Center(
-              child: MyTicketContributors(
-                ticketId: _showContributorsTicketId,
+          SizedBox(
+            height: 13.0,
+          ),
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(top: 15),
+              decoration: BoxDecoration(
+                color: theme.backgroundColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: _userCollection
+                      .where('closeFriends',
+                          arrayContains: _auth.currentUser!.uid)
+                      .snapshots(),
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Something went wrong'));
+                    }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasData) {
+                      final documents = (snapshot.data)!.docs;
+                      if (documents.isNotEmpty) {
+                        return GridView.builder(
+                          itemCount: documents.length,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 25),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 0,
+                            crossAxisSpacing: 15,
+                            childAspectRatio: 1,
+                          ),
+                          itemBuilder: (context, index) {
+                            return FriendTicketIcon(
+                              friendId: documents[index].id,
+                            );
+                          },
+                        );
+                      } else {
+                        return Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              'Tickets created by contacts who have you as a close friend will apear here.',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                  color: theme.primaryColor,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
               ),
             ),
+          ),
         ],
       ),
       endDrawer: EndDrawer(),
@@ -529,4 +553,71 @@ class _TicketsScreenState extends State<TicketsScreen> {
       ),
     );
   }
+
+  showAlertDialog(BuildContext context, final theme, ticketId) => showDialog(
+        context: context,
+        builder: (context) => BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: 5,
+            sigmaY: 5,
+          ),
+          child: AlertDialog(
+            backgroundColor: theme.backgroundColor,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            title: Text(
+              "Are you sure?",
+              style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: theme.primaryColorDark,
+                ),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            content: Text(
+              "This ticket will be deleted.",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+                  fontSize: 18,
+                  color: theme.primaryColor,
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  setState(() {});
+                },
+                child: Text(
+                  "No",
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: theme.accentColor,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await _ticketsCollection.doc(ticketId).delete();
+                },
+                child: Text(
+                  "Yes",
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: theme.accentColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
 }
