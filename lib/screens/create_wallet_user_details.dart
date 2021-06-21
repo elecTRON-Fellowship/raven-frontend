@@ -185,17 +185,21 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                           width: 2,
                         ),
                       ),
-                      labelText: "DOB dd/mm/yyyy",
+                      labelText: "DOB mm/dd/yyyy",
                       labelStyle: TextStyle(
                         color: theme.accentColor,
                       ),
                     ),
                     validator: (value) {
                       String pattern =
-                          r"^([0-2][0-9]||3[0-1])/(0[0-9]||1[0-2])/([0-9][0-9])?[0-9][0-9]$";
+                          r"(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d";
                       RegExp regExp = new RegExp(pattern);
                       if (value == null || value.isEmpty) {
                         return 'DOB is required';
+                      } else if (DateTime.now().year -
+                              int.parse(value.substring(6)) <
+                          18) {
+                        return 'Must be at least 18 years of age.';
                       } else if (!regExp.hasMatch(value)) {
                         return 'Please enter a valid Date';
                       }
@@ -232,7 +236,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                           width: 2,
                         ),
                       ),
-                      labelText: "Nationality",
+                      labelText: "Nationality (Eg: IN)",
                       labelStyle: TextStyle(
                         color: theme.accentColor,
                       ),
@@ -243,6 +247,8 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                       RegExp regExp = new RegExp(pattern);
                       if (value == null || value.isEmpty) {
                         return 'Nationality is required';
+                      } else if (value.length != 2) {
+                        return 'Invalid input';
                       } else if (!regExp.hasMatch(value)) {
                         return 'Invalid input';
                       }

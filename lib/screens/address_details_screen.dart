@@ -335,7 +335,7 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                           width: 2,
                         ),
                       ),
-                      labelText: "Country",
+                      labelText: "Country Code (Eg: IN)",
                       labelStyle: TextStyle(
                         color: theme.accentColor,
                       ),
@@ -345,6 +345,8 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                       RegExp regExp = new RegExp(pattern);
                       if (value == null || value.isEmpty) {
                         return 'Required';
+                      } else if (value.length != 2) {
+                        return 'Invalid input';
                       } else if (!regExp.hasMatch(value)) {
                         return 'Invalid input';
                       }
