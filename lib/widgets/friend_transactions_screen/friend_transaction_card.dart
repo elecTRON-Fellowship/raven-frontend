@@ -77,7 +77,7 @@ class FriendTransactionCard extends StatelessWidget {
                     textStyle: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
-                      color: Colors.black,
+                      color: theme.primaryColorDark,
                     ),
                   ),
                 )

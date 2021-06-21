@@ -422,9 +422,7 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                       _userInfoSingleton.phoneNumber(phoneNumber);
 
                       final _requestsSingleton = RequestsSingleton();
-                      var res = await _requestsSingleton.postReq();
-                      print(res.statusCode);
-                      print(res.body);
+                      var res = await _requestsSingleton.createWallet();
 
                       if (res.statusCode == 200) {
                         Navigator.of(context).pushNamedAndRemoveUntil(

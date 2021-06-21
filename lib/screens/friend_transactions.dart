@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/models/requestsSingleton.dart';
 import 'package:raven/widgets/friend_transactions_screen/friend_ticket_card.dart';
 import 'package:raven/widgets/friend_transactions_screen/friend_transaction_card.dart';
 
@@ -38,6 +40,30 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
     super.initState();
     fetchContactName();
     fetchTransactions();
+    fetchWalletBalance();
+  }
+
+  void sendMoney(context) async {
+    //create transaction
+    await _transactionsCollection.add({
+      'amount': double.parse(_amountController.text.toString()),
+      'createdAt': DateTime.now(),
+      'description': _descriptionController.text,
+      'ticketId': null,
+      'sender': _auth.currentUser!.uid,
+      'userIds': [
+        _auth.currentUser!.uid,
+        widget.friendId,
+      ],
+      'userIdsMap': {
+        _auth.currentUser!.uid: true,
+        widget.friendId: true,
+      }
+    });
+
+    _amountController.clear();
+    _descriptionController.clear();
+    Navigator.of(context, rootNavigator: true).pop();
   }
 
   List transactionList = [];
@@ -62,8 +88,6 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
 
     var documents = transactionsSnapshot.docs.toList();
 
-    print(documents[0].data());
-
     setState(() {
       documents.sort((item1, item2) {
         var one = item1.data() as Map;
@@ -76,6 +100,29 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
       });
       transactionList = [...documents];
     });
+  }
+
+  var fetchedBalance = 0;
+  bool _isBalanceLoading = false;
+
+  void fetchWalletBalance() async {
+    _isBalanceLoading = true;
+
+    final _requestsSingleton = RequestsSingleton();
+    var res = await _requestsSingleton.fetchWalletBalance();
+
+    var data = json.decode(res.body);
+
+    var balance = data['data']['data'][0]['balance'];
+
+    if (res.statusCode == 200) {
+      if (!mounted) return;
+
+      setState(() {
+        fetchedBalance = balance;
+        _isBalanceLoading = false;
+      });
+    }
   }
 
   @override
@@ -111,7 +158,9 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              _createSendDialog(context, theme, size);
+              if (!_isBalanceLoading) {
+                _createSendDialog(context, theme, size);
+              }
             },
             icon: Icon(Icons.add_circle_outline_rounded),
             iconSize: 25,
@@ -411,7 +460,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                           height: size.height * 0.02,
                         ),
                         Text(
-                          "Wallet Balance: 100000",
+                          "Wallet Balance: $fetchedBalance",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.poppins(
                             textStyle: TextStyle(
@@ -424,7 +473,41 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                           height: size.height * 0.01,
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            final _requestsSingleton = RequestsSingleton();
+                            var res = await _requestsSingleton
+                                .addMoneyToWallet("5000");
+
+                            if (res.statusCode == 200) {
+                              Navigator.of(context).pop();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    '₹5000 has been added to your wallet.',
+                                    style: TextStyle(
+                                        color: theme.primaryColorDark,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14),
+                                  ),
+                                  backgroundColor: theme.primaryColor,
+                                ),
+                              );
+                              fetchWalletBalance();
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Something went wrong.',
+                                    style: TextStyle(
+                                        color: theme.primaryColorDark,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14),
+                                  ),
+                                  backgroundColor: theme.primaryColor,
+                                ),
+                              );
+                            }
+                          },
                           child: Text(
                             "Add money to wallet",
                             style: GoogleFonts.poppins(
@@ -496,8 +579,40 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  //sendMoney(context);
+                onPressed: () async {
+                  final _requestsSingleton = RequestsSingleton();
+                  var res = await _requestsSingleton.transferFunds(
+                      _amountController.text, widget.friendId);
+
+                  if (res.statusCode == 200) {
+                    sendMoney(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          '${_amountController.text} has been sent to $fetchedName.',
+                          style: TextStyle(
+                              color: theme.primaryColorDark,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14),
+                        ),
+                        backgroundColor: theme.primaryColor,
+                      ),
+                    );
+                    fetchWalletBalance();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Something went wrong.',
+                          style: TextStyle(
+                              color: theme.primaryColorDark,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14),
+                        ),
+                        backgroundColor: theme.primaryColor,
+                      ),
+                    );
+                  }
                 },
                 child: Text(
                   "Yes",

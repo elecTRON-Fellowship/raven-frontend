@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/models/requestsSingleton.dart';
 
 class FriendTicketCard extends StatefulWidget {
   final Function contributeCallback;
@@ -47,6 +49,30 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
     super.initState();
     _contributorsCollection = FirebaseFirestore.instance
         .collection('tickets/${widget.ticketId}/contributors');
+    fetchWalletBalance();
+  }
+
+  var fetchedBalance = 0;
+  bool _isBalanceLoading = false;
+
+  void fetchWalletBalance() async {
+    _isBalanceLoading = true;
+
+    final _requestsSingleton = RequestsSingleton();
+    var res = await _requestsSingleton.fetchWalletBalance();
+
+    var data = json.decode(res.body);
+
+    var balance = data['data']['data'][0]['balance'];
+
+    if (res.statusCode == 200) {
+      if (!mounted) return;
+
+      setState(() {
+        fetchedBalance = balance;
+        _isBalanceLoading = false;
+      });
+    }
   }
 
   void sendMoney(context) async {
@@ -193,7 +219,8 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                   ),
                 ),
                 onPressed: () {
-                  createContributeDialog(context, theme, size);
+                  if (!_isBalanceLoading)
+                    createContributeDialog(context, theme, size);
                 },
               ),
             ],
@@ -354,7 +381,7 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                         height: size.height * 0.02,
                       ),
                       Text(
-                        "Wallet Balance: 100000",
+                        "Wallet Balance: $fetchedBalance",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.poppins(
                           textStyle: TextStyle(
@@ -367,7 +394,41 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                         height: size.height * 0.01,
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          final _requestsSingleton = RequestsSingleton();
+                          var res =
+                              await _requestsSingleton.addMoneyToWallet("5000");
+
+                          if (res.statusCode == 200) {
+                            Navigator.of(context).pop();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  '₹5000 has been added to your wallet.',
+                                  style: TextStyle(
+                                      color: theme.primaryColorDark,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
+                                ),
+                                backgroundColor: theme.primaryColor,
+                              ),
+                            );
+                            fetchWalletBalance();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Something went wrong.',
+                                  style: TextStyle(
+                                      color: theme.primaryColorDark,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
+                                ),
+                                backgroundColor: theme.primaryColor,
+                              ),
+                            );
+                          }
+                        },
                         child: Text(
                           "Add money to wallet",
                           style: GoogleFonts.poppins(
@@ -438,8 +499,40 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  sendMoney(context);
+                onPressed: () async {
+                  final _requestsSingleton = RequestsSingleton();
+                  var res = await _requestsSingleton.transferFunds(
+                      ticketAmountController.text, widget.friendId);
+
+                  if (res.statusCode == 200) {
+                    sendMoney(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          '${ticketAmountController.text} has been sent to ${widget.friendName}.',
+                          style: TextStyle(
+                              color: theme.primaryColorDark,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14),
+                        ),
+                        backgroundColor: theme.primaryColor,
+                      ),
+                    );
+                    fetchWalletBalance();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Something went wrong.',
+                          style: TextStyle(
+                              color: theme.primaryColorDark,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14),
+                        ),
+                        backgroundColor: theme.primaryColor,
+                      ),
+                    );
+                  }
                 },
                 child: Text(
                   "Yes",

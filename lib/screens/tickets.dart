@@ -76,7 +76,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
   void checkIfUserHasCreatedWallet() async {
     final snapshot = await _userCollection.doc(_auth.currentUser!.uid).get();
     final data = snapshot.data() as Map;
-    if (data['walletData'] == null) {
+    if (data['walletID'] == null) {
       Navigator.of(context).pushReplacementNamed('/create-wallet-user-details');
     }
   }
