@@ -509,7 +509,7 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          '${ticketAmountController.text} has been sent to ${widget.friendName}.',
+                          '₹${ticketAmountController.text} has been sent to ${widget.friendName}.',
                           style: TextStyle(
                               color: theme.primaryColorDark,
                               fontWeight: FontWeight.bold,

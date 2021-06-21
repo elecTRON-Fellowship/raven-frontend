@@ -63,6 +63,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
 
     _amountController.clear();
     _descriptionController.clear();
+    refreshTransactions();
     Navigator.of(context, rootNavigator: true).pop();
   }
 
@@ -589,7 +590,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          '${_amountController.text} has been sent to $fetchedName.',
+                          '₹${_amountController.text} has been sent to $fetchedName.',
                           style: TextStyle(
                               color: theme.primaryColorDark,
                               fontWeight: FontWeight.bold,
