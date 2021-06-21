@@ -8,8 +8,6 @@ import 'package:raven/screens/friend_transactions.dart';
 import 'package:raven/screens/auth.dart';
 import 'package:raven/screens/tickets.dart';
 
-import 'screens/address_details_screen.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -35,6 +33,7 @@ class MyApp extends StatelessWidget {
         '/conversations': (ctx) => ConversationsScreen(),
         '/contacts': (ctx) => ContactsScreen(),
         '/tickets': (ctx) => TicketsScreen(),
+        '/create-wallet-user-details': (ctx) => UserDetailsScreen()
       },
     );
   }

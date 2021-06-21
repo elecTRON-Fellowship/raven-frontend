@@ -41,7 +41,9 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
         centerTitle: true,
         elevation: 0.0,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
           icon: Icon(Icons.arrow_back),
           color: theme.primaryColorDark,
         ),
@@ -81,6 +83,7 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                 Container(
                   width: size.width * 0.8,
                   child: TextFormField(
+                    textCapitalization: TextCapitalization.sentences,
                     keyboardType: TextInputType.streetAddress,
                     textInputAction: TextInputAction.next,
                     style: TextStyle(
@@ -126,6 +129,7 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                 Container(
                   width: size.width * 0.8,
                   child: TextFormField(
+                    textCapitalization: TextCapitalization.sentences,
                     keyboardType: TextInputType.streetAddress,
                     textInputAction: TextInputAction.next,
                     style: TextStyle(
@@ -171,6 +175,7 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                 Container(
                   width: size.width * 0.8,
                   child: TextFormField(
+                    textCapitalization: TextCapitalization.sentences,
                     keyboardType: TextInputType.streetAddress,
                     textInputAction: TextInputAction.next,
                     style: TextStyle(
@@ -216,6 +221,7 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                 Container(
                   width: size.width * 0.8,
                   child: TextFormField(
+                    textCapitalization: TextCapitalization.sentences,
                     keyboardType: TextInputType.name,
                     textInputAction: TextInputAction.next,
                     style: TextStyle(
@@ -261,6 +267,7 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                 Container(
                   width: size.width * 0.8,
                   child: TextFormField(
+                    textCapitalization: TextCapitalization.sentences,
                     keyboardType: TextInputType.name,
                     textInputAction: TextInputAction.next,
                     style: TextStyle(
@@ -306,6 +313,7 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                 Container(
                   width: size.width * 0.8,
                   child: TextFormField(
+                    textCapitalization: TextCapitalization.sentences,
                     keyboardType: TextInputType.name,
                     textInputAction: TextInputAction.next,
                     style: TextStyle(
@@ -415,6 +423,24 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                       var res = await _requestsSingleton.postReq();
                       print(res.statusCode);
                       print(res.body);
+
+                      if (res.statusCode == 200) {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            '/conversations', (route) => false);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Could not create wallet.',
+                              style: TextStyle(
+                                  color: theme.primaryColorDark,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14),
+                            ),
+                            backgroundColor: theme.primaryColor,
+                          ),
+                        );
+                      }
                     }
                   },
                   child: Text(
