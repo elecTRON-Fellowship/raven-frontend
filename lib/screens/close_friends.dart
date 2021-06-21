@@ -1,6 +1,7 @@
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:raven/widgets/close_friends_screen/close_friend_card.dart';
 import 'package:uuid/uuid.dart';
 
@@ -20,10 +21,20 @@ class _CloseFriendsScreenState extends State<CloseFriendsScreen> {
   @override
   void initState() {
     super.initState();
-    fetchContacts();
+    checkpermissionContacts();
     searchController.addListener(() {
       filterContacts();
     });
+  }
+
+  checkpermissionContacts() async {
+    var contactStatus = await Permission.contacts.status;
+
+    print(contactStatus);
+
+    if (!contactStatus.isGranted) await Permission.contacts.request();
+
+    if (await Permission.contacts.isGranted) fetchContacts();
   }
 
   void fetchContacts() async {

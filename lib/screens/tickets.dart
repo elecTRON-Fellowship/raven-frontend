@@ -611,6 +611,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
               TextButton(
                 onPressed: () async {
                   await _ticketsCollection.doc(ticketId).delete();
+                  Navigator.of(context, rootNavigator: true).pop();
                 },
                 child: Text(
                   "Yes",
