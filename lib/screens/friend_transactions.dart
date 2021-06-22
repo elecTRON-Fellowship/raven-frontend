@@ -258,23 +258,38 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                   topLeft: Radius.circular(30),
                   topRight: Radius.circular(30),
                 ),
-                child: ListView.builder(
-                  key: ValueKey(Uuid().v4()),
-                  padding: EdgeInsets.all(15),
-                  itemCount: transactionList.length,
-                  itemBuilder: (context, index) => FriendTransactionCard(
-                    status: transactionList[index]['sender'] ==
-                            _auth.currentUser!.uid
-                        ? 'Sent'
-                        : 'Received',
-                    description: transactionList[index]['description'],
-                    amount: double.parse(
-                        transactionList[index]['amount'].toString()),
-                    date: DateTime.parse(transactionList[index]['createdAt']
-                        .toDate()
-                        .toString()),
-                  ),
-                ),
+                child: transactionList.isEmpty
+                    ? ListView.builder(
+                        key: ValueKey(Uuid().v4()),
+                        padding: EdgeInsets.all(15),
+                        itemCount: transactionList.length,
+                        itemBuilder: (context, index) => FriendTransactionCard(
+                          status: transactionList[index]['sender'] ==
+                                  _auth.currentUser!.uid
+                              ? 'Sent'
+                              : 'Received',
+                          description: transactionList[index]['description'],
+                          amount: double.parse(
+                              transactionList[index]['amount'].toString()),
+                          date: DateTime.parse(transactionList[index]
+                                  ['createdAt']
+                              .toDate()
+                              .toString()),
+                        ),
+                      )
+                    : Center(
+                        child: Text(
+                          'No transactions to show.',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              color: theme.primaryColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
               ),
             ),
           ),
