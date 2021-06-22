@@ -479,7 +479,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                           height: size.height * 0.02,
                         ),
                         Text(
-                          "Wallet Balance: $fetchedBalance",
+                          "Wallet Balance: ${fetchedBalance.toStringAsFixed(2)}",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.poppins(
                             textStyle: TextStyle(
