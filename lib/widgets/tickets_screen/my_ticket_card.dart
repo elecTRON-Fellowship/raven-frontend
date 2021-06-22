@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_contributor_card.dart';
+import 'package:uuid/uuid.dart';
 
 class MyTicketCard extends StatefulWidget {
   final String description;
@@ -200,6 +201,7 @@ class _MyTicketCardState extends State<MyTicketCard> {
                 if (snapshot.hasData) {
                   final documents = (snapshot.data)!.docs;
                   return ListView.builder(
+                    key: ValueKey(Uuid().v4()),
                     padding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                     itemCount: documents.length,
                     itemBuilder: (context, index) => MyTicketContributorCard(

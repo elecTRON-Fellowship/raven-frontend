@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/widgets/common/end_drawer.dart';
+import 'package:uuid/uuid.dart';
 
 import '../widgets/conversations_screen/conversation_card.dart';
 
@@ -88,6 +89,8 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
         child: StreamBuilder<QuerySnapshot>(
           stream: _conversationsCollection
               .where('members', arrayContains: _auth.currentUser!.uid)
+              // .where('lastTime', isNotEqualTo: null)
+              .orderBy('lastTime', descending: true)
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
@@ -98,17 +101,31 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
             }
             if (snapshot.hasData) {
               final documents = (snapshot.data)!.docs;
-              return ListView.builder(
-                itemCount: documents.length,
-                itemBuilder: (context, index) => ConversationCard(
-                  friendUserId:
-                      documents[index]['members'][0] == _auth.currentUser!.uid
-                          ? documents[index]['members'][1]
-                          : documents[index]['members'][0],
-                  unreadTexts: documents[index]['unreadTexts'] as int,
-                  conversationId: documents[index].id,
-                ),
-              );
+              if (documents.isNotEmpty) {
+                return ListView.builder(
+                  key: ValueKey(Uuid().v4()),
+                  itemCount: documents.length,
+                  itemBuilder: (context, index) => ConversationCard(
+                    friendUserId:
+                        documents[index]['members'][0] == _auth.currentUser!.uid
+                            ? documents[index]['members'][1]
+                            : documents[index]['members'][0],
+                    unreadTexts: documents[index]['unreadTexts'] as int,
+                    conversationId: documents[index].id,
+                  ),
+                );
+              } else {
+                return Center(
+                  child: Text(
+                    'No conversations found.\nClick on the + icon to start one.',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                            fontSize: 18,
+                            color: Theme.of(context).primaryColorDark)),
+                  ),
+                );
+              }
             } else {
               return Container();
             }

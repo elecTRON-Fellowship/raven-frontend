@@ -8,6 +8,7 @@ import 'package:raven/screens/all_transactions.dart';
 import 'package:raven/widgets/common/end_drawer.dart';
 import 'package:raven/widgets/tickets_screen/friend_ticket_icon.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_card.dart';
+import 'package:uuid/uuid.dart';
 
 class TicketsScreen extends StatefulWidget {
   const TicketsScreen({Key? key}) : super(key: key);
@@ -147,6 +148,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                   final documents = (snapshot.data)!.docs;
                   if (documents.isNotEmpty) {
                     return ListView.builder(
+                      key: ValueKey(Uuid().v4()),
                       scrollDirection: Axis.horizontal,
                       itemCount: documents.length,
                       itemBuilder: (context, index) => Dismissible(
@@ -292,6 +294,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                       final documents = (snapshot.data)!.docs;
                       if (documents.isNotEmpty) {
                         return GridView.builder(
+                          key: ValueKey(Uuid().v4()),
                           itemCount: documents.length,
                           padding: EdgeInsets.symmetric(
                               vertical: 20, horizontal: 25),

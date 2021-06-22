@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/widgets/timed_chat_screen/message_bubble_timed_chat.dart';
 import 'package:raven/widgets/timed_chat_screen/timer_card.dart';
+import 'package:uuid/uuid.dart';
 
 class TimedChatScreen extends StatefulWidget {
   final String conversationId;
@@ -202,6 +203,7 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
                         if (snapshot.hasData) {
                           final documents = (snapshot.data)!.docs;
                           return ListView.builder(
+                            key: ValueKey(Uuid().v4()),
                             controller: scrollController,
                             reverse: true,
                             itemCount: documents.length,
@@ -266,7 +268,11 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
                           ),
                         ),
                         IconButton(
-                          onPressed: () => sendMessage(),
+                          onPressed: () {
+                            if (textController.text.isNotEmpty) {
+                              sendMessage();
+                            }
+                          },
                           icon: Icon(Icons.send_rounded),
                           color: Theme.of(context).primaryColorDark,
                           iconSize: 30.0,

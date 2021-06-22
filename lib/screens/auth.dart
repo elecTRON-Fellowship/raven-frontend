@@ -184,11 +184,11 @@ class _AuthScreenState extends State<AuthScreen> {
                         phoneNumber: '+91${phoneController.text}',
                         verificationCompleted:
                             (PhoneAuthCredential credential) async {
-                          setState(() {
-                            showLoading = false;
-                          });
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/conversations', (route) => false);
+                          // setState(() {
+                          //   showLoading = false;
+                          // });
+                          // Navigator.of(context).pushNamedAndRemoveUntil(
+                          //     '/conversations', (route) => false);
                         },
                         verificationFailed: (FirebaseAuthException e) {
                           showLoading = false;

@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/models/requestsSingleton.dart';
 import 'package:raven/widgets/friend_transactions_screen/friend_ticket_card.dart';
 import 'package:raven/widgets/friend_transactions_screen/friend_transaction_card.dart';
+import 'package:uuid/uuid.dart';
 
 class FriendTransactionsScreen extends StatefulWidget {
   final String friendId;
@@ -191,6 +192,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                   final documents = (snapshot.data)!.docs;
                   if (documents.isNotEmpty) {
                     return ListView.builder(
+                      key: ValueKey(Uuid().v4()),
                       scrollDirection: Axis.horizontal,
                       itemCount: documents.length,
                       itemBuilder: (context, index) => FriendTicketCard(
@@ -257,6 +259,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                   topRight: Radius.circular(30),
                 ),
                 child: ListView.builder(
+                  key: ValueKey(Uuid().v4()),
                   padding: EdgeInsets.all(15),
                   itemCount: transactionList.length,
                   itemBuilder: (context, index) => FriendTransactionCard(

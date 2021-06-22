@@ -25,12 +25,14 @@ class _ConversationCardState extends State<ConversationCard> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('users');
+  CollectionReference _conversationsCollection =
+      FirebaseFirestore.instance.collection('conversations');
 
   late CollectionReference _messagesCollection;
 
   String fetchedName = '';
   String fetchedLastText = '';
-  String fetchedLastTextTime = '';
+  String fetchedlastTime = '';
 
   @override
   void initState() {
@@ -88,12 +90,10 @@ class _ConversationCardState extends State<ConversationCard> {
                     fontSize: 16,
                     color: Theme.of(context).primaryColorDark)),
           ),
-          StreamBuilder<QuerySnapshot>(
-            stream: _messagesCollection
-                .orderBy('time', descending: true)
-                .limit(1)
-                .snapshots(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          StreamBuilder<DocumentSnapshot>(
+            stream:
+                _conversationsCollection.doc(widget.conversationId).snapshots(),
+            builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.hasError) {
                 return Text('Something went wrong');
               }
@@ -101,12 +101,14 @@ class _ConversationCardState extends State<ConversationCard> {
                 return Text('');
               }
               if (snapshot.hasData) {
-                final documents = (snapshot.data)!.docs;
-                final data = documents[0].data() as Map<String, dynamic>;
-                String lastTextTime = DateFormat.Hm()
-                    .format(DateTime.parse(data['time'].toDate().toString()));
+                // final documents = (snapshot.data)!.docs;
+                final data = snapshot.data!;
+                String lastTime = data['lastTime'] == null
+                    ? ''
+                    : DateFormat.Hm().format(
+                        DateTime.parse(data['lastTime'].toDate().toString()));
                 return Text(
-                  lastTextTime,
+                  lastTime,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
                       textStyle: TextStyle(
@@ -123,12 +125,10 @@ class _ConversationCardState extends State<ConversationCard> {
       subtitle: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          StreamBuilder<QuerySnapshot>(
-            stream: _messagesCollection
-                .orderBy('time', descending: true)
-                .limit(1)
-                .snapshots(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          StreamBuilder<DocumentSnapshot>(
+            stream:
+                _conversationsCollection.doc(widget.conversationId).snapshots(),
+            builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.hasError) {
                 return Text('Something went wrong');
               }
@@ -136,9 +136,8 @@ class _ConversationCardState extends State<ConversationCard> {
                 return Text('');
               }
               if (snapshot.hasData) {
-                final documents = (snapshot.data)!.docs;
-                final data = documents[0].data() as Map<String, dynamic>;
-                String lastText = data['text'];
+                final data = snapshot.data!;
+                String lastText = data['lastText'];
                 return Container(
                   width: MediaQuery.of(context).size.width * 0.65,
                   child: Text(

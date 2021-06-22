@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/widgets/all_transactions_screen/transaction_card.dart';
+import 'package:uuid/uuid.dart';
 
 class AllTransactionsScreen extends StatefulWidget {
   const AllTransactionsScreen({Key? key}) : super(key: key);
@@ -64,6 +65,7 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
                 final documents = (snapshot.data)!.docs;
                 if (documents.isNotEmpty) {
                   return ListView.builder(
+                    key: ValueKey(Uuid().v4()),
                     padding: EdgeInsets.all(15),
                     itemCount: documents.length,
                     itemBuilder: (context, index) => TransactionCard(

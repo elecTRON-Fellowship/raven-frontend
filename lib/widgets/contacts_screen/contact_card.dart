@@ -104,7 +104,12 @@ class _ContactCardState extends State<ContactCard> {
       final newConversationDocument = await _conversationsCollection.add({
         'members': [_auth.currentUser!.uid, userSnapshot.docs[0].id],
         'unreadTexts': 0,
-        'userIds': {_auth.currentUser!.uid: true, userSnapshot.docs[0].id: true}
+        'userIds': {
+          _auth.currentUser!.uid: true,
+          userSnapshot.docs[0].id: true
+        },
+        'lastText': '',
+        'lastTime': null
       });
 
       Navigator.of(context).pushReplacement(

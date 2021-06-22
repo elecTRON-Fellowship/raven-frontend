@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/screens/friend_transactions.dart';
 import 'package:raven/widgets/chat_screen/message_bubble.dart';
 import 'package:raven/widgets/chat_screen/timed_chat_invite.dart';
+import 'package:uuid/uuid.dart';
 
 class ChatScreen extends StatefulWidget {
   final String conversationId;
@@ -20,6 +21,8 @@ class _ChatScreenState extends State<ChatScreen> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('users');
+  CollectionReference _conversationsCollection =
+      FirebaseFirestore.instance.collection('conversations');
   late TextEditingController textController;
   late ScrollController scrollController;
 
@@ -47,12 +50,17 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void sendMessage() async {
     FocusScope.of(context).unfocus();
+    var textToSend = textController.text;
+    var timeOfSending = DateTime.now();
     await _messagesCollection.add({
-      'time': DateTime.now(),
+      'time': timeOfSending,
       'sender': _auth.currentUser!.uid,
-      'text': textController.text,
+      'text': textToSend,
       'read': false
     });
+    await _conversationsCollection
+        .doc(widget.conversationId)
+        .update({'lastText': textToSend, 'lastTime': timeOfSending});
     textController.clear();
     scrollController.animateTo(scrollController.position.minScrollExtent,
         duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
@@ -141,6 +149,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       if (snapshot.hasData) {
                         final documents = (snapshot.data)!.docs;
                         return ListView.builder(
+                            key: ValueKey(Uuid().v4()),
                             controller: scrollController,
                             reverse: true,
                             itemCount: documents.length,
@@ -216,19 +225,19 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   IconButton(
+                    onPressed: () => sendTimedChatInvitation(),
+                    icon: Icon(Icons.timer_rounded),
+                    color: theme.primaryColorDark,
+                    iconSize: 30.0,
+                    padding: EdgeInsets.only(left: 15),
+                  ),
+                  IconButton(
                     onPressed: () {
                       if (textController.text.isNotEmpty) {
                         sendMessage();
                       }
                     },
                     icon: Icon(Icons.send_rounded),
-                    color: theme.primaryColorDark,
-                    iconSize: 30.0,
-                    padding: EdgeInsets.only(left: 15),
-                  ),
-                  IconButton(
-                    onPressed: () => sendTimedChatInvitation(),
-                    icon: Icon(Icons.timer_rounded),
                     color: theme.primaryColorDark,
                     iconSize: 30.0,
                     padding: EdgeInsets.only(left: 15),

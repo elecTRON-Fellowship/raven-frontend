@@ -45,7 +45,8 @@ class _OTPScreenState extends State<OTPScreen> {
           await _userCollection.doc(user.uid.toString()).set({
             'phoneNumber': user.phoneNumber.toString(),
             'firstName': '',
-            'lastName': ''
+            'lastName': '',
+            'closeFriends': []
           });
 
           Navigator.of(context).push(
