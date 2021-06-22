@@ -59,12 +59,6 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
       ),
       actions: [
         IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.search_rounded),
-          iconSize: 25,
-          color: Theme.of(context).primaryColorDark,
-        ),
-        IconButton(
           onPressed: () {
             Navigator.of(context).pushNamed('/contacts');
           },
