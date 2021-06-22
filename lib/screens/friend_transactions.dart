@@ -104,7 +104,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
     });
   }
 
-  var fetchedBalance = 0;
+  double fetchedBalance = 0;
   bool _isBalanceLoading = false;
 
   void fetchWalletBalance() async {
@@ -121,7 +121,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
       if (!mounted) return;
 
       setState(() {
-        fetchedBalance = balance;
+        fetchedBalance = double.parse(balance.toString());
         _isBalanceLoading = false;
       });
     }

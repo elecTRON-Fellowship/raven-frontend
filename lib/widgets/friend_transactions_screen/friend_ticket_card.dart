@@ -52,7 +52,7 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
     fetchWalletBalance();
   }
 
-  var fetchedBalance = 0;
+  double fetchedBalance = 0.0;
   bool _isBalanceLoading = false;
 
   void fetchWalletBalance() async {
@@ -69,7 +69,7 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
       if (!mounted) return;
 
       setState(() {
-        fetchedBalance = balance;
+        fetchedBalance = double.parse(balance.toString());
         _isBalanceLoading = false;
       });
     }
