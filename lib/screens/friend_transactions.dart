@@ -39,9 +39,18 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
   @override
   void initState() {
     super.initState();
+    checkIfUserHasCreatedWallet();
     fetchContactName();
     fetchTransactions();
     fetchWalletBalance();
+  }
+
+  void checkIfUserHasCreatedWallet() async {
+    final snapshot = await _userCollection.doc(_auth.currentUser!.uid).get();
+    final data = snapshot.data() as Map;
+    if (data['walletID'] == null) {
+      Navigator.of(context).pushReplacementNamed('/create-wallet-user-details');
+    }
   }
 
   void sendMoney(context) async {
