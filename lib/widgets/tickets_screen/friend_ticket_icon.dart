@@ -80,7 +80,7 @@ class _FriendTicketIconState extends State<FriendTicketIcon> {
           height: 2.0,
         ),
         Text(
-          fetchedName,
+          fetchedName.split(' ').first,
           style: GoogleFonts.poppins(
             textStyle: TextStyle(
               fontWeight: FontWeight.w500,

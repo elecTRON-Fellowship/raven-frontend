@@ -60,7 +60,6 @@ class _TicketsScreenState extends State<TicketsScreen> {
       Navigator.of(context).pop();
     }
     if (_selectedNavBarIndex == 3) {
-      print("This is running");
       Scaffold.of(ctx).openEndDrawer();
       setState(() {
         _selectedNavBarIndex = 1;

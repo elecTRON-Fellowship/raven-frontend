@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/models/requestsSingleton.dart';
 import 'package:raven/screens/close_friends.dart';
 import 'package:raven/screens/tickets_history.dart';
 
@@ -13,6 +16,36 @@ class EndDrawer extends StatefulWidget {
 
 class _EndDrawerState extends State<EndDrawer> {
   FirebaseAuth _auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchWalletBalance();
+  }
+
+  double fetchedBalance = 0.0;
+  bool _isBalanceLoading = false;
+
+  void fetchWalletBalance() async {
+    _isBalanceLoading = true;
+
+    final _requestsSingleton = RequestsSingleton();
+    var res = await _requestsSingleton.fetchWalletBalance();
+
+    var data = json.decode(res.body);
+
+    var balance = data['data']['data'][0]['balance'];
+
+    if (res.statusCode == 200) {
+      if (!mounted) return;
+
+      setState(() {
+        fetchedBalance = double.parse(balance.toString());
+        _isBalanceLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -38,7 +71,32 @@ class _EndDrawerState extends State<EndDrawer> {
                 ),
               ),
               SizedBox(
-                height: 38,
+                height: 10,
+              ),
+              ListTile(
+                title: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "Wallet\nBalance: ",
+                      style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                              fontSize: 22,
+                              color: Theme.of(context).primaryColorDark)),
+                    ),
+                    Text(
+                      "₹${fetchedBalance.toStringAsFixed(2)}",
+                      style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 22,
+                              color: Theme.of(context).accentColor)),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 32,
               ),
               ListTile(
                 title: Text(

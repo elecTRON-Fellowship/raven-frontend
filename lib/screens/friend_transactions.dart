@@ -229,7 +229,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                         color: theme.backgroundColor,
                         child: Center(
                           child: Text(
-                            "$fetchedName doesn't have any active tickets.",
+                            "${fetchedName.split(' ').first} doesn't have any active tickets.",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.poppins(
                               textStyle: TextStyle(
@@ -267,7 +267,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                   topLeft: Radius.circular(30),
                   topRight: Radius.circular(30),
                 ),
-                child: transactionList.isEmpty
+                child: transactionList.isNotEmpty
                     ? ListView.builder(
                         key: ValueKey(Uuid().v4()),
                         padding: EdgeInsets.all(15),
@@ -488,7 +488,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                           height: size.height * 0.02,
                         ),
                         Text(
-                          "Wallet Balance: ${fetchedBalance.toStringAsFixed(2)}",
+                          "Wallet Balance: ₹${fetchedBalance.toStringAsFixed(2)}",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.poppins(
                             textStyle: TextStyle(

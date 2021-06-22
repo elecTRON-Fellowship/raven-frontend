@@ -33,7 +33,6 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
       });
     }
     if (_selectedNavBarIndex == 3) {
-      print("This is running");
       Scaffold.of(ctx).openEndDrawer();
       setState(() {
         _selectedNavBarIndex = 0;

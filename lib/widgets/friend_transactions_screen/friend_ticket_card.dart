@@ -381,7 +381,7 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                         height: size.height * 0.02,
                       ),
                       Text(
-                        "Wallet Balance: ${fetchedBalance.toStringAsFixed(2)}",
+                        "Wallet Balance: ₹${fetchedBalance.toStringAsFixed(2)}",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.poppins(
                           textStyle: TextStyle(
