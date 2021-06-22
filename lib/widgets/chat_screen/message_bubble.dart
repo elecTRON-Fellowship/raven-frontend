@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class MessageBubble extends StatefulWidget {
+  final bool isRead;
   final String conversationId;
   final String messageId;
   final Key key;
@@ -13,7 +14,8 @@ class MessageBubble extends StatefulWidget {
   final DateTime time;
 
   MessageBubble(
-      {required this.conversationId,
+      {required this.isRead,
+      required this.conversationId,
       required this.messageId,
       required this.key,
       required this.sender,
@@ -116,6 +118,25 @@ class _MessageBubbleState extends State<MessageBubble> {
                             ),
                     ),
                   ),
+                  if (isSent)
+                    SizedBox(
+                      width: 8.0,
+                    ),
+                  if (isSent)
+                    Padding(
+                      padding: EdgeInsets.only(top: 6.0),
+                      child: widget.isRead
+                          ? Icon(
+                              Icons.done_all_rounded,
+                              size: 16,
+                              color: Colors.grey[800],
+                            )
+                          : Icon(
+                              Icons.done_rounded,
+                              size: 16,
+                              color: Colors.grey[800],
+                            ),
+                    ),
                 ],
               )),
         )

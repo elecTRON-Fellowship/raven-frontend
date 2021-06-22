@@ -175,6 +175,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   time: DateTime.parse(documents[index]['time']
                                       .toDate()
                                       .toString()),
+                                  isRead: documents[index]['read'],
                                 );
                               }
                             });
