@@ -3,6 +3,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_CONTACTS" />  
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
    <application
         android:label="Raven"
         android:icon="@mipmap/ic_launcher">
@@ -40,5 +41,7 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyA7JDmk8pXuhU5jm4l6YVhGxXk_fWpL2KY"/>    
     </application>
 </manifest>
