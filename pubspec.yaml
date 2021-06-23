@@ -39,6 +39,8 @@ dependencies:
   flutter_native_splash: ^1.2.0
   flutter_svg: ^0.22.0
   uuid: ^3.0.4
+  google_maps_flutter: ^2.0.6
+  geolocator: ^7.1.1
 
 dev_dependencies:
   flutter_test:
