@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -15,6 +16,9 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   Position? position;
+  Marker? _originMarker = null;
+  Marker? _destinationMarker = null;
+  String _polyline = '';
   late GoogleMapController _googleMapController;
   TextEditingController searchController = new TextEditingController();
 
@@ -92,15 +96,47 @@ class _MapScreenState extends State<MapScreen> {
     return await Geolocator.getCurrentPosition();
   }
 
-  Set<Marker> _createMarker() {
-    return <Marker>[
-      Marker(
-          markerId: MarkerId('home'),
+  void _createOriginMarker() {
+    setState(() {
+      _originMarker = Marker(
+          markerId: MarkerId('origin'),
           position: LatLng(position!.latitude, position!.longitude),
           icon: BitmapDescriptor.defaultMarker,
-          infoWindow: InfoWindow(title: 'Current Location'))
-    ].toSet();
+          infoWindow: InfoWindow(title: 'Current Location'));
+    });
   }
+
+  void _createdestinationMarkerAndPolyline(lat, lng, polyline) {
+    setState(() {
+      _destinationMarker = Marker(
+          markerId: MarkerId('destination'),
+          position: LatLng(lat, lng),
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+              HSLColor.fromColor(Theme.of(context).accentColor).hue),
+          infoWindow: InfoWindow(title: 'Destination Location'));
+
+      _polyline = polyline;
+    });
+
+    // LatLngBounds bounds;
+
+    // if (position!.latitude <= lat) {
+    //   bounds = LatLngBounds(
+    //     southwest: LatLng(position!.latitude, position!.longitude),
+    //     northeast: LatLng(lat, lng),
+    //   );
+    // } else {
+    //   bounds = LatLngBounds(
+    //     southwest: LatLng(lat, lng),
+    //     northeast: LatLng(position!.latitude, position!.longitude),
+    //   );
+    // }
+
+    // _googleMapController
+    //     .animateCamera(CameraUpdate.newLatLngBounds(bounds, 130));
+  }
+
+  void displayRoute() {}
 
   @override
   Widget build(BuildContext context) {
@@ -131,9 +167,26 @@ class _MapScreenState extends State<MapScreen> {
                   Container(
                       height: size.height - appBar.preferredSize.height,
                       child: GoogleMap(
-                        onMapCreated: (controller) =>
-                            _googleMapController = controller,
-                        markers: _createMarker(),
+                        polylines: {
+                          if (_polyline != '')
+                            Polyline(
+                              polylineId: PolylineId('destinationpolyline'),
+                              color: theme.accentColor,
+                              width: 5,
+                              points: PolylinePoints()
+                                  .decodePolyline(_polyline)
+                                  .map((e) => LatLng(e.latitude, e.longitude))
+                                  .toList(),
+                            ),
+                        },
+                        onMapCreated: (controller) {
+                          _googleMapController = controller;
+                          _createOriginMarker();
+                        },
+                        markers: {
+                          if (_originMarker != null) _originMarker!,
+                          if (_destinationMarker != null) _destinationMarker!,
+                        },
                         myLocationButtonEnabled: false,
                         initialCameraPosition: CameraPosition(
                             target:
@@ -147,8 +200,12 @@ class _MapScreenState extends State<MapScreen> {
                       width: size.width * 0.9,
                       padding: const EdgeInsets.all(10),
                       child: TextField(
-                        onEditingComplete: () {
-                          Navigator.of(context).push(
+                        onEditingComplete: () async {
+                          FocusScope.of(context).unfocus();
+
+                          _destinationMarker = null;
+
+                          final result = await Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (_) => PlacesResultsScreen(
                                 searchString: searchController.text,
@@ -157,6 +214,11 @@ class _MapScreenState extends State<MapScreen> {
                               ),
                             ),
                           );
+
+                          _createdestinationMarkerAndPolyline(
+                              result['lat'], result['lng'], result['polyline']);
+
+                          // displayRoute();
                         },
                         controller: searchController,
                         style: GoogleFonts.poppins(

@@ -20,6 +20,7 @@ class _PlacesResultCardState extends State<PlacesResultCard> {
   List photos = [];
   String openHours = '';
   bool _showLoading = false;
+  String polyline = '';
 
   void calculateDistance() async {
     final destination = widget.placeObject['place_id'];
@@ -35,6 +36,7 @@ class _PlacesResultCardState extends State<PlacesResultCard> {
       setState(() {
         distance = body['routes'][0]['legs'][0]['distance']['text'];
         duration = body['routes'][0]['legs'][0]['duration']['text'];
+        polyline = body['routes'][0]['overview_polyline']['points'];
       });
     }
   }
@@ -194,6 +196,34 @@ class _PlacesResultCardState extends State<PlacesResultCard> {
                   size: 13,
                 ),
               ],
+            ),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  var result = {
+                    'lat': widget.placeObject['geometry']['location']['lat'],
+                    'lng': widget.placeObject['geometry']['location']['lng'],
+                    'polyline': polyline
+                  };
+                  print(result);
+                  Navigator.of(context).pop(result);
+                },
+                child: Text(
+                  'Directions',
+                  style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: theme.backgroundColor)),
+                ),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+                  primary: theme.accentColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
