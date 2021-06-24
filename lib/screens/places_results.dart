@@ -18,6 +18,7 @@ class PlacesResultsScreen extends StatefulWidget {
 
 class _PlacesResultsScreenState extends State<PlacesResultsScreen> {
   List places = [];
+  bool _showLoading = true;
 
   void findPlace() async {
     var url = Uri.parse(
@@ -31,6 +32,10 @@ class _PlacesResultsScreenState extends State<PlacesResultsScreen> {
         places = body['results'];
       });
     }
+
+    setState(() {
+      _showLoading = false;
+    });
   }
 
   @override
@@ -45,6 +50,15 @@ class _PlacesResultsScreenState extends State<PlacesResultsScreen> {
     final size = MediaQuery.of(context).size;
 
     final appBar = AppBar(
+      leading: IconButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        icon: Icon(Icons.arrow_back_rounded),
+        iconSize: 25,
+        color: theme.primaryColorDark,
+      ),
+      centerTitle: true,
       elevation: 0.0,
       backgroundColor: theme.primaryColor,
       title: Text(
@@ -59,13 +73,34 @@ class _PlacesResultsScreenState extends State<PlacesResultsScreen> {
 
     return Scaffold(
       appBar: appBar,
-      body: ListView.builder(
-        key: ValueKey(Uuid().v4()),
-        itemCount: places.length,
-        itemBuilder: (context, index) => PlacesResultCard(
-          placeObject: places[index] as Map,
-          origin: widget.location,
-        ),
+      backgroundColor: theme.primaryColor,
+      body: Container(
+        height: size.height - appBar.preferredSize.height,
+        child: _showLoading
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: theme.primaryColorDark,
+                ),
+              )
+            : places.length == 0
+                ? Center(
+                    child: Text(
+                      'No places found near you.',
+                      style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                              color: Theme.of(context).primaryColorDark)),
+                    ),
+                  )
+                : ListView.builder(
+                    key: ValueKey(Uuid().v4()),
+                    itemCount: places.length,
+                    itemBuilder: (context, index) => PlacesResultCard(
+                      placeObject: places[index] as Map,
+                      origin: widget.location,
+                    ),
+                  ),
       ),
     );
   }

@@ -108,7 +108,7 @@ class _MapScreenState extends State<MapScreen> {
                       initialCameraPosition: CameraPosition(
                           target:
                               LatLng(position!.latitude, position!.longitude),
-                          zoom: 13),
+                          zoom: 16),
                     )),
                 Positioned(
                   top: 0,
@@ -174,7 +174,7 @@ class _MapScreenState extends State<MapScreen> {
           CameraUpdate.newCameraPosition(
             CameraPosition(
                 target: LatLng(position!.latitude, position!.longitude),
-                zoom: 13),
+                zoom: 16),
           ),
         ),
         child: Icon(Icons.center_focus_strong),
