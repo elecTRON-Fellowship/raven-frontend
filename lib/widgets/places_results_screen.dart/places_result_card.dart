@@ -53,7 +53,11 @@ class _PlacesResultCardState extends State<PlacesResultCard> {
       var body = json.decode(res.body);
       if (body['result']['photos'] != null) {
         if (!mounted) return;
-
+        setState(() {
+          photos = body['result']['photos'];
+        });
+      }
+      if (body['result']['opening_hours'] != null) {
         int dayOfTheWeek = DateTime.now().weekday;
 
         String open = (body['result']['opening_hours']['weekday_text']
@@ -68,11 +72,16 @@ class _PlacesResultCardState extends State<PlacesResultCard> {
         }
 
         setState(() {
-          photos = body['result']['photos'];
           openHours = openingHours;
-          _showLoading = false;
+        });
+      } else {
+        setState(() {
+          openHours = 'Opening hours not found.';
         });
       }
+      setState(() {
+        _showLoading = false;
+      });
     }
   }
 

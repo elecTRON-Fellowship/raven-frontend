@@ -68,7 +68,7 @@ class _TimedChatInviteState extends State<TimedChatInvite> {
           return Center(child: Text('Something went wrong'));
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Container();
         }
         if (snapshot.hasData) {
           final data = (snapshot.data)!.data() as Map;

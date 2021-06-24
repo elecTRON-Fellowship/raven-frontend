@@ -52,6 +52,7 @@ class _ChatScreenState extends State<ChatScreen> {
     FocusScope.of(context).unfocus();
     var textToSend = textController.text;
     var timeOfSending = DateTime.now();
+    textController.clear();
     await _messagesCollection.add({
       'time': timeOfSending,
       'sender': _auth.currentUser!.uid,
@@ -61,7 +62,7 @@ class _ChatScreenState extends State<ChatScreen> {
     await _conversationsCollection
         .doc(widget.conversationId)
         .update({'lastText': textToSend, 'lastTime': timeOfSending});
-    textController.clear();
+
     scrollController.animateTo(scrollController.position.minScrollExtent,
         duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
   }
@@ -144,7 +145,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         .snapshots(),
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return Container();
                       }
                       if (snapshot.hasData) {
                         final documents = (snapshot.data)!.docs;

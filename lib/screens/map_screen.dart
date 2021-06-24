@@ -216,13 +216,16 @@ class _MapScreenState extends State<MapScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: theme.accentColor,
         foregroundColor: theme.backgroundColor,
-        onPressed: () => _googleMapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-                target: LatLng(position!.latitude, position!.longitude),
-                zoom: 16),
-          ),
-        ),
+        onPressed: () {
+          if (position != null)
+            _googleMapController.animateCamera(
+              CameraUpdate.newCameraPosition(
+                CameraPosition(
+                    target: LatLng(position!.latitude, position!.longitude),
+                    zoom: 16),
+              ),
+            );
+        },
         child: Icon(Icons.center_focus_strong),
       ),
       endDrawer: EndDrawer(),

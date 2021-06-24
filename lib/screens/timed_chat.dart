@@ -44,12 +44,14 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
 
   void sendMessage() async {
     FocusScope.of(context).unfocus();
+    var textToSend = textController.text;
+    textController.clear();
+
     await _timedChatsCollection.add({
       'time': DateTime.now(),
       'sender': _auth.currentUser!.uid,
-      'text': textController.text
+      'text': textToSend
     });
-    textController.clear();
     scrollController.animateTo(scrollController.position.minScrollExtent,
         duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
   }
@@ -198,7 +200,7 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
                           (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
+                          return Container();
                         }
                         if (snapshot.hasData) {
                           final documents = (snapshot.data)!.docs;

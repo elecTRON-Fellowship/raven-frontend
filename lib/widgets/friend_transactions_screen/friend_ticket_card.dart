@@ -246,7 +246,7 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                 borderRadius: BorderRadius.circular(20.0),
               ),
               child: Container(
-                height: size.height * 0.65,
+                height: size.height * 0.53,
                 width: size.width * 0.8,
                 child: SingleChildScrollView(
                   child: Column(
@@ -340,7 +340,7 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                                 return "Amount can't be 0";
                               } else if (double.parse(value.toString()) >
                                   9999.00) {
-                                return "Max amount allowed is 9999.00";
+                                return "Max amount is ₹9999.00";
                               }
                             },
                           ),
