@@ -59,6 +59,12 @@ class _TicketsScreenState extends State<TicketsScreen> {
     if (_selectedNavBarIndex == 0) {
       Navigator.of(context).pop();
     }
+    if (_selectedNavBarIndex == 2) {
+      Navigator.of(context).pushReplacementNamed('/map');
+      setState(() {
+        _selectedNavBarIndex = 1;
+      });
+    }
     if (_selectedNavBarIndex == 3) {
       Scaffold.of(ctx).openEndDrawer();
       setState(() {
@@ -367,7 +373,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.local_taxi_rounded,
+                Icons.map_rounded,
                 size: 30,
               ),
               label: 'Uber',

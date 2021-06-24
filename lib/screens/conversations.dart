@@ -32,6 +32,12 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
         _selectedNavBarIndex = 0;
       });
     }
+    if (_selectedNavBarIndex == 2) {
+      Navigator.of(context).pushNamed('/map');
+      setState(() {
+        _selectedNavBarIndex = 0;
+      });
+    }
     if (_selectedNavBarIndex == 3) {
       Scaffold.of(ctx).openEndDrawer();
       setState(() {
@@ -154,7 +160,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.local_taxi_rounded,
+                Icons.map_rounded,
                 size: 30,
               ),
               label: 'Uber',
