@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:raven/screens/places_results.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -32,7 +33,8 @@ class _MapScreenState extends State<MapScreen> {
     final result = await _determinePosition();
     setState(() {
       position = result;
-      print(position);
+      print(position!.latitude.toString());
+      print(position!.latitude.toString());
     });
   }
 
@@ -93,68 +95,78 @@ class _MapScreenState extends State<MapScreen> {
     );
     return Scaffold(
       appBar: appBar,
-      body: Stack(
-        children: [
-          Container(
-            height: size.height - appBar.preferredSize.height,
-            child: position != null
-                ? GoogleMap(
-                    onMapCreated: (controller) =>
-                        _googleMapController = controller,
-                    markers: _createMarker(),
-                    myLocationButtonEnabled: false,
-                    initialCameraPosition: CameraPosition(
-                        target: LatLng(position!.latitude, position!.longitude),
-                        zoom: 13),
-                  )
-                : Text("Test"),
-          ),
-          Positioned(
-            top: 0,
-            left: size.width * 0.05,
-            child: Container(
-              width: size.width * 0.9,
-              padding: const EdgeInsets.all(10),
-              child: TextField(
-                onEditingComplete: () => print(searchController.text),
-                controller: searchController,
-                style: GoogleFonts.poppins(
-                  textStyle: TextStyle(
-                    color: Theme.of(context).primaryColorDark,
-                  ),
-                ),
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.search_rounded,
-                    color: Theme.of(context).primaryColorDark,
-                  ),
-                  fillColor: Theme.of(context).backgroundColor,
-                  filled: true,
-                  contentPadding: EdgeInsets.all(13),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide(
-                      color: Theme.of(context).primaryColorDark,
+      body: position != null
+          ? Stack(
+              children: [
+                Container(
+                    height: size.height - appBar.preferredSize.height,
+                    child: GoogleMap(
+                      onMapCreated: (controller) =>
+                          _googleMapController = controller,
+                      markers: _createMarker(),
+                      myLocationButtonEnabled: false,
+                      initialCameraPosition: CameraPosition(
+                          target:
+                              LatLng(position!.latitude, position!.longitude),
+                          zoom: 13),
+                    )),
+                Positioned(
+                  top: 0,
+                  left: size.width * 0.05,
+                  child: Container(
+                    width: size.width * 0.9,
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      onEditingComplete: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => PlacesResultsScreen(
+                              searchString: searchController.text,
+                              location:
+                                  '${position!.latitude},${position!.longitude}',
+                            ),
+                          ),
+                        );
+                      },
+                      controller: searchController,
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          color: Theme.of(context).primaryColorDark,
+                        ),
+                      ),
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.search_rounded,
+                          color: Theme.of(context).primaryColorDark,
+                        ),
+                        fillColor: Theme.of(context).backgroundColor,
+                        filled: true,
+                        contentPadding: EdgeInsets.all(13),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).primaryColorDark,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).primaryColorDark,
+                            width: 2,
+                          ),
+                        ),
+                        hintText: "Search",
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).primaryColorDark,
+                        ),
+                      ),
+                      textCapitalization: TextCapitalization.words,
                     ),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide(
-                      color: Theme.of(context).primaryColorDark,
-                      width: 2,
-                    ),
-                  ),
-                  hintText: "Search",
-                  labelStyle: TextStyle(
-                    color: Theme.of(context).primaryColorDark,
-                  ),
                 ),
-                textCapitalization: TextCapitalization.words,
-              ),
-            ),
-          ),
-        ],
-      ),
+              ],
+            )
+          : Text("Test"),
       floatingActionButton: FloatingActionButton(
         backgroundColor: theme.accentColor,
         foregroundColor: theme.backgroundColor,
