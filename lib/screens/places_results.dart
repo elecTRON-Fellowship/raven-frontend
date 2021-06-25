@@ -8,9 +8,13 @@ import 'package:uuid/uuid.dart';
 
 class PlacesResultsScreen extends StatefulWidget {
   final String searchString;
-  final String location;
+  final originLatitude;
+  final originLongitude;
 
-  PlacesResultsScreen({required this.searchString, required this.location});
+  PlacesResultsScreen(
+      {required this.searchString,
+      required this.originLatitude,
+      required this.originLongitude});
 
   @override
   _PlacesResultsScreenState createState() => _PlacesResultsScreenState();
@@ -21,8 +25,10 @@ class _PlacesResultsScreenState extends State<PlacesResultsScreen> {
   bool _showLoading = true;
 
   void findPlace() async {
+    final location = '${widget.originLatitude},${widget.originLongitude}';
+
     var url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyA7JDmk8pXuhU5jm4l6YVhGxXk_fWpL2KY&keyword=${widget.searchString}&location=${widget.location}&rankby=distance');
+        'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyA7JDmk8pXuhU5jm4l6YVhGxXk_fWpL2KY&keyword=${widget.searchString}&location=${location}&rankby=distance');
 
     var res = await http.get(url);
 
@@ -98,7 +104,8 @@ class _PlacesResultsScreenState extends State<PlacesResultsScreen> {
                     itemCount: places.length,
                     itemBuilder: (context, index) => PlacesResultCard(
                       placeObject: places[index] as Map,
-                      origin: widget.location,
+                      originLatitude: widget.originLatitude,
+                      originLongitude: widget.originLongitude,
                     ),
                   ),
       ),

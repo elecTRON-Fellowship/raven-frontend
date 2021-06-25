@@ -4,12 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:raven/screens/directions.dart';
 
 class PlacesResultCard extends StatefulWidget {
   final Map placeObject;
-  final String origin;
+  final originLatitude;
+  final originLongitude;
 
-  PlacesResultCard({required this.placeObject, required this.origin});
+  PlacesResultCard(
+      {required this.placeObject,
+      required this.originLatitude,
+      required this.originLongitude});
 
   @override
   _PlacesResultCardState createState() => _PlacesResultCardState();
@@ -26,8 +31,10 @@ class _PlacesResultCardState extends State<PlacesResultCard> {
   void calculateDistance() async {
     final destination = widget.placeObject['place_id'];
 
+    final origin = '${widget.originLatitude},${widget.originLongitude}';
+
     var url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/directions/json?key=AIzaSyA7JDmk8pXuhU5jm4l6YVhGxXk_fWpL2KY&origin=${widget.origin}&destination=place_id:$destination');
+        'https://maps.googleapis.com/maps/api/directions/json?key=AIzaSyA7JDmk8pXuhU5jm4l6YVhGxXk_fWpL2KY&origin=${origin}&destination=place_id:$destination');
 
     var res = await http.get(url);
 
@@ -201,14 +208,20 @@ class _PlacesResultCardState extends State<PlacesResultCard> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  var result = {
-                    'lat': widget.placeObject['geometry']['location']['lat'],
-                    'lng': widget.placeObject['geometry']['location']['lng'],
-                    'polyline': polyline,
-                    'bounds': bounds
-                  };
-                  print(result);
-                  Navigator.of(context).pop(result);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => DirectionsScreen(
+                        bounds: bounds,
+                        destinationLat: widget.placeObject['geometry']
+                            ['location']['lat'],
+                        destinationLng: widget.placeObject['geometry']
+                            ['location']['lng'],
+                        originLat: widget.originLatitude,
+                        originLng: widget.originLongitude,
+                        polyline: polyline,
+                      ),
+                    ),
+                  );
                 },
                 child: Text(
                   'Directions',
