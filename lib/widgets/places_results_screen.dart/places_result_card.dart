@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class PlacesResultCard extends StatefulWidget {
@@ -15,12 +16,12 @@ class PlacesResultCard extends StatefulWidget {
 }
 
 class _PlacesResultCardState extends State<PlacesResultCard> {
-  String distance = '';
-  String duration = '';
+  String distanceAndDuration = '';
   List photos = [];
   String openHours = '';
   bool _showLoading = false;
   String polyline = '';
+  LatLngBounds? bounds = null;
 
   void calculateDistance() async {
     final destination = widget.placeObject['place_id'];
@@ -34,9 +35,15 @@ class _PlacesResultCardState extends State<PlacesResultCard> {
       var body = json.decode(res.body);
       if (!mounted) return;
       setState(() {
-        distance = body['routes'][0]['legs'][0]['distance']['text'];
-        duration = body['routes'][0]['legs'][0]['duration']['text'];
+        final distance = body['routes'][0]['legs'][0]['distance']['text'];
+        final duration = body['routes'][0]['legs'][0]['duration']['text'];
+        distanceAndDuration = '$distance, $duration';
         polyline = body['routes'][0]['overview_polyline']['points'];
+        final northeast = body['routes'][0]['bounds']['northeast'];
+        final southwest = body['routes'][0]['bounds']['southwest'];
+        bounds = LatLngBounds(
+            southwest: LatLng(southwest['lat'], southwest['lng']),
+            northeast: LatLng(northeast['lat'], northeast['lng']));
       });
     }
   }
@@ -129,7 +136,7 @@ class _PlacesResultCardState extends State<PlacesResultCard> {
               width: 4,
             ),
             Container(
-              width: size.width * 0.5,
+              width: size.width * 0.7,
               child: Text(
                 this.widget.placeObject['name'],
                 overflow: TextOverflow.ellipsis,
@@ -157,36 +164,30 @@ class _PlacesResultCardState extends State<PlacesResultCard> {
             SizedBox(
               height: size.height * 0.01,
             ),
-            Row(
-              children: [
-                Text(
-                  '$distance,',
-                  style: GoogleFonts.poppins(
-                      textStyle:
-                          TextStyle(fontSize: 14, color: theme.primaryColor)),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  duration,
-                  style: GoogleFonts.poppins(
-                      textStyle:
-                          TextStyle(fontSize: 14, color: theme.primaryColor)),
-                ),
-              ],
+            Text(
+              distanceAndDuration,
+              style: GoogleFonts.poppins(
+                  textStyle:
+                      TextStyle(fontSize: 14, color: theme.primaryColor)),
             ),
             SizedBox(
               height: size.height * 0.01,
             ),
             Row(
               children: [
-                Text(
-                  this.widget.placeObject['rating'].toString(),
-                  style: GoogleFonts.poppins(
-                      textStyle:
-                          TextStyle(fontSize: 14, color: theme.primaryColor)),
-                ),
+                this.widget.placeObject['rating'] != null
+                    ? Text(
+                        this.widget.placeObject['rating'].toString(),
+                        style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                                fontSize: 14, color: theme.primaryColor)),
+                      )
+                    : Text(
+                        'No ratings',
+                        style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                                fontSize: 14, color: theme.primaryColor)),
+                      ),
                 SizedBox(
                   width: 4,
                 ),
@@ -203,7 +204,8 @@ class _PlacesResultCardState extends State<PlacesResultCard> {
                   var result = {
                     'lat': widget.placeObject['geometry']['location']['lat'],
                     'lng': widget.placeObject['geometry']['location']['lng'],
-                    'polyline': polyline
+                    'polyline': polyline,
+                    'bounds': bounds
                   };
                   print(result);
                   Navigator.of(context).pop(result);

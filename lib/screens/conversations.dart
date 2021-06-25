@@ -160,7 +160,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.map_rounded,
+                Icons.local_taxi_rounded,
                 size: 30,
               ),
               label: 'Uber',

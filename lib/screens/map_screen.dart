@@ -106,7 +106,7 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  void _createdestinationMarkerAndPolyline(lat, lng, polyline) {
+  void _createdestinationMarkerAndPolyline(lat, lng, polyline, bounds) {
     setState(() {
       _destinationMarker = Marker(
           markerId: MarkerId('destination'),
@@ -118,22 +118,8 @@ class _MapScreenState extends State<MapScreen> {
       _polyline = polyline;
     });
 
-    // LatLngBounds bounds;
-
-    // if (position!.latitude <= lat) {
-    //   bounds = LatLngBounds(
-    //     southwest: LatLng(position!.latitude, position!.longitude),
-    //     northeast: LatLng(lat, lng),
-    //   );
-    // } else {
-    //   bounds = LatLngBounds(
-    //     southwest: LatLng(lat, lng),
-    //     northeast: LatLng(position!.latitude, position!.longitude),
-    //   );
-    // }
-
-    // _googleMapController
-    //     .animateCamera(CameraUpdate.newLatLngBounds(bounds, 130));
+    _googleMapController
+        .animateCamera(CameraUpdate.newLatLngBounds(bounds, 110));
   }
 
   void displayRoute() {}
@@ -216,7 +202,10 @@ class _MapScreenState extends State<MapScreen> {
                           );
 
                           _createdestinationMarkerAndPolyline(
-                              result['lat'], result['lng'], result['polyline']);
+                              result['lat'],
+                              result['lng'],
+                              result['polyline'],
+                              result['bounds']);
 
                           // displayRoute();
                         },
@@ -319,7 +308,7 @@ class _MapScreenState extends State<MapScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.map_rounded,
+                Icons.local_taxi_rounded,
                 size: 30,
               ),
               label: 'Uber',

@@ -373,7 +373,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.map_rounded,
+                Icons.local_taxi_rounded,
                 size: 30,
               ),
               label: 'Uber',
