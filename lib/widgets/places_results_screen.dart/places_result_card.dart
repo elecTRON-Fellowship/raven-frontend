@@ -219,6 +219,7 @@ class _PlacesResultCardState extends State<PlacesResultCard> {
                         originLat: widget.originLatitude,
                         originLng: widget.originLongitude,
                         polyline: polyline,
+                        destinationPlaceName: this.widget.placeObject['name'],
                       ),
                     ),
                   );

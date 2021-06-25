@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:raven/screens/group_ride_invite.dart';
 import 'package:raven/screens/places_results.dart';
 import 'package:raven/widgets/common/end_drawer.dart';
 
@@ -14,6 +15,7 @@ class DirectionsScreen extends StatefulWidget {
   final destinationLng;
   final polyline;
   final bounds;
+  final destinationPlaceName;
 
   DirectionsScreen(
       {required this.originLat,
@@ -21,7 +23,8 @@ class DirectionsScreen extends StatefulWidget {
       required this.destinationLat,
       required this.destinationLng,
       required this.polyline,
-      required this.bounds});
+      required this.bounds,
+      required this.destinationPlaceName});
 
   @override
   _DirectionsScreenState createState() => _DirectionsScreenState();
@@ -166,7 +169,21 @@ class _DirectionsScreenState extends State<DirectionsScreen> {
                       width: 10,
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => GroupRideInviteScreen(
+                              originLat: widget.originLat,
+                              originLng: widget.originLng,
+                              destinationLat: widget.destinationLat,
+                              destinationLng: widget.destinationLng,
+                              polyline: widget.polyline,
+                              bounds: widget.bounds,
+                              destinationPlaceName: widget.destinationPlaceName,
+                            ),
+                          ),
+                        );
+                      },
                       child: Row(
                         children: [
                           Icon(

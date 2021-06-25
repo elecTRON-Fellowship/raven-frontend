@@ -63,6 +63,8 @@ class _MapScreenState extends State<MapScreen> {
 
   void _getPosition() async {
     final result = await _determinePosition();
+    if (!mounted) return;
+
     setState(() {
       position = result;
       print(position!.latitude.toString());
@@ -96,6 +98,8 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _createOriginMarker() {
+    if (!mounted) return;
+
     setState(() {
       _originMarker = Marker(
           markerId: MarkerId('origin'),

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/screens/friend_transactions.dart';
+import 'package:raven/widgets/chat_screen/group_ride_invite.dart';
 import 'package:raven/widgets/chat_screen/message_bubble.dart';
 import 'package:raven/widgets/chat_screen/timed_chat_invite.dart';
 import 'package:uuid/uuid.dart';
@@ -165,6 +166,28 @@ class _ChatScreenState extends State<ChatScreen> {
                                   time: DateTime.parse(documents[index]['time']
                                       .toDate()
                                       .toString()),
+                                );
+                              } else if (documents[index]['text'] ==
+                                  '/GROUP_RIDE_INVITE') {
+                                return GroupRideInvite(
+                                  conversationId: widget.conversationId,
+                                  messageId: documents[index].id,
+                                  key: ValueKey(documents[index].id),
+                                  sender: documents[index]['sender'],
+                                  text: documents[index]['text'],
+                                  time: DateTime.parse(documents[index]['time']
+                                      .toDate()
+                                      .toString()),
+                                  originLat: documents[index]['originLat'],
+                                  originLng: documents[index]['originLng'],
+                                  destinationLat: documents[index]
+                                      ['destinationLat'],
+                                  destinationLng: documents[index]
+                                      ['destinationLng'],
+                                  polyline: documents[index]['polyline'],
+                                  bounds: documents[index]['bounds'],
+                                  destinationPlaceName: documents[index]
+                                      ['destinationPlaceName'],
                                 );
                               } else {
                                 return MessageBubble(
