@@ -1,10 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:raven/screens/timed_chat.dart';
 
 class GroupRideInvite extends StatefulWidget {
   final String conversationId;
@@ -43,12 +40,8 @@ class GroupRideInvite extends StatefulWidget {
 class _GroupRideInviteState extends State<GroupRideInvite> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   late CollectionReference _messagesCollection;
-
-  Marker? _originMarker = null;
-  Marker? _destinationMarker = null;
-
-  late GoogleMapController _googleMapController;
-  TextEditingController searchController = new TextEditingController();
+  late double _mapWidth;
+  late double _mapHeight;
 
   @override
   void initState() {
@@ -66,74 +59,112 @@ class _GroupRideInviteState extends State<GroupRideInvite> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    _googleMapController.dispose();
-  }
-
-  void _createOriginMarker() {
-    setState(() {
-      _originMarker = Marker(
-          markerId: MarkerId('origin'),
-          position: LatLng(
-              double.parse(widget.originLat), double.parse(widget.originLng)),
-          icon: BitmapDescriptor.defaultMarker,
-          infoWindow: InfoWindow(title: 'Origin'));
-    });
-  }
-
-  void _createdestinationMarkerAndPolyline(lat, lng) {
-    setState(() {
-      _destinationMarker = Marker(
-          markerId: MarkerId('destination'),
-          position: LatLng(lat, lng),
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-              HSLColor.fromColor(Theme.of(context).accentColor).hue),
-          infoWindow: InfoWindow(title: 'Destination'));
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
     bool isSent = this.widget.sender == _auth.currentUser!.uid;
+    _mapWidth = size.width * 0.6;
+    _mapHeight = size.height * 0.2;
 
-    return Container(
-      width: 100,
-      height: 100,
-      child: GoogleMap(
-        zoomControlsEnabled: false,
-        polylines: {
-          Polyline(
-            polylineId: PolylineId('destinationpolyline'),
-            color: theme.accentColor,
-            width: 5,
-            points: PolylinePoints()
-                .decodePolyline(widget.polyline)
-                .map((e) => LatLng(e.latitude, e.longitude))
-                .toList(),
+    return Column(
+      crossAxisAlignment:
+          isSent ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 10.0, left: 4.0, right: 4.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+            color: isSent
+                ? Theme.of(context).accentColor
+                : Color.fromRGBO(144, 180, 206, 0.5),
           ),
-        },
-        onMapCreated: (controller) {
-          _googleMapController = controller;
-          _createOriginMarker();
-          _createdestinationMarkerAndPolyline(
-              double.parse(widget.destinationLat),
-              double.parse(widget.destinationLng));
-          _googleMapController.animateCamera(
-              CameraUpdate.newLatLngBounds(widget.bounds as LatLngBounds, 110));
-        },
-        markers: {
-          if (_originMarker != null) _originMarker!,
-          if (_destinationMarker != null) _destinationMarker!,
-        },
-        myLocationButtonEnabled: false,
-        initialCameraPosition: CameraPosition(
-            target: LatLng(
-                double.parse(widget.originLat), double.parse(widget.originLng)),
-            zoom: 16),
-      ),
+          height: size.height * 0.37,
+          width: size.width * 0.6,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                height: size.height * 0.2,
+                width: size.width * 0.6,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20.0),
+                    topRight: Radius.circular(20.0),
+                  ),
+                  child: Image.network(
+                    "https://maps.googleapis.com/maps/api/staticmap?center=${widget.destinationLat},${widget.destinationLng}&zoom=13&size=${_mapWidth.ceil()}x${_mapHeight.ceil()}&markers=color:red%7C%7C${widget.destinationLat},${widget.destinationLng}&key=AIzaSyA7JDmk8pXuhU5jm4l6YVhGxXk_fWpL2KY",
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: size.height * 0.01,
+              ),
+              Container(
+                height: size.height * 0.15,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      "Ride with me ",
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: isSent
+                              ? theme.backgroundColor
+                              : theme.primaryColorDark,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: size.width * 0.5,
+                      child: Text(
+                        widget.destinationPlaceName,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            fontSize: 14,
+                            color: isSent
+                                ? theme.backgroundColor
+                                : theme.primaryColorDark,
+                          ),
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: isSent
+                          ? Text(
+                              "Call a cab",
+                              style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.primaryColorDark,
+                                ),
+                              ),
+                            )
+                          : Text(
+                              "Directions",
+                              style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                  fontSize: 16,
+                                  color: theme.accentColor,
+                                ),
+                              ),
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
