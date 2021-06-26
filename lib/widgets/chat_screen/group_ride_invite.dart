@@ -144,6 +144,7 @@ class _GroupRideInviteState extends State<GroupRideInvite> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) => RideDetailsScreen(
+                              sender: widget.sender,
                               ticketId: widget.ticketId,
                               bounds: widget.bounds,
                               destinationLat: widget.destinationLat,

@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:raven/screens/uber_screen.dart';
+import 'package:raven/widgets/friend_transactions_screen/friend_ticket_card.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_card.dart';
 
 class RideDetailsScreen extends StatefulWidget {
+  final String sender;
   final String ticketId;
   final String originLat;
   final String originLng;
@@ -17,6 +20,7 @@ class RideDetailsScreen extends StatefulWidget {
 
   RideDetailsScreen({
     required this.ticketId,
+    required this.sender,
     required this.originLat,
     required this.originLng,
     required this.destinationLat,
@@ -33,6 +37,10 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   CollectionReference _ticketsCollection =
       FirebaseFirestore.instance.collection('tickets');
+  CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection('users');
+
+  String fetchedName = '';
 
   Marker? _originMarker = null;
   Marker? _destinationMarker = null;
@@ -43,12 +51,21 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
   @override
   void initState() {
     super.initState();
+    if (widget.sender != _auth.currentUser!.uid) fetchContactName();
   }
 
   @override
   void dispose() {
     super.dispose();
     _googleMapController.dispose();
+  }
+
+  fetchContactName() async {
+    final snapshot = await _userCollection.doc(widget.sender).get();
+    final data = snapshot.data() as Map<String, dynamic>;
+    setState(() {
+      fetchedName = "${data['firstName']} ${data['lastName']}";
+    });
   }
 
   void _createOriginMarker() {
@@ -120,12 +137,26 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                 }
                 if (snapshot.hasData) {
                   final data = snapshot.data!;
-                  return MyTicketCard(
-                    ticketId: widget.ticketId,
-                    description: data['description'],
-                    amountRaised: double.parse(data['amountRaised'].toString()),
-                    totalAmount: double.parse(data['totalAmount'].toString()),
-                  );
+                  return widget.sender == _auth.currentUser!.uid
+                      ? MyTicketCard(
+                          ticketId: widget.ticketId,
+                          description: data['description'],
+                          amountRaised:
+                              double.parse(data['amountRaised'].toString()),
+                          totalAmount:
+                              double.parse(data['totalAmount'].toString()),
+                        )
+                      : FriendTicketCard(
+                          contributeCallback: () {},
+                          friendId: widget.sender,
+                          friendName: fetchedName,
+                          ticketId: widget.ticketId,
+                          description: data['description'],
+                          amountRaised:
+                              double.parse(data['amountRaised'].toString()),
+                          totalAmount:
+                              double.parse(data['totalAmount'].toString()),
+                        );
                 } else {
                   return Container();
                 }
@@ -189,6 +220,17 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => UberScreen(),
+              ),
+            );
+          },
+          child: Icon(Icons.local_taxi_rounded)),
     );
   }
 }

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:raven/widgets/places_results_screen.dart/places_result_card.dart';
+import 'package:raven/widgets/places_results_screen/places_result_card.dart';
 import 'package:uuid/uuid.dart';
 
 class PlacesResultsScreen extends StatefulWidget {

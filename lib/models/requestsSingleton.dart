@@ -47,7 +47,7 @@ class RequestsSingleton {
     var response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
-      body: json.encode({"ewalletID": _eWalletID}),
+      body: json.encode({"ewallet": _eWalletID}),
     );
 
     return response;

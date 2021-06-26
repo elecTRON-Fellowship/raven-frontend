@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/screens/friend_transactions.dart';
+import 'package:raven/screens/ride_history.dart';
 import 'package:raven/widgets/chat_screen/group_ride_invite.dart';
 import 'package:raven/widgets/chat_screen/message_bubble.dart';
 import 'package:raven/widgets/chat_screen/timed_chat_invite.dart';
@@ -96,6 +97,18 @@ class _ChatScreenState extends State<ChatScreen> {
                 color: theme.primaryColorDark)),
       ),
       actions: [
+        IconButton(
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => RideHistoryScreen(
+                conversationId: widget.conversationId,
+              ),
+            ));
+          },
+          icon: Icon(Icons.local_taxi_rounded),
+          iconSize: 25,
+          color: theme.primaryColorDark,
+        ),
         IconButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
