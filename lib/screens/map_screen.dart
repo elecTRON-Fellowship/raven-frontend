@@ -17,7 +17,6 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   Position? position;
   Marker? _originMarker = null;
-  Marker? _destinationMarker = null;
   String _polyline = '';
   late GoogleMapController _googleMapController;
   TextEditingController searchController = new TextEditingController();
@@ -64,6 +63,8 @@ class _MapScreenState extends State<MapScreen> {
 
   void _getPosition() async {
     final result = await _determinePosition();
+    if (!mounted) return;
+
     setState(() {
       position = result;
       print(position!.latitude.toString());
@@ -97,6 +98,8 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _createOriginMarker() {
+    if (!mounted) return;
+
     setState(() {
       _originMarker = Marker(
           markerId: MarkerId('origin'),
@@ -105,24 +108,6 @@ class _MapScreenState extends State<MapScreen> {
           infoWindow: InfoWindow(title: 'Current Location'));
     });
   }
-
-  void _createdestinationMarkerAndPolyline(lat, lng, polyline, bounds) {
-    setState(() {
-      _destinationMarker = Marker(
-          markerId: MarkerId('destination'),
-          position: LatLng(lat, lng),
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-              HSLColor.fromColor(Theme.of(context).accentColor).hue),
-          infoWindow: InfoWindow(title: 'Destination Location'));
-
-      _polyline = polyline;
-    });
-
-    _googleMapController
-        .animateCamera(CameraUpdate.newLatLngBounds(bounds, 110));
-  }
-
-  void displayRoute() {}
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +156,6 @@ class _MapScreenState extends State<MapScreen> {
                         },
                         markers: {
                           if (_originMarker != null) _originMarker!,
-                          if (_destinationMarker != null) _destinationMarker!,
                         },
                         myLocationButtonEnabled: false,
                         initialCameraPosition: CameraPosition(
@@ -189,25 +173,14 @@ class _MapScreenState extends State<MapScreen> {
                         onEditingComplete: () async {
                           FocusScope.of(context).unfocus();
 
-                          _destinationMarker = null;
-
-                          final result = await Navigator.of(context).push(
+                          Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (_) => PlacesResultsScreen(
-                                searchString: searchController.text,
-                                location:
-                                    '${position!.latitude},${position!.longitude}',
-                              ),
+                                  searchString: searchController.text,
+                                  originLatitude: position!.latitude,
+                                  originLongitude: position!.longitude),
                             ),
                           );
-
-                          _createdestinationMarkerAndPolyline(
-                              result['lat'],
-                              result['lng'],
-                              result['polyline'],
-                              result['bounds']);
-
-                          // displayRoute();
                         },
                         controller: searchController,
                         style: GoogleFonts.poppins(
