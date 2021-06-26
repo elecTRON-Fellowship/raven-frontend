@@ -46,17 +46,20 @@ class _CloseFriendActionButtonState extends State<CloseFriendActionButton> {
       numberToQuery = '+91$numberToQuery';
     }
 
-    final userSnapshot = await _userCollection
+    final friendSnapshot = await _userCollection
         .where('phoneNumber', isEqualTo: numberToQuery)
         .get();
 
-    final idToQuery = userSnapshot.docs[0].id;
+    final friendId = friendSnapshot.docs[0].id;
 
-    final snapshot = await _userCollection
-        .where('closeFriends', arrayContains: idToQuery)
-        .get();
+    final userSnapshot =
+        await _userCollection.doc(_auth.currentUser!.uid).get();
 
-    if (snapshot.size > 0) {
+    final data = userSnapshot.data() as Map;
+
+    List closeFriends = data['closeFriends'];
+
+    if (closeFriends.contains(friendId)) {
       setState(() {
         showLoading = false;
         status = CloseFriendStatus.CLOSE_FRIEND;
@@ -80,7 +83,7 @@ class _CloseFriendActionButtonState extends State<CloseFriendActionButton> {
         .where('phoneNumber', isEqualTo: numberToQuery)
         .get();
 
-    final idToAAdd = friendSnapshot.docs[0].id;
+    final friendId = friendSnapshot.docs[0].id;
 
     final userSnapshot =
         await _userCollection.doc(_auth.currentUser!.uid).get();
@@ -88,7 +91,7 @@ class _CloseFriendActionButtonState extends State<CloseFriendActionButton> {
 
     List closeFriends = data['closeFriends'];
 
-    closeFriends.add(idToAAdd);
+    closeFriends.add(friendId);
 
     await _userCollection
         .doc(_auth.currentUser!.uid)
