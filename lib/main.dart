@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:raven/screens/all_transactions.dart';
 import 'package:raven/screens/contacts.dart';
 import 'package:raven/screens/conversations.dart';
 import 'package:raven/screens/create_wallet_user_details.dart';
@@ -36,7 +37,8 @@ class MyApp extends StatelessWidget {
         '/contacts': (ctx) => ContactsScreen(),
         '/tickets': (ctx) => TicketsScreen(),
         '/create-wallet-user-details': (ctx) => UserDetailsScreen(),
-        '/map': (ctx) => MapScreen()
+        '/map': (ctx) => MapScreen(),
+        '/all_transactions': (ctx) => AllTransactionsScreen(),
       },
     );
   }
@@ -64,5 +66,5 @@ class _HomePageRedirectState extends State<HomePageRedirect> {
 
   @override
   Widget build(BuildContext context) =>
-      _user == null ? AddPaymentScreen() : AddPaymentScreen();
+      _user == null ? AuthScreen() : ConversationsScreen();
 }

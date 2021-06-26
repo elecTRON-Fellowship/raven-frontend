@@ -16,9 +16,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   CollectionReference _conversationsCollection =
       FirebaseFirestore.instance.collection('conversations');
-
   bool showLoading = false;
-
   int _selectedNavBarIndex = 0;
 
   void _onIndexChanged(index, ctx) {
@@ -39,7 +37,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
       });
     }
     if (_selectedNavBarIndex == 3) {
-      Scaffold.of(ctx).openEndDrawer();
+      Navigator.of(context).pushNamed('/all_transactions');
       setState(() {
         _selectedNavBarIndex = 0;
       });
@@ -70,6 +68,16 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
           icon: Icon(Icons.add_circle_outline_rounded),
           iconSize: 25,
           color: Theme.of(context).primaryColorDark,
+        ),
+        Builder(
+          builder: (ctx) => IconButton(
+            onPressed: () {
+              Scaffold.of(ctx).openEndDrawer();
+            },
+            icon: Icon(Icons.menu_rounded),
+            iconSize: 25,
+            color: Theme.of(context).primaryColorDark,
+          ),
         ),
       ],
     );
@@ -153,24 +161,24 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.account_balance_wallet_rounded,
+                Icons.receipt_outlined,
                 size: 30,
               ),
               label: 'Tickets',
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.local_taxi_rounded,
+                Icons.place_rounded,
                 size: 30,
               ),
-              label: 'Uber',
+              label: 'Places',
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.settings_rounded,
+                Icons.account_balance_wallet_rounded,
                 size: 30,
               ),
-              label: 'Settings',
+              label: 'Transactions',
             ),
           ],
         ),

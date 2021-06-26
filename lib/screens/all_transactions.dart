@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/widgets/all_transactions_screen/transaction_card.dart';
+import 'package:raven/widgets/common/end_drawer.dart';
 import 'package:uuid/uuid.dart';
 
 class AllTransactionsScreen extends StatefulWidget {
@@ -18,6 +19,29 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
       FirebaseFirestore.instance.collection('tickets');
   CollectionReference _transactionsCollection =
       FirebaseFirestore.instance.collection('transactions');
+  int _selectedNavBarIndex = 3;
+
+  void _onIndexChanged(index, ctx) {
+    setState(() {
+      _selectedNavBarIndex = index;
+      print(_selectedNavBarIndex);
+    });
+    if (_selectedNavBarIndex == 0) {
+      Navigator.of(context).pop();
+    }
+    if (_selectedNavBarIndex == 1) {
+      Navigator.of(context).pushNamed('/tickets');
+      setState(() {
+        _selectedNavBarIndex = 0;
+      });
+    }
+    if (_selectedNavBarIndex == 2) {
+      Navigator.of(context).pushNamed('/map');
+      setState(() {
+        _selectedNavBarIndex = 0;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +128,50 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
               }
             },
           ),
+        ),
+      ),
+      endDrawer: EndDrawer(),
+      bottomNavigationBar: Builder(
+        builder: (ctx) => BottomNavigationBar(
+          elevation: 2,
+          currentIndex: _selectedNavBarIndex,
+          onTap: (index) => _onIndexChanged(index, ctx),
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          backgroundColor: theme.primaryColor,
+          selectedItemColor: theme.primaryColorDark,
+          unselectedItemColor: Colors.white,
+          type: BottomNavigationBarType.fixed,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.message_rounded,
+                size: 30,
+              ),
+              label: 'Conversations',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.receipt_rounded,
+                size: 30,
+              ),
+              label: 'Tickets',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.place_rounded,
+                size: 30,
+              ),
+              label: 'Uber',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.account_balance_wallet_rounded,
+                size: 30,
+              ),
+              label: 'Transactions',
+            ),
+          ],
         ),
       ),
     );

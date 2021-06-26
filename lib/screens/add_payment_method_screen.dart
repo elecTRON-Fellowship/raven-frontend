@@ -101,8 +101,8 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
                 ),
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(
-                    size.width * 0.6,
-                    size.height * 0.08,
+                    size.width * 0.5,
+                    size.height * 0.06,
                   ),
                   onPrimary: theme.backgroundColor,
                   primary: theme.accentColor,
