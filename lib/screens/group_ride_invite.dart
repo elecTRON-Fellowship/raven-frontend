@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +32,14 @@ class GroupRideInviteScreen extends StatefulWidget {
 class _GroupRideInviteScreenState extends State<GroupRideInviteScreen> {
   List closeFriends = [];
   bool showLoading = true;
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  CollectionReference _usersCollection =
+      FirebaseFirestore.instance.collection('users');
+  CollectionReference _conversationsCollection =
+      FirebaseFirestore.instance.collection('conversations');
+  CollectionReference _ticketsCollection =
+      FirebaseFirestore.instance.collection('tickets');
+  List friendsInvited = [];
 
   @override
   void initState() {
@@ -38,10 +48,6 @@ class _GroupRideInviteScreenState extends State<GroupRideInviteScreen> {
   }
 
   void fetchCloseFriends() async {
-    FirebaseAuth _auth = FirebaseAuth.instance;
-    CollectionReference _usersCollection =
-        FirebaseFirestore.instance.collection('users');
-
     final snapshot = await _usersCollection.doc(_auth.currentUser!.uid).get();
     final data = snapshot.data() as Map;
 
@@ -53,7 +59,81 @@ class _GroupRideInviteScreenState extends State<GroupRideInviteScreen> {
 
   void dismissItemFromList(element) {
     setState(() {
+      friendsInvited.add(element);
       closeFriends.remove(element);
+    });
+  }
+
+  void createTicketAndSendGroupRideInvites() async {
+    var createdTicket = await _ticketsCollection.add({
+      'createdAt': DateTime.now(),
+      'userId': _auth.currentUser!.uid,
+      'isActive': true,
+      'amountRaised': 0.00,
+      'description': 'Cab ride to ${widget.destinationPlaceName}',
+      'totalAmount':
+          double.parse((Random().nextDouble() * 200 + 300).toStringAsFixed(2)),
+      'visibleTo': friendsInvited
+    });
+
+    friendsInvited.forEach((friendId) async {
+      bool _isConversationFound = false;
+
+      var conversationsSnapshot = await _conversationsCollection
+          .where('userIds.${_auth.currentUser!.uid}', isEqualTo: true)
+          .where('userIds.$friendId', isEqualTo: true)
+          .get();
+
+      if (conversationsSnapshot.docs.length != 0) {
+        _isConversationFound = true;
+      }
+
+      if (_isConversationFound) {
+        CollectionReference _messagesCollection = FirebaseFirestore.instance
+            .collection(
+                'conversations/${conversationsSnapshot.docs[0].id}/messages');
+
+        await _messagesCollection.add({
+          'time': DateTime.now(),
+          'sender': _auth.currentUser!.uid,
+          'text': '/GROUP_RIDE_INVITE',
+          'read': false,
+          'originLat': widget.originLat.toString(),
+          'originLng': widget.originLng.toString(),
+          'destinationLat': widget.destinationLat.toString(),
+          'destinationLng': widget.destinationLng.toString(),
+          'polyline': widget.polyline.toString(),
+          'bounds': widget.bounds.toString(),
+          'destinationPlaceName': widget.destinationPlaceName,
+          'ticketId': createdTicket.id
+        });
+      } else {
+        final newConversationDocument = await _conversationsCollection.add({
+          'members': [_auth.currentUser!.uid, friendId],
+          'unreadTexts': 0,
+          'userIds': {_auth.currentUser!.uid: true, friendId: true},
+          'lastText': '',
+          'lastTime': null
+        });
+
+        CollectionReference _messagesCollection = FirebaseFirestore.instance
+            .collection('conversations/${newConversationDocument.id}/messages');
+
+        await _messagesCollection.add({
+          'time': DateTime.now(),
+          'sender': _auth.currentUser!.uid,
+          'text': '/GROUP_RIDE_INVITE',
+          'read': false,
+          'originLat': widget.originLat.toString(),
+          'originLng': widget.originLng.toString(),
+          'destinationLat': widget.destinationLat.toString(),
+          'destinationLng': widget.destinationLng.toString(),
+          'polyline': widget.polyline.toString(),
+          'bounds': widget.bounds.toString(),
+          'destinationPlaceName': widget.destinationPlaceName,
+          'ticketId': createdTicket.id
+        });
+      }
     });
   }
 
@@ -79,6 +159,7 @@ class _GroupRideInviteScreenState extends State<GroupRideInviteScreen> {
         actions: [
           IconButton(
             onPressed: () {
+              createTicketAndSendGroupRideInvites();
               Navigator.of(context)
                   .pushNamedAndRemoveUntil('/conversations', (r) => false);
             },
