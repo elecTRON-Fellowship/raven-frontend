@@ -7,6 +7,7 @@ import 'package:raven/screens/create_wallet_user_details.dart';
 import 'package:raven/screens/friend_transactions.dart';
 import 'package:raven/screens/auth.dart';
 import 'package:raven/screens/map_screen.dart';
+import 'package:raven/screens/add_payment_method_screen.dart';
 import 'package:raven/screens/tickets.dart';
 
 void main() async {
@@ -63,5 +64,5 @@ class _HomePageRedirectState extends State<HomePageRedirect> {
 
   @override
   Widget build(BuildContext context) =>
-      _user == null ? AuthScreen() : ConversationsScreen();
+      _user == null ? AddPaymentScreen() : AddPaymentScreen();
 }
