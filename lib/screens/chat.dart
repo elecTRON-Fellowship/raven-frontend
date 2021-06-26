@@ -188,6 +188,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   bounds: documents[index]['bounds'],
                                   destinationPlaceName: documents[index]
                                       ['destinationPlaceName'],
+                                  ticketId: documents[index]['ticketId'],
                                 );
                               } else {
                                 return MessageBubble(

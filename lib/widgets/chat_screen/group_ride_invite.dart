@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/screens/ride_details.dart';
 
 class GroupRideInvite extends StatefulWidget {
   final String conversationId;
@@ -10,13 +11,14 @@ class GroupRideInvite extends StatefulWidget {
   final String sender;
   final String text;
   final DateTime time;
-  final String originLat;
-  final String originLng;
-  final String destinationLat;
-  final String destinationLng;
-  final String polyline;
-  final String bounds;
-  final String destinationPlaceName;
+  final originLat;
+  final originLng;
+  final destinationLat;
+  final destinationLng;
+  final polyline;
+  final bounds;
+  final destinationPlaceName;
+  final String ticketId;
 
   GroupRideInvite(
       {required this.conversationId,
@@ -31,7 +33,8 @@ class GroupRideInvite extends StatefulWidget {
       required this.destinationLng,
       required this.polyline,
       required this.bounds,
-      required this.destinationPlaceName});
+      required this.destinationPlaceName,
+      required this.ticketId});
 
   @override
   _GroupRideInviteState createState() => _GroupRideInviteState();
@@ -40,6 +43,7 @@ class GroupRideInvite extends StatefulWidget {
 class _GroupRideInviteState extends State<GroupRideInvite> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   late CollectionReference _messagesCollection;
+
   late double _mapWidth;
   late double _mapHeight;
 
@@ -136,23 +140,38 @@ class _GroupRideInviteState extends State<GroupRideInvite> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => RideDetailsScreen(
+                              ticketId: widget.ticketId,
+                              bounds: widget.bounds,
+                              destinationLat: widget.destinationLat,
+                              destinationLng: widget.destinationLng,
+                              originLat: widget.originLat,
+                              originLng: widget.originLng,
+                              polyline: widget.polyline,
+                            ),
+                          ),
+                        );
+                      },
                       child: isSent
                           ? Text(
-                              "Call a cab",
+                              "Ride Details",
                               style: GoogleFonts.poppins(
                                 textStyle: TextStyle(
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w500,
                                   color: theme.primaryColorDark,
                                 ),
                               ),
                             )
                           : Text(
-                              "Directions",
+                              "Ride Details",
                               style: GoogleFonts.poppins(
                                 textStyle: TextStyle(
                                   fontSize: 16,
+                                  fontWeight: FontWeight.w500,
                                   color: theme.accentColor,
                                 ),
                               ),
