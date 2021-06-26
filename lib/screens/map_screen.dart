@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -15,12 +14,17 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  Position? position;
   Marker? _originMarker = null;
   String _polyline = '';
   late GoogleMapController _googleMapController;
   TextEditingController searchController = new TextEditingController();
   int _selectedNavBarIndex = 2;
+  Location location = new Location();
+
+  late bool _serviceEnabled;
+  PermissionStatus _permissionGranted = PermissionStatus.denied;
+  late LocationData _locationData;
+  bool _hasData = false;
 
   void _onIndexChanged(index, ctx) {
     setState(() {
@@ -61,39 +65,26 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _getPosition() async {
-    final result = await _determinePosition();
-    if (!mounted) return;
-
-    setState(() {
-      position = result;
-      print(position!.latitude.toString());
-      print(position!.latitude.toString());
-    });
-  }
-
-  Future<Position> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
       }
     }
 
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
     }
 
-    return await Geolocator.getCurrentPosition();
+    _locationData = await location.getLocation();
+    setState(() {
+      _hasData = true;
+    });
   }
 
   void _createOriginMarker() {
@@ -102,7 +93,7 @@ class _MapScreenState extends State<MapScreen> {
     setState(() {
       _originMarker = Marker(
           markerId: MarkerId('origin'),
-          position: LatLng(position!.latitude, position!.longitude),
+          position: LatLng(_locationData.latitude!, _locationData.longitude!),
           icon: BitmapDescriptor.defaultMarker,
           infoWindow: InfoWindow(title: 'Current Location'));
     });
@@ -129,7 +120,7 @@ class _MapScreenState extends State<MapScreen> {
     );
     return Scaffold(
       appBar: appBar,
-      body: position != null
+      body: _hasData
           ? Container(
               height: size.height - appBar.preferredSize.height,
               child: Stack(
@@ -158,8 +149,8 @@ class _MapScreenState extends State<MapScreen> {
                         },
                         myLocationButtonEnabled: false,
                         initialCameraPosition: CameraPosition(
-                            target:
-                                LatLng(position!.latitude, position!.longitude),
+                            target: LatLng(_locationData.latitude!,
+                                _locationData.longitude!),
                             zoom: 16),
                       )),
                   Positioned(
@@ -176,8 +167,8 @@ class _MapScreenState extends State<MapScreen> {
                             MaterialPageRoute(
                               builder: (_) => PlacesResultsScreen(
                                   searchString: searchController.text,
-                                  originLatitude: position!.latitude,
-                                  originLongitude: position!.longitude),
+                                  originLatitude: _locationData.latitude!,
+                                  originLongitude: _locationData.longitude!),
                             ),
                           );
                         },
@@ -240,11 +231,12 @@ class _MapScreenState extends State<MapScreen> {
         backgroundColor: theme.accentColor,
         foregroundColor: theme.backgroundColor,
         onPressed: () {
-          if (position != null)
+          if (_hasData)
             _googleMapController.animateCamera(
               CameraUpdate.newCameraPosition(
                 CameraPosition(
-                    target: LatLng(position!.latitude, position!.longitude),
+                    target: LatLng(
+                        _locationData.latitude!, _locationData.longitude!),
                     zoom: 16),
               ),
             );
