@@ -3,7 +3,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:location/location.dart';
 import 'package:raven/screens/places_results.dart';
 import 'package:raven/widgets/common/end_drawer.dart';
 
@@ -20,7 +20,6 @@ class _MapScreenState extends State<MapScreen> {
   String _polyline = '';
   late GoogleMapController _googleMapController;
   TextEditingController searchController = new TextEditingController();
-
   int _selectedNavBarIndex = 2;
 
   void _onIndexChanged(index, ctx) {
@@ -42,7 +41,7 @@ class _MapScreenState extends State<MapScreen> {
       });
     }
     if (_selectedNavBarIndex == 3) {
-      Scaffold.of(ctx).openEndDrawer();
+      Navigator.of(context).pushReplacementNamed('/all_transactions');
       setState(() {
         _selectedNavBarIndex = 2;
       });
@@ -274,24 +273,24 @@ class _MapScreenState extends State<MapScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.account_balance_wallet_rounded,
+                Icons.receipt_rounded,
                 size: 30,
               ),
               label: 'Tickets',
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.local_taxi_rounded,
+                Icons.place_rounded,
                 size: 30,
               ),
-              label: 'Uber',
+              label: 'Places',
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.settings_rounded,
+                Icons.account_balance_wallet_rounded,
                 size: 30,
               ),
-              label: 'Settings',
+              label: 'Transactions',
             ),
           ],
         ),

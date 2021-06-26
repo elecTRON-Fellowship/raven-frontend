@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/screens/all_transactions.dart';
+import 'package:raven/screens/tickets_history.dart';
 import 'package:raven/widgets/common/end_drawer.dart';
 import 'package:raven/widgets/tickets_screen/friend_ticket_icon.dart';
 import 'package:raven/widgets/tickets_screen/my_ticket_card.dart';
@@ -66,7 +67,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
       });
     }
     if (_selectedNavBarIndex == 3) {
-      Scaffold.of(ctx).openEndDrawer();
+      Navigator.of(context).pushReplacementNamed('/all_transactions');
       setState(() {
         _selectedNavBarIndex = 1;
       });
@@ -110,7 +111,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => AllTransactionsScreen(),
+                builder: (_) => TicketsHistoryScreen(),
               ),
             );
           },
@@ -125,7 +126,17 @@ class _TicketsScreenState extends State<TicketsScreen> {
           icon: Icon(Icons.add_circle_outline_rounded),
           iconSize: 25,
           color: theme.primaryColorDark,
-        )
+        ),
+        Builder(
+          builder: (ctx) => IconButton(
+            onPressed: () {
+              Scaffold.of(ctx).openEndDrawer();
+            },
+            icon: Icon(Icons.menu_rounded),
+            iconSize: 25,
+            color: Theme.of(context).primaryColorDark,
+          ),
+        ),
       ],
     );
 
@@ -366,24 +377,24 @@ class _TicketsScreenState extends State<TicketsScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.account_balance_wallet_rounded,
+                Icons.receipt_rounded,
                 size: 30,
               ),
               label: 'Tickets',
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.local_taxi_rounded,
+                Icons.place_rounded,
                 size: 30,
               ),
               label: 'Uber',
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.settings_rounded,
+                Icons.account_balance_wallet_rounded,
                 size: 30,
               ),
-              label: 'Settings',
+              label: 'Transactions',
             ),
           ],
         ),
