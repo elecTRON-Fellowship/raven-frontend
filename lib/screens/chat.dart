@@ -70,13 +70,19 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void sendTimedChatInvitation() async {
+    var timeOfSending = DateTime.now();
+
     await _messagesCollection.add({
-      'time': DateTime.now(),
+      'time': timeOfSending,
       'sender': _auth.currentUser!.uid,
       'text': '/TIMED_CHAT',
       'status': 'PENDING',
       'read': false
     });
+
+    await _conversationsCollection
+        .doc(widget.conversationId)
+        .update({'lastText': 'Coffee Break', 'lastTime': timeOfSending});
   }
 
   @override

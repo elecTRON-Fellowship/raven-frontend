@@ -45,6 +45,8 @@ class _ConversationCardState extends State<ConversationCard> {
   fetchContactName() async {
     final snapshot = await _userCollection.doc(widget.friendUserId).get();
     final data = snapshot.data() as Map<String, dynamic>;
+    if (!mounted) return;
+
     setState(() {
       fetchedName = "${data['firstName']} ${data['lastName']}";
     });
@@ -138,6 +140,37 @@ class _ConversationCardState extends State<ConversationCard> {
               if (snapshot.hasData) {
                 final data = snapshot.data!;
                 String lastText = data['lastText'];
+                if (lastText == 'Group Ride Invite') {
+                  return Container(
+                    width: MediaQuery.of(context).size.width * 0.65,
+                    child: Text(
+                      lastText,
+                      textAlign: TextAlign.start,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                            fontStyle: FontStyle.italic),
+                      ),
+                    ),
+                  );
+                } else if (lastText == 'Coffee Break') {
+                  return Container(
+                    width: MediaQuery.of(context).size.width * 0.65,
+                    child: Text(
+                      lastText,
+                      textAlign: TextAlign.start,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                            fontStyle: FontStyle.italic),
+                      ),
+                    ),
+                  );
+                }
                 return Container(
                   width: MediaQuery.of(context).size.width * 0.65,
                   child: Text(
@@ -145,7 +178,8 @@ class _ConversationCardState extends State<ConversationCard> {
                     textAlign: TextAlign.start,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.poppins(
-                        textStyle: TextStyle(fontSize: 14, color: Colors.grey)),
+                      textStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
                   ),
                 );
               } else {

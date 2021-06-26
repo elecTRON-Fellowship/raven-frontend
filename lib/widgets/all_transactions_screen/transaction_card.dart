@@ -36,6 +36,8 @@ class _TransactionCardState extends State<TransactionCard> {
   fetchContactName() async {
     final snapshot = await _userCollection.doc(widget.friendUserId).get();
     final data = snapshot.data() as Map<String, dynamic>;
+    if (!mounted) return;
+
     setState(() {
       fetchedName = "${data['firstName']} ${data['lastName']}";
     });

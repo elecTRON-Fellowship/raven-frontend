@@ -92,9 +92,10 @@ class _GroupRideInviteScreenState extends State<GroupRideInviteScreen> {
         CollectionReference _messagesCollection = FirebaseFirestore.instance
             .collection(
                 'conversations/${conversationsSnapshot.docs[0].id}/messages');
+        final currentTime = DateTime.now();
 
         await _messagesCollection.add({
-          'time': DateTime.now(),
+          'time': currentTime,
           'sender': _auth.currentUser!.uid,
           'text': '/GROUP_RIDE_INVITE',
           'read': false,
@@ -107,20 +108,26 @@ class _GroupRideInviteScreenState extends State<GroupRideInviteScreen> {
           'destinationPlaceName': widget.destinationPlaceName,
           'ticketId': createdTicket.id
         });
+
+        await _conversationsCollection
+            .doc(conversationsSnapshot.docs[0].id)
+            .update({'lastText': 'Group Ride Invite', 'lastTime': currentTime});
       } else {
+        final currentTime = DateTime.now();
+
         final newConversationDocument = await _conversationsCollection.add({
           'members': [_auth.currentUser!.uid, friendId],
           'unreadTexts': 0,
           'userIds': {_auth.currentUser!.uid: true, friendId: true},
-          'lastText': '',
-          'lastTime': null
+          'lastText': 'Group Ride Invite',
+          'lastTime': currentTime
         });
 
         CollectionReference _messagesCollection = FirebaseFirestore.instance
             .collection('conversations/${newConversationDocument.id}/messages');
 
         await _messagesCollection.add({
-          'time': DateTime.now(),
+          'time': currentTime,
           'sender': _auth.currentUser!.uid,
           'text': '/GROUP_RIDE_INVITE',
           'read': false,
