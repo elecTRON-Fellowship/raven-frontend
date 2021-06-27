@@ -52,7 +52,7 @@ class _TransactionCardState extends State<TransactionCard> {
       margin: EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: theme.primaryColorDark)),
+          border: Border.all(color: theme.primaryColor)),
       width: double.infinity,
       child: ExpansionTile(
         tilePadding: EdgeInsets.all(8),

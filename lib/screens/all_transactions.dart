@@ -30,15 +30,15 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
       Navigator.of(context).pop();
     }
     if (_selectedNavBarIndex == 1) {
-      Navigator.of(context).pushNamed('/tickets');
+      Navigator.of(context).pushReplacementNamed('/tickets');
       setState(() {
-        _selectedNavBarIndex = 0;
+        _selectedNavBarIndex = 3;
       });
     }
     if (_selectedNavBarIndex == 2) {
-      Navigator.of(context).pushNamed('/map');
+      Navigator.of(context).pushReplacementNamed('/map');
       setState(() {
-        _selectedNavBarIndex = 0;
+        _selectedNavBarIndex = 3;
       });
     }
   }
@@ -62,6 +62,18 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
                   fontSize: 20,
                   color: theme.primaryColorDark)),
         ),
+        actions: [
+          Builder(
+            builder: (ctx) => IconButton(
+              onPressed: () {
+                Scaffold.of(ctx).openEndDrawer();
+              },
+              icon: Icon(Icons.menu_rounded),
+              iconSize: 25,
+              color: Theme.of(context).primaryColorDark,
+            ),
+          ),
+        ],
       ),
       body: Container(
         decoration: BoxDecoration(

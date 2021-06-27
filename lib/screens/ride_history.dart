@@ -49,6 +49,14 @@ class _RideHistoryScreenState extends State<RideHistoryScreen> {
                   fontSize: 20,
                   color: theme.primaryColorDark)),
         ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back_rounded),
+          iconSize: 25,
+          color: theme.primaryColorDark,
+        ),
       ),
       body: Container(
         decoration: BoxDecoration(

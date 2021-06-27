@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/models/requestsSingleton.dart';
+import 'package:raven/screens/account.dart';
 import 'package:raven/screens/close_friends.dart';
 import 'package:raven/screens/tickets_history.dart';
 
@@ -78,7 +79,7 @@ class _EndDrawerState extends State<EndDrawer> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      "Wallet\nBalance: ",
+                      "Balance: ",
                       style: GoogleFonts.poppins(
                           textStyle: TextStyle(
                               fontSize: 22,
@@ -100,17 +101,6 @@ class _EndDrawerState extends State<EndDrawer> {
               ),
               ListTile(
                 title: Text(
-                  'Wallet',
-                  style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 24,
-                          color: Theme.of(context).primaryColor)),
-                ),
-                onTap: () {},
-              ),
-              ListTile(
-                title: Text(
                   'Account',
                   style: GoogleFonts.poppins(
                       textStyle: TextStyle(
@@ -118,35 +108,11 @@ class _EndDrawerState extends State<EndDrawer> {
                           fontSize: 24,
                           color: Theme.of(context).primaryColor)),
                 ),
-                onTap: () {},
-              ),
-              ListTile(
-                title: Text(
-                  'Closed Tickets',
-                  style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 24,
-                          color: Theme.of(context).primaryColor)),
-                ),
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => TicketsHistoryScreen(),
-                    ),
-                  );
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => AccountScreen(),
+                  ));
                 },
-              ),
-              ListTile(
-                title: Text(
-                  'Themes',
-                  style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 24,
-                          color: Theme.of(context).primaryColor)),
-                ),
-                onTap: () {},
               ),
               ListTile(
                 title: Text(

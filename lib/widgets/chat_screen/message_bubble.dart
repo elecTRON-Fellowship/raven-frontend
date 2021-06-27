@@ -77,11 +77,13 @@ class _MessageBubbleState extends State<MessageBubble> {
                         topLeft: Radius.circular(16),
                         bottomLeft: Radius.circular(16),
                         bottomRight: Radius.circular(16),
+                        topRight: Radius.circular(5),
                       )
                     : BorderRadius.only(
                         topRight: Radius.circular(16),
                         bottomLeft: Radius.circular(16),
                         bottomRight: Radius.circular(16),
+                        topLeft: Radius.circular(5),
                       ),
               ),
               child: Row(

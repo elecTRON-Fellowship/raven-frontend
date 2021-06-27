@@ -75,9 +75,19 @@ class _GroupRideInviteState extends State<GroupRideInvite> {
           isSent ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         Container(
-          margin: EdgeInsets.only(top: 10.0, left: 4.0, right: 4.0),
+          margin: EdgeInsets.only(top: 4.0, left: 4.0, right: 4.0, bottom: 4.0),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: isSent
+                ? BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    bottomLeft: Radius.circular(16),
+                    bottomRight: Radius.circular(16),
+                  )
+                : BorderRadius.only(
+                    topRight: Radius.circular(16),
+                    bottomLeft: Radius.circular(16),
+                    bottomRight: Radius.circular(16),
+                  ),
             color: isSent
                 ? Theme.of(context).accentColor
                 : Color.fromRGBO(144, 180, 206, 0.5),
@@ -92,10 +102,13 @@ class _GroupRideInviteState extends State<GroupRideInvite> {
                 height: size.height * 0.2,
                 width: size.width * 0.6,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20.0),
-                    topRight: Radius.circular(20.0),
-                  ),
+                  borderRadius: isSent
+                      ? BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                        )
+                      : BorderRadius.only(
+                          topRight: Radius.circular(16),
+                        ),
                   child: Image.network(
                     "https://maps.googleapis.com/maps/api/staticmap?center=${widget.destinationLat},${widget.destinationLng}&zoom=13&size=${_mapWidth.ceil()}x${_mapHeight.ceil()}&markers=color:red%7C%7C${widget.destinationLat},${widget.destinationLng}&key=AIzaSyA7JDmk8pXuhU5jm4l6YVhGxXk_fWpL2KY",
                     fit: BoxFit.fill,

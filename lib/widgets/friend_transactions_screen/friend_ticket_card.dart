@@ -411,17 +411,16 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                           } else {
                             final _requestsSingleton = RequestsSingleton();
                             var res = await _requestsSingleton
-                                .addMoneyToWallet("800");
-
-                            print(res.body);
+                                .addMoneyToWallet(ticketAmountController.text);
 
                             if (res.statusCode == 200) {
                               final data = json.decode(res.body);
-                              Navigator.of(context).pop();
                               await Navigator.of(context).push(
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           WebViewScreen(data["data"])));
+                              Navigator.of(context).pop();
+
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
@@ -436,6 +435,7 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                               );
                               fetchWalletBalance();
                             } else {
+                              Navigator.of(context).pop();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(

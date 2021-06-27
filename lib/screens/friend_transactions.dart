@@ -518,17 +518,16 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                             } else {
                               final _requestsSingleton = RequestsSingleton();
                               var res = await _requestsSingleton
-                                  .addMoneyToWallet("800");
-
-                              print(res.body);
+                                  .addMoneyToWallet(_amountController.text);
 
                               if (res.statusCode == 200) {
                                 final data = json.decode(res.body);
-                                Navigator.of(context).pop();
+
                                 await Navigator.of(context).push(
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             WebViewScreen(data["data"])));
+                                Navigator.of(context).pop();
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
@@ -543,6 +542,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                                 );
                                 fetchWalletBalance();
                               } else {
+                                Navigator.of(context).pop();
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(

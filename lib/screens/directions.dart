@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:raven/screens/group_ride_invite.dart';
 import 'package:raven/screens/places_results.dart';
+import 'package:raven/screens/uber_screen.dart';
 import 'package:raven/widgets/common/end_drawer.dart';
 
 class DirectionsScreen extends StatefulWidget {
@@ -88,6 +89,14 @@ class _DirectionsScreenState extends State<DirectionsScreen> {
           ),
         ),
       ),
+      leading: IconButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        icon: Icon(Icons.arrow_back_rounded),
+        iconSize: 25,
+        color: theme.primaryColorDark,
+      ),
     );
     return Scaffold(
       appBar: appBar,
@@ -129,13 +138,19 @@ class _DirectionsScreenState extends State<DirectionsScreen> {
               ),
             ),
             Positioned(
-                bottom: 10,
-                left: size.width * 0.075,
+                bottom: size.height * 0.02,
+                left: size.width * 0.05,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => UberScreen(),
+                          ),
+                        );
+                      },
                       child: Row(
                         children: [
                           Icon(
@@ -157,17 +172,17 @@ class _DirectionsScreenState extends State<DirectionsScreen> {
                         ],
                       ),
                       style: ElevatedButton.styleFrom(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+                        minimumSize: Size(
+                          size.width * 0.4,
+                          size.height * 0.06,
+                        ),
                         primary: theme.accentColor,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
+                          borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
+                    SizedBox(width: size.width * 0.1),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).push(
@@ -205,11 +220,13 @@ class _DirectionsScreenState extends State<DirectionsScreen> {
                         ],
                       ),
                       style: ElevatedButton.styleFrom(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+                        minimumSize: Size(
+                          size.width * 0.4,
+                          size.height * 0.06,
+                        ),
                         primary: theme.accentColor,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
+                          borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
                     )

@@ -152,6 +152,14 @@ class _GroupRideInviteScreenState extends State<GroupRideInviteScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back_rounded),
+          iconSize: 25,
+          color: theme.primaryColorDark,
+        ),
         elevation: 0.0,
         backgroundColor: theme.primaryColor,
         centerTitle: true,

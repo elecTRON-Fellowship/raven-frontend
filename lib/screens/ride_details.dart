@@ -137,26 +137,82 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                 }
                 if (snapshot.hasData) {
                   final data = snapshot.data!;
-                  return widget.sender == _auth.currentUser!.uid
-                      ? MyTicketCard(
-                          ticketId: widget.ticketId,
-                          description: data['description'],
-                          amountRaised:
-                              double.parse(data['amountRaised'].toString()),
-                          totalAmount:
-                              double.parse(data['totalAmount'].toString()),
-                        )
-                      : FriendTicketCard(
-                          contributeCallback: () {},
-                          friendId: widget.sender,
-                          friendName: fetchedName,
-                          ticketId: widget.ticketId,
-                          description: data['description'],
-                          amountRaised:
-                              double.parse(data['amountRaised'].toString()),
-                          totalAmount:
-                              double.parse(data['totalAmount'].toString()),
-                        );
+                  if (data.exists) {
+                    if (data['isActive']) {
+                      return widget.sender == _auth.currentUser!.uid
+                          ? MyTicketCard(
+                              ticketId: widget.ticketId,
+                              description: data['description'],
+                              amountRaised:
+                                  double.parse(data['amountRaised'].toString()),
+                              totalAmount:
+                                  double.parse(data['totalAmount'].toString()),
+                            )
+                          : FriendTicketCard(
+                              contributeCallback: () {},
+                              friendId: widget.sender,
+                              friendName: fetchedName,
+                              ticketId: widget.ticketId,
+                              description: data['description'],
+                              amountRaised:
+                                  double.parse(data['amountRaised'].toString()),
+                              totalAmount:
+                                  double.parse(data['totalAmount'].toString()),
+                            );
+                    } else {
+                      return Container(
+                        height: size.height * 0.26,
+                        width: size.width * 0.9,
+                        margin: EdgeInsets.symmetric(horizontal: 8),
+                        child: Card(
+                          elevation: 3.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          color: theme.backgroundColor,
+                          child: Center(
+                            child: Text(
+                              "The ticket for this ride has been closed.",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                  color: theme.primaryColor,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  } else {
+                    return Container(
+                      height: size.height * 0.26,
+                      width: size.width * 0.9,
+                      margin: EdgeInsets.symmetric(horizontal: 8),
+                      child: Card(
+                        elevation: 3.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        color: theme.backgroundColor,
+                        child: Center(
+                          child: Text(
+                            "The ticket for this ride was deleted.",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                color: theme.primaryColor,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
                 } else {
                   return Container();
                 }

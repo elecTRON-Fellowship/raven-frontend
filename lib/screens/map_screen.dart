@@ -32,8 +32,7 @@ class _MapScreenState extends State<MapScreen> {
       print(_selectedNavBarIndex);
     });
     if (_selectedNavBarIndex == 0) {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil('/conversations', (r) => false);
+      Navigator.of(context).pop();
       setState(() {
         _selectedNavBarIndex = 2;
       });
@@ -82,6 +81,7 @@ class _MapScreenState extends State<MapScreen> {
     }
 
     _locationData = await location.getLocation();
+    if (!mounted) return;
     setState(() {
       _hasData = true;
     });
@@ -117,6 +117,18 @@ class _MapScreenState extends State<MapScreen> {
           ),
         ),
       ),
+      actions: [
+        Builder(
+          builder: (ctx) => IconButton(
+            onPressed: () {
+              Scaffold.of(ctx).openEndDrawer();
+            },
+            icon: Icon(Icons.menu_rounded),
+            iconSize: 25,
+            color: Theme.of(context).primaryColorDark,
+          ),
+        ),
+      ],
     );
     return Scaffold(
       appBar: appBar,

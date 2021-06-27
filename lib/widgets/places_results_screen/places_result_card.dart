@@ -229,14 +229,17 @@ class _PlacesResultCardState extends State<PlacesResultCard> {
                   style: GoogleFonts.poppins(
                       textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 18,
                           color: theme.backgroundColor)),
                 ),
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+                  minimumSize: Size(
+                    size.width * 0.5,
+                    size.height * 0.06,
+                  ),
                   primary: theme.accentColor,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
               ),
