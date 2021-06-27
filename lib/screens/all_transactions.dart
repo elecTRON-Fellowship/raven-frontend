@@ -15,8 +15,6 @@ class AllTransactionsScreen extends StatefulWidget {
 
 class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
   FirebaseAuth _auth = FirebaseAuth.instance;
-  CollectionReference _ticketsCollection =
-      FirebaseFirestore.instance.collection('tickets');
   CollectionReference _transactionsCollection =
       FirebaseFirestore.instance.collection('transactions');
   int _selectedNavBarIndex = 3;
@@ -46,7 +44,6 @@ class _AllTransactionsScreenState extends State<AllTransactionsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,

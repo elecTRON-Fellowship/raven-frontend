@@ -137,7 +137,6 @@ class _TimedChatScreenState extends State<TimedChatScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
 
     return WillPopScope(
       onWillPop: () => _onBackPressed(context, theme),

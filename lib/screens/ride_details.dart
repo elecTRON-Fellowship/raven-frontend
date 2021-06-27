@@ -42,8 +42,9 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
 
   String fetchedName = '';
 
-  Marker? _originMarker = null;
-  Marker? _destinationMarker = null;
+  Marker? _originMarker;
+  Marker? _destinationMarker;
+  late LatLngBounds myBounds;
 
   late GoogleMapController _googleMapController;
   TextEditingController searchController = new TextEditingController();
@@ -52,6 +53,19 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
   void initState() {
     super.initState();
     if (widget.sender != _auth.currentUser!.uid) fetchContactName();
+    List<String> arr = widget.bounds.split(', ');
+
+    String firstLat = arr[0].substring(20);
+    String firstLng = arr[1].substring(0, arr[1].length - 1);
+
+    String secondLat = arr[2].substring(7);
+    String secondLng = arr[3].substring(0, arr[3].length - 2);
+
+    setState(() {
+      myBounds = LatLngBounds(
+          southwest: LatLng(double.parse(firstLat), double.parse(firstLng)),
+          northeast: LatLng(double.parse(secondLat), double.parse(secondLng)));
+    });
   }
 
   @override
@@ -258,8 +272,7 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                         double.parse(widget.destinationLat),
                         double.parse(widget.destinationLng));
                     _googleMapController.animateCamera(
-                        CameraUpdate.newLatLngBounds(
-                            widget.bounds as LatLngBounds, 110));
+                        CameraUpdate.newLatLngBounds(myBounds, 110));
                   },
                   markers: {
                     if (_originMarker != null) _originMarker!,

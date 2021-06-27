@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:raven/screens/all_transactions.dart';
 import 'package:raven/screens/tickets_history.dart';
 import 'package:raven/widgets/common/end_drawer.dart';
 import 'package:raven/widgets/tickets_screen/friend_ticket_icon.dart';
@@ -489,7 +488,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: size.height * 0.04,
+                    height: size.height * 0.02,
                   ),
                   Container(
                     width: size.width * 0.5,
@@ -550,14 +549,14 @@ class _TicketsScreenState extends State<TicketsScreen> {
                       style: GoogleFonts.poppins(
                         textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 24,
+                          fontSize: 18,
                         ),
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(
-                        size.width * 0.55,
-                        size.height * 0.07,
+                        size.width * 0.45,
+                        size.height * 0.06,
                       ),
                       onPrimary: theme.backgroundColor,
                       primary: theme.accentColor,

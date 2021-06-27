@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:raven/screens/group_ride_invite.dart';
-import 'package:raven/screens/places_results.dart';
 import 'package:raven/screens/uber_screen.dart';
-import 'package:raven/widgets/common/end_drawer.dart';
 
 class DirectionsScreen extends StatefulWidget {
   final originLat;
@@ -32,8 +28,8 @@ class DirectionsScreen extends StatefulWidget {
 }
 
 class _DirectionsScreenState extends State<DirectionsScreen> {
-  Marker? _originMarker = null;
-  Marker? _destinationMarker = null;
+  Marker? _originMarker;
+  Marker? _destinationMarker;
 
   late GoogleMapController _googleMapController;
   TextEditingController searchController = new TextEditingController();

@@ -8,9 +8,9 @@ class OTPScreen extends StatefulWidget {
   @override
   _OTPScreenState createState() => _OTPScreenState();
 
-  FirebaseAuth _auth;
-  String verificationId;
-  String phoneNumber;
+  final FirebaseAuth _auth;
+  final String verificationId;
+  final String phoneNumber;
 
   OTPScreen(this._auth, this.verificationId, this.phoneNumber);
 }

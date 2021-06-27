@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:raven/models/requestsSingleton.dart';
+import 'package:raven/models/requests_singleton.dart';
 import 'package:raven/screens/add_payment_method_screen.dart';
 import 'package:raven/screens/web_view.dart';
 import 'package:raven/widgets/friend_transactions_screen/friend_ticket_card.dart';
@@ -37,6 +37,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
   final _descriptionController = TextEditingController();
   final _amountController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final _amountFormFieldKey = GlobalKey<FormFieldState>();
 
   @override
   void initState() {
@@ -244,7 +245,6 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                         ),
                       ),
                     );
-                  ;
                 } else {
                   return Container();
                 }
@@ -412,6 +412,7 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                         Container(
                           width: size.width * 0.5,
                           child: TextFormField(
+                            key: _amountFormFieldKey,
                             controller: _amountController,
                             textAlign: TextAlign.center,
                             keyboardType: TextInputType.number,
@@ -504,57 +505,63 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                         ),
                         TextButton(
                           onPressed: () async {
-                            final userSnapshot = await _userCollection
-                                .doc(_auth.currentUser!.uid)
-                                .get();
+                            if (_amountFormFieldKey.currentState!.validate()) {
+                              final userSnapshot = await _userCollection
+                                  .doc(_auth.currentUser!.uid)
+                                  .get();
 
-                            final data = userSnapshot.data() as Map;
+                              final data = userSnapshot.data() as Map;
 
-                            final customerId = data['customerID'];
+                              final customerId = data['customerID'];
 
-                            if (customerId == null) {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => AddPaymentScreen()));
-                            } else {
-                              final _requestsSingleton = RequestsSingleton();
-                              var res = await _requestsSingleton
-                                  .addMoneyToWallet(_amountController.text);
-
-                              if (res.statusCode == 200) {
-                                final data = json.decode(res.body);
-
-                                await Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            WebViewScreen(data["data"])));
-                                Navigator.of(context).pop();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      '₹800 has been added to your wallet.',
-                                      style: TextStyle(
-                                          color: theme.primaryColorDark,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14),
-                                    ),
-                                    backgroundColor: theme.primaryColor,
-                                  ),
-                                );
-                                fetchWalletBalance();
+                              if (customerId == null) {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => AddPaymentScreen()));
                               } else {
-                                Navigator.of(context).pop();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Something went wrong.',
-                                      style: TextStyle(
-                                          color: theme.primaryColorDark,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14),
+                                final _requestsSingleton = RequestsSingleton();
+                                var res = await _requestsSingleton
+                                    .addMoneyToWallet(_amountController.text);
+
+                                if (res.statusCode == 200) {
+                                  final data = json.decode(res.body);
+
+                                  final wasSuccessful =
+                                      await Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  WebViewScreen(data["data"])));
+                                  Navigator.of(context).pop();
+
+                                  if (wasSuccessful) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          '₹${_amountController.text} has been added to your wallet.',
+                                          style: TextStyle(
+                                              color: theme.primaryColorDark,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14),
+                                        ),
+                                        backgroundColor: theme.primaryColor,
+                                      ),
+                                    );
+                                  }
+                                  fetchWalletBalance();
+                                } else {
+                                  Navigator.of(context).pop();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Something went wrong.',
+                                        style: TextStyle(
+                                            color: theme.primaryColorDark,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14),
+                                      ),
+                                      backgroundColor: theme.primaryColor,
                                     ),
-                                    backgroundColor: theme.primaryColor,
-                                  ),
-                                );
+                                  );
+                                }
                               }
                             }
                           },

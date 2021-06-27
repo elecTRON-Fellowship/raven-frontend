@@ -28,7 +28,7 @@ class _PlacesResultsScreenState extends State<PlacesResultsScreen> {
     final location = '${widget.originLatitude},${widget.originLongitude}';
 
     var url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyA7JDmk8pXuhU5jm4l6YVhGxXk_fWpL2KY&keyword=${widget.searchString}&location=${location}&rankby=distance');
+        'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyA7JDmk8pXuhU5jm4l6YVhGxXk_fWpL2KY&keyword=${widget.searchString}&location=$location&rankby=distance');
 
     var res = await http.get(url);
 

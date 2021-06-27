@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 
 class TimerCard extends StatefulWidget {
-  Function onTimerFinish;
+  final Function onTimerFinish;
 
   TimerCard({required this.onTimerFinish});
 

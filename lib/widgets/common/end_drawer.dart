@@ -3,10 +3,9 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:raven/models/requestsSingleton.dart';
+import 'package:raven/models/requests_singleton.dart';
 import 'package:raven/screens/account.dart';
 import 'package:raven/screens/close_friends.dart';
-import 'package:raven/screens/tickets_history.dart';
 
 class EndDrawer extends StatefulWidget {
   const EndDrawer({Key? key}) : super(key: key);
@@ -25,11 +24,8 @@ class _EndDrawerState extends State<EndDrawer> {
   }
 
   double fetchedBalance = 0.0;
-  bool _isBalanceLoading = false;
 
   void fetchWalletBalance() async {
-    _isBalanceLoading = true;
-
     final _requestsSingleton = RequestsSingleton();
     var res = await _requestsSingleton.fetchWalletBalance();
 
@@ -42,7 +38,6 @@ class _EndDrawerState extends State<EndDrawer> {
 
       setState(() {
         fetchedBalance = double.parse(balance.toString());
-        _isBalanceLoading = false;
       });
     }
   }

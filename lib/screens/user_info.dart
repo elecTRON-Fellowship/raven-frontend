@@ -6,7 +6,7 @@ class UserInfoScreen extends StatefulWidget {
   @override
   _UserInfoScreenState createState() => _UserInfoScreenState();
 
-  String userUid;
+  final String userUid;
 
   UserInfoScreen(this.userUid);
 }

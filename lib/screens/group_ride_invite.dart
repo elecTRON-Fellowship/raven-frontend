@@ -147,7 +147,6 @@ class _GroupRideInviteScreenState extends State<GroupRideInviteScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,

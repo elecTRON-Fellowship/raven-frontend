@@ -26,7 +26,7 @@ class _PlacesResultCardState extends State<PlacesResultCard> {
   String openHours = '';
   bool _showLoading = false;
   String polyline = '';
-  LatLngBounds? bounds = null;
+  LatLngBounds? bounds;
 
   void calculateDistance() async {
     final destination = widget.placeObject['place_id'];
@@ -34,7 +34,7 @@ class _PlacesResultCardState extends State<PlacesResultCard> {
     final origin = '${widget.originLatitude},${widget.originLongitude}';
 
     var url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/directions/json?key=AIzaSyA7JDmk8pXuhU5jm4l6YVhGxXk_fWpL2KY&origin=${origin}&destination=place_id:$destination');
+        'https://maps.googleapis.com/maps/api/directions/json?key=AIzaSyA7JDmk8pXuhU5jm4l6YVhGxXk_fWpL2KY&origin=$origin&destination=place_id:$destination');
 
     var res = await http.get(url);
 

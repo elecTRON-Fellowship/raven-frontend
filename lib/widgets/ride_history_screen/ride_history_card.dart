@@ -47,12 +47,14 @@ class _RideHistoryCardState extends State<RideHistoryCard> {
 
   void fetchRideFare() async {
     final ticketSnapshot = await _ticketsCollection.doc(widget.ticketId).get();
-    final data = ticketSnapshot.data() as Map;
+    if (ticketSnapshot.data() != null) {
+      final data = ticketSnapshot.data() as Map;
 
-    if (!mounted) return;
-    setState(() {
-      rideFare = data['totalAmount'];
-    });
+      if (!mounted) return;
+      setState(() {
+        rideFare = data['totalAmount'];
+      });
+    }
   }
 
   @override
@@ -69,7 +71,7 @@ class _RideHistoryCardState extends State<RideHistoryCard> {
           border: Border.all(color: theme.primaryColor)),
       width: double.infinity,
       child: ExpansionTile(
-        tilePadding: EdgeInsets.all(8),
+        tilePadding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         childrenPadding: EdgeInsets.all(8),
         title: Text(
           this.widget.destinationPlaceName,
@@ -80,10 +82,13 @@ class _RideHistoryCardState extends State<RideHistoryCard> {
                   fontSize: 15,
                   color: theme.primaryColorDark)),
         ),
-        subtitle: Text(
-          '${DateFormat.yMd().add_Hm().format(this.widget.time)}, ₹${rideFare.toStringAsFixed(2)}',
-          style: GoogleFonts.poppins(
-              textStyle: TextStyle(fontSize: 14, color: theme.primaryColor)),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 10.0),
+          child: Text(
+            '${DateFormat.yMd().add_Hm().format(this.widget.time)}, ₹${rideFare.toStringAsFixed(2)}',
+            style: GoogleFonts.poppins(
+                textStyle: TextStyle(fontSize: 14, color: theme.primaryColor)),
+          ),
         ),
         children: [
           Image.network(

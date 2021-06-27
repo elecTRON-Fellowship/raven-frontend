@@ -14,9 +14,9 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  Marker? _originMarker = null;
+  Marker? _originMarker;
   String _polyline = '';
-  late GoogleMapController _googleMapController;
+  GoogleMapController? _googleMapController;
   TextEditingController searchController = new TextEditingController();
   int _selectedNavBarIndex = 2;
   Location location = new Location();
@@ -25,6 +25,8 @@ class _MapScreenState extends State<MapScreen> {
   PermissionStatus _permissionGranted = PermissionStatus.denied;
   late LocationData _locationData;
   bool _hasData = false;
+
+  bool hasPermission = false;
 
   void _onIndexChanged(index, ctx) {
     setState(() {
@@ -60,7 +62,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void dispose() {
     super.dispose();
-    _googleMapController.dispose();
+    if (_googleMapController != null) _googleMapController!.dispose();
   }
 
   void _getPosition() async {
@@ -79,6 +81,9 @@ class _MapScreenState extends State<MapScreen> {
         return;
       }
     }
+    setState(() {
+      hasPermission = true;
+    });
 
     _locationData = await location.getLocation();
     if (!mounted) return;
@@ -132,119 +137,132 @@ class _MapScreenState extends State<MapScreen> {
     );
     return Scaffold(
       appBar: appBar,
-      body: _hasData
-          ? Container(
-              height: size.height - appBar.preferredSize.height,
-              child: Stack(
-                children: [
-                  Container(
-                      height: size.height - appBar.preferredSize.height,
-                      child: GoogleMap(
-                        polylines: {
-                          if (_polyline != '')
-                            Polyline(
-                              polylineId: PolylineId('destinationpolyline'),
-                              color: theme.accentColor,
-                              width: 5,
-                              points: PolylinePoints()
-                                  .decodePolyline(_polyline)
-                                  .map((e) => LatLng(e.latitude, e.longitude))
-                                  .toList(),
-                            ),
-                        },
-                        onMapCreated: (controller) {
-                          _googleMapController = controller;
-                          _createOriginMarker();
-                        },
-                        markers: {
-                          if (_originMarker != null) _originMarker!,
-                        },
-                        myLocationButtonEnabled: false,
-                        initialCameraPosition: CameraPosition(
-                            target: LatLng(_locationData.latitude!,
-                                _locationData.longitude!),
-                            zoom: 16),
-                      )),
-                  Positioned(
-                    top: 0,
-                    left: size.width * 0.05,
-                    child: Container(
-                      width: size.width * 0.9,
-                      padding: const EdgeInsets.all(10),
-                      child: TextField(
-                        onEditingComplete: () async {
-                          FocusScope.of(context).unfocus();
+      body: hasPermission
+          ? _hasData
+              ? Container(
+                  height: size.height - appBar.preferredSize.height,
+                  child: Stack(
+                    children: [
+                      Container(
+                          height: size.height - appBar.preferredSize.height,
+                          child: GoogleMap(
+                            polylines: {
+                              if (_polyline != '')
+                                Polyline(
+                                  polylineId: PolylineId('destinationpolyline'),
+                                  color: theme.accentColor,
+                                  width: 5,
+                                  points: PolylinePoints()
+                                      .decodePolyline(_polyline)
+                                      .map((e) =>
+                                          LatLng(e.latitude, e.longitude))
+                                      .toList(),
+                                ),
+                            },
+                            onMapCreated: (controller) {
+                              _googleMapController = controller;
+                              _createOriginMarker();
+                            },
+                            markers: {
+                              if (_originMarker != null) _originMarker!,
+                            },
+                            myLocationButtonEnabled: false,
+                            initialCameraPosition: CameraPosition(
+                                target: LatLng(_locationData.latitude!,
+                                    _locationData.longitude!),
+                                zoom: 16),
+                          )),
+                      Positioned(
+                        top: 0,
+                        left: size.width * 0.05,
+                        child: Container(
+                          width: size.width * 0.9,
+                          padding: const EdgeInsets.all(10),
+                          child: TextField(
+                            onEditingComplete: () async {
+                              FocusScope.of(context).unfocus();
 
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => PlacesResultsScreen(
-                                  searchString: searchController.text,
-                                  originLatitude: _locationData.latitude!,
-                                  originLongitude: _locationData.longitude!),
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => PlacesResultsScreen(
+                                      searchString: searchController.text,
+                                      originLatitude: _locationData.latitude!,
+                                      originLongitude:
+                                          _locationData.longitude!),
+                                ),
+                              );
+                            },
+                            controller: searchController,
+                            style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                color: Theme.of(context).primaryColorDark,
+                              ),
                             ),
-                          );
-                        },
-                        controller: searchController,
-                        style: GoogleFonts.poppins(
-                          textStyle: TextStyle(
-                            color: Theme.of(context).primaryColorDark,
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.search_rounded,
+                                color: Theme.of(context).primaryColorDark,
+                              ),
+                              fillColor: Theme.of(context).backgroundColor,
+                              filled: true,
+                              contentPadding: EdgeInsets.all(13),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColorDark,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColorDark,
+                                  width: 2,
+                                ),
+                              ),
+                              hintText: "Search",
+                              labelStyle: TextStyle(
+                                color: Theme.of(context).primaryColorDark,
+                              ),
+                            ),
+                            textCapitalization: TextCapitalization.words,
                           ),
                         ),
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.search_rounded,
-                            color: Theme.of(context).primaryColorDark,
-                          ),
-                          fillColor: Theme.of(context).backgroundColor,
-                          filled: true,
-                          contentPadding: EdgeInsets.all(13),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).primaryColorDark,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).primaryColorDark,
-                              width: 2,
-                            ),
-                          ),
-                          hintText: "Search",
-                          labelStyle: TextStyle(
-                            color: Theme.of(context).primaryColorDark,
-                          ),
-                        ),
-                        textCapitalization: TextCapitalization.words,
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-            )
+                )
+              : Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      Text(
+                        'Getting your location...',
+                        style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18,
+                                color: Theme.of(context).primaryColorDark)),
+                      ),
+                    ],
+                  ),
+                )
           : Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  Text(
-                    'Getting your location...',
-                    style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18,
-                            color: Theme.of(context).primaryColorDark)),
-                  ),
-                ],
+              child: Text(
+                'Please provide required permissions.',
+                style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                        color: Theme.of(context).primaryColor)),
               ),
             ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: theme.accentColor,
         foregroundColor: theme.backgroundColor,
         onPressed: () {
-          if (_hasData)
-            _googleMapController.animateCamera(
+          if (_hasData && _googleMapController != null)
+            _googleMapController!.animateCamera(
               CameraUpdate.newCameraPosition(
                 CameraPosition(
                     target: LatLng(

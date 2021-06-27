@@ -50,6 +50,12 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
+  }
+
   void sendMessage() async {
     FocusScope.of(context).unfocus();
     var textToSend = textController.text;
@@ -88,7 +94,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
 
     final appBar = AppBar(
       elevation: 0.0,

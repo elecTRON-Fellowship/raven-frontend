@@ -18,7 +18,7 @@ class UserDataSingleton {
   late String _nationality;
   late String _idNumber;
 
-  final _ewallet_reference_id = Uuid().v4();
+  final _ewalletReferenceId = Uuid().v4();
 
   UserDataSingleton._internal();
 
@@ -100,7 +100,7 @@ class UserDataSingleton {
         "first_name": _firstName,
         "last_name": _lastName,
         "email": _email,
-        "ewallet_reference_id": _ewallet_reference_id,
+        "ewallet_reference_id": _ewalletReferenceId,
         "metadata": {"merchant_defined": true},
         "phone_number": _phoneNumber,
         "type": "person",

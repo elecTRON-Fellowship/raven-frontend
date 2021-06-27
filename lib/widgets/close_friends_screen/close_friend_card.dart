@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:raven/screens/chat.dart';
 import 'package:raven/widgets/close_friends_screen/close_friend_action_button.dart';
 
 enum ContactRegisteredStatus {
@@ -21,16 +19,8 @@ class CloseFriendCard extends StatefulWidget {
 }
 
 class _CloseFriendCardState extends State<CloseFriendCard> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-
   CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('users');
-
-  CollectionReference _conversationsCollection =
-      FirebaseFirestore.instance.collection('conversations');
-
-  CollectionReference _connectionsCollection =
-      FirebaseFirestore.instance.collection('connections');
 
   bool showLoading = true;
 
@@ -59,11 +49,14 @@ class _CloseFriendCardState extends State<CloseFriendCard> {
         .get();
 
     if (snapshot.size > 0) {
+      if (!mounted) return;
       setState(() {
         showLoading = false;
         status = ContactRegisteredStatus.REGISTERED;
       });
     } else {
+      if (!mounted) return;
+
       setState(() {
         showLoading = false;
         status = ContactRegisteredStatus.NOT_REGISTERED;

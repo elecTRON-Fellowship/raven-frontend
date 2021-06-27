@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/widgets/ride_history_screen/ride_history_card.dart';
@@ -15,11 +14,6 @@ class RideHistoryScreen extends StatefulWidget {
 }
 
 class _RideHistoryScreenState extends State<RideHistoryScreen> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  CollectionReference _userCollection =
-      FirebaseFirestore.instance.collection('users');
-  CollectionReference _conversationsCollection =
-      FirebaseFirestore.instance.collection('conversations');
   late CollectionReference _messagesCollection;
 
   @override
@@ -33,7 +27,6 @@ class _RideHistoryScreenState extends State<RideHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,

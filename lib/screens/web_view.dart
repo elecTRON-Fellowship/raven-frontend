@@ -24,6 +24,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
+  bool wasSuccessful = false;
+
   @override
   Widget build(BuildContext context) {
     print(widget.url);
@@ -44,7 +46,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         leading: IconButton(
           color: theme.primaryColorDark,
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(wasSuccessful);
           },
           icon: Icon(Icons.arrow_back_rounded),
           iconSize: 25.0,
@@ -52,6 +54,14 @@ class _WebViewScreenState extends State<WebViewScreen> {
         centerTitle: true,
       ),
       body: WebView(
+        navigationDelegate: (navigation) {
+          if (navigation.url.startsWith('https://raven.herokuapp.com/')) {
+            setState(() {
+              wasSuccessful = true;
+            });
+          }
+          return NavigationDecision.navigate;
+        },
         initialUrl: widget.url,
         javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (WebViewController webViewController) {

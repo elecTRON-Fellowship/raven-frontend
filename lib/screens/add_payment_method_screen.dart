@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:raven/models/requestsSingleton.dart';
+import 'package:raven/models/requests_singleton.dart';
 
 class AddPaymentScreen extends StatefulWidget {
   @override

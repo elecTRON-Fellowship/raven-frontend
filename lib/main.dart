@@ -5,12 +5,9 @@ import 'package:raven/screens/all_transactions.dart';
 import 'package:raven/screens/contacts.dart';
 import 'package:raven/screens/conversations.dart';
 import 'package:raven/screens/create_wallet_user_details.dart';
-import 'package:raven/screens/friend_transactions.dart';
 import 'package:raven/screens/auth.dart';
 import 'package:raven/screens/map_screen.dart';
-import 'package:raven/screens/add_payment_method_screen.dart';
 import 'package:raven/screens/tickets.dart';
-import 'package:raven/screens/web_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,14 +52,12 @@ class HomePageRedirect extends StatefulWidget {
 class _HomePageRedirectState extends State<HomePageRedirect> {
   late FirebaseAuth _auth;
   User? _user;
-  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _auth = FirebaseAuth.instance;
     _user = _auth.currentUser;
-    _isLoading = false;
   }
 
   @override
