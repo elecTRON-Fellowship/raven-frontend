@@ -10,6 +10,7 @@ import 'package:raven/screens/auth.dart';
 import 'package:raven/screens/map_screen.dart';
 import 'package:raven/screens/add_payment_method_screen.dart';
 import 'package:raven/screens/tickets.dart';
+import 'package:raven/screens/web_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

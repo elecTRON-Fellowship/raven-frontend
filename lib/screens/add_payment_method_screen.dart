@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:raven/models/requestsSingleton.dart';
 
 class AddPaymentScreen extends StatefulWidget {
   @override
@@ -85,9 +86,17 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
               textFormField(size, theme, TextInputType.number,
                   TextInputAction.done, "CVV", true, _cvvValidator),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    print("Validated");
+                    final _requestsSingleton = RequestsSingleton();
+                    var res = await _requestsSingleton.createCustomer();
+
+                    print(res.statusCode);
+                    print(res.body);
+
+                    if (res.statusCode == 200) {
+                      print(res.body);
+                    }
                   }
                 },
                 child: Text(

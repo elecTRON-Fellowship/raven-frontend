@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/models/requestsSingleton.dart';
+import 'package:raven/screens/web_view.dart';
 import 'package:raven/widgets/friend_transactions_screen/friend_ticket_card.dart';
 import 'package:raven/widgets/friend_transactions_screen/friend_transaction_card.dart';
 import 'package:uuid/uuid.dart';
@@ -504,14 +505,21 @@ class _FriendTransactionsScreenState extends State<FriendTransactionsScreen> {
                           onPressed: () async {
                             final _requestsSingleton = RequestsSingleton();
                             var res = await _requestsSingleton
-                                .addMoneyToWallet("5000");
+                                .addMoneyToWallet("800");
+
+                            print(res.body);
 
                             if (res.statusCode == 200) {
+                              final data = json.decode(res.body);
                               Navigator.of(context).pop();
+                              await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          WebViewScreen(data["data"])));
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    '₹5000 has been added to your wallet.',
+                                    '₹800 has been added to your wallet.',
                                     style: TextStyle(
                                         color: theme.primaryColorDark,
                                         fontWeight: FontWeight.bold,
