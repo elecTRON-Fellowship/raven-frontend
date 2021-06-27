@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:raven/models/requestsSingleton.dart';
+import 'package:raven/screens/add_payment_method_screen.dart';
+import 'package:raven/screens/web_view.dart';
 
 class FriendTicketCard extends StatefulWidget {
   final Function contributeCallback;
@@ -395,38 +397,58 @@ class _FriendTicketCardState extends State<FriendTicketCard> {
                       ),
                       TextButton(
                         onPressed: () async {
-                          final _requestsSingleton = RequestsSingleton();
-                          var res =
-                              await _requestsSingleton.addMoneyToWallet("5000");
+                          final userSnapshot = await _userCollection
+                              .doc(_auth.currentUser!.uid)
+                              .get();
 
-                          if (res.statusCode == 200) {
-                            Navigator.of(context).pop();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  '₹5000 has been added to your wallet.',
-                                  style: TextStyle(
-                                      color: theme.primaryColorDark,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14),
-                                ),
-                                backgroundColor: theme.primaryColor,
-                              ),
-                            );
-                            fetchWalletBalance();
+                          final data = userSnapshot.data() as Map;
+
+                          final customerId = data['customerID'];
+
+                          if (customerId == null) {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => AddPaymentScreen()));
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Something went wrong.',
-                                  style: TextStyle(
-                                      color: theme.primaryColorDark,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14),
+                            final _requestsSingleton = RequestsSingleton();
+                            var res = await _requestsSingleton
+                                .addMoneyToWallet("800");
+
+                            print(res.body);
+
+                            if (res.statusCode == 200) {
+                              final data = json.decode(res.body);
+                              Navigator.of(context).pop();
+                              await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          WebViewScreen(data["data"])));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    '₹800 has been added to your wallet.',
+                                    style: TextStyle(
+                                        color: theme.primaryColorDark,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14),
+                                  ),
+                                  backgroundColor: theme.primaryColor,
                                 ),
-                                backgroundColor: theme.primaryColor,
-                              ),
-                            );
+                              );
+                              fetchWalletBalance();
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Something went wrong.',
+                                    style: TextStyle(
+                                        color: theme.primaryColorDark,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14),
+                                  ),
+                                  backgroundColor: theme.primaryColor,
+                                ),
+                              );
+                            }
                           }
                         },
                         child: Text(

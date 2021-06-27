@@ -8,6 +8,8 @@ class AddPaymentScreen extends StatefulWidget {
 }
 
 class _AddPaymentScreenState extends State<AddPaymentScreen> {
+  bool showLoading = false;
+
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -47,82 +49,105 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
           ),
           color: theme.backgroundColor,
         ),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text(
-                "Please provide your card details",
-                style: GoogleFonts.poppins(
-                  textStyle: TextStyle(fontSize: 16),
+        child: showLoading
+            ? Center(
+                child: CircularProgressIndicator(
                   color: theme.primaryColorDark,
                 ),
-              ),
-              textFormField(
-                  size,
-                  theme,
-                  TextInputType.name,
-                  TextInputAction.next,
-                  "Name on card",
-                  false,
-                  _fullNameValidator),
-              textFormField(
-                  size,
-                  theme,
-                  TextInputType.number,
-                  TextInputAction.next,
-                  "Card number",
-                  false,
-                  _cardNumberValidator),
-              textFormField(
-                  size,
-                  theme,
-                  TextInputType.datetime,
-                  TextInputAction.next,
-                  "Expiration (MM/YY)",
-                  false,
-                  _cardExpirationValidator),
-              textFormField(size, theme, TextInputType.number,
-                  TextInputAction.done, "CVV", true, _cvvValidator),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    final _requestsSingleton = RequestsSingleton();
-                    var res = await _requestsSingleton.createCustomer();
-
-                    print(res.statusCode);
-                    print(res.body);
-
-                    if (res.statusCode == 200) {
-                      print(res.body);
-                    }
-                  }
-                },
-                child: Text(
-                  "Save",
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
+              )
+            : Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      "Please provide your card details",
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(fontSize: 16),
+                        color: theme.primaryColorDark,
+                      ),
                     ),
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: Size(
-                    size.width * 0.5,
-                    size.height * 0.06,
-                  ),
-                  onPrimary: theme.backgroundColor,
-                  primary: theme.accentColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
+                    textFormField(
+                        size,
+                        theme,
+                        TextInputType.name,
+                        TextInputAction.next,
+                        "Name on card",
+                        false,
+                        _fullNameValidator),
+                    textFormField(
+                        size,
+                        theme,
+                        TextInputType.number,
+                        TextInputAction.next,
+                        "Card number",
+                        false,
+                        _cardNumberValidator),
+                    textFormField(
+                        size,
+                        theme,
+                        TextInputType.datetime,
+                        TextInputAction.next,
+                        "Expiration (MM/YY)",
+                        false,
+                        _cardExpirationValidator),
+                    textFormField(size, theme, TextInputType.number,
+                        TextInputAction.done, "CVV", true, _cvvValidator),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          setState(() {
+                            showLoading = true;
+                          });
+
+                          final _requestsSingleton = RequestsSingleton();
+                          var res = await _requestsSingleton.createCustomer();
+
+                          if (res.statusCode == 200) {
+                            setState(() {
+                              showLoading = false;
+                            });
+                            Navigator.of(context).pop();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Something went wrong.',
+                                  style: TextStyle(
+                                      color: theme.primaryColorDark,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
+                                ),
+                                backgroundColor: theme.primaryColor,
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      child: Text(
+                        "Save",
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                          ),
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(
+                          size.width * 0.5,
+                          size.height * 0.06,
+                        ),
+                        onPrimary: theme.backgroundColor,
+                        primary: theme.accentColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
       ),
     );
   }
