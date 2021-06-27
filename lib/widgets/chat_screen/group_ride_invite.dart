@@ -82,11 +82,13 @@ class _GroupRideInviteState extends State<GroupRideInvite> {
                     topLeft: Radius.circular(16),
                     bottomLeft: Radius.circular(16),
                     bottomRight: Radius.circular(16),
+                    topRight: Radius.circular(5),
                   )
                 : BorderRadius.only(
                     topRight: Radius.circular(16),
                     bottomLeft: Radius.circular(16),
                     bottomRight: Radius.circular(16),
+                    topLeft: Radius.circular(5),
                   ),
             color: isSent
                 ? Theme.of(context).accentColor
@@ -105,9 +107,11 @@ class _GroupRideInviteState extends State<GroupRideInvite> {
                   borderRadius: isSent
                       ? BorderRadius.only(
                           topLeft: Radius.circular(16),
+                          topRight: Radius.circular(5),
                         )
                       : BorderRadius.only(
                           topRight: Radius.circular(16),
+                          topLeft: Radius.circular(5),
                         ),
                   child: Image.network(
                     "https://maps.googleapis.com/maps/api/staticmap?center=${widget.destinationLat},${widget.destinationLng}&zoom=13&size=${_mapWidth.ceil()}x${_mapHeight.ceil()}&markers=color:red%7C%7C${widget.destinationLat},${widget.destinationLng}&key=AIzaSyA7JDmk8pXuhU5jm4l6YVhGxXk_fWpL2KY",

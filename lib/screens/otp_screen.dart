@@ -92,7 +92,7 @@ class _OTPScreenState extends State<OTPScreen> {
           "Verification",
           style: GoogleFonts.poppins(
             textStyle: TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: theme.primaryColorDark),
           ),
@@ -130,7 +130,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 style: GoogleFonts.poppins(
                     textStyle: TextStyle(
                   color: theme.primaryColorDark,
-                  fontSize: 18,
+                  fontSize: 16,
                 )),
               ),
             ),
@@ -143,7 +143,7 @@ class _OTPScreenState extends State<OTPScreen> {
               style: GoogleFonts.poppins(
                   textStyle: TextStyle(
                 color: theme.accentColor,
-                fontSize: 24,
+                fontSize: 22,
               )),
             ),
             SizedBox(
@@ -158,13 +158,13 @@ class _OTPScreenState extends State<OTPScreen> {
                 : Column(
                     children: [
                       Container(
-                        width: size.width * 0.8,
+                        width: size.width * 0.7,
                         child: TextField(
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.done,
                           controller: otpController,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 15,
                             height: 1,
                             color: theme.accentColor,
                           ),
@@ -191,7 +191,7 @@ class _OTPScreenState extends State<OTPScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: size.height * 0.05,
+                        height: size.height * 0.08,
                       ),
                       ElevatedButton(
                         onPressed: () async {
@@ -208,14 +208,14 @@ class _OTPScreenState extends State<OTPScreen> {
                           style: GoogleFonts.poppins(
                             textStyle: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 30,
+                              fontSize: 22,
                             ),
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size(
-                            size.width * 0.6,
-                            size.height * 0.07,
+                            size.width * 0.48,
+                            size.height * 0.068,
                           ),
                           onPrimary: theme.backgroundColor,
                           primary: theme.accentColor,

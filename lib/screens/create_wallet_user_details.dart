@@ -21,7 +21,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
           "Create Wallet",
           style: GoogleFonts.poppins(
             textStyle: TextStyle(
-              fontSize: 24,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
               color: theme.primaryColorDark,
             ),
@@ -35,6 +35,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
           },
           icon: Icon(Icons.arrow_back),
           color: theme.primaryColorDark,
+          iconSize: 25,
         ),
       ),
       backgroundColor: theme.primaryColor,

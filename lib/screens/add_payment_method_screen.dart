@@ -32,8 +32,11 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
       centerTitle: true,
       leading: IconButton(
         icon: Icon(Icons.arrow_back),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
         color: theme.primaryColorDark,
+        iconSize: 25,
       ),
     );
     return Scaffold(

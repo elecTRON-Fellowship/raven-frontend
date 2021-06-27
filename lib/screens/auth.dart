@@ -111,7 +111,7 @@ class _AuthScreenState extends State<AuthScreen> {
               "Hey there, \nWelcome to Raven",
               style: GoogleFonts.poppins(
                   textStyle: TextStyle(
-                fontSize: 24,
+                fontSize: 22,
                 color: theme.primaryColorDark,
               )),
             ),
@@ -122,6 +122,7 @@ class _AuthScreenState extends State<AuthScreen> {
           Form(
             key: formKey,
             child: Container(
+              width: size.width * 0.72,
               child: TextFormField(
                 controller: phoneController,
                 keyboardType: TextInputType.phone,
@@ -230,14 +231,14 @@ class _AuthScreenState extends State<AuthScreen> {
                     style: GoogleFonts.poppins(
                       textStyle: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 30,
+                        fontSize: 22,
                       ),
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(
-                      size.width * 0.6,
-                      size.height * 0.08,
+                      size.width * 0.45,
+                      size.height * 0.07,
                     ),
                     onPrimary: theme.backgroundColor,
                     primary: theme.accentColor,
