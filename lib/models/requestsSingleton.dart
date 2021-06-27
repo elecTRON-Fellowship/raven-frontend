@@ -31,6 +31,36 @@ class RequestsSingleton {
     return response;
   }
 
+  Future<http.Response> createCustomer() async {
+    var url = Uri.parse('https://raven.herokuapp.com/ccustomer');
+
+    CollectionReference _userCollection =
+        FirebaseFirestore.instance.collection('users');
+
+    FirebaseAuth _auth = FirebaseAuth.instance;
+
+    final snapshot = await _userCollection.doc(_auth.currentUser!.uid).get();
+    final data = snapshot.data() as Map;
+    final _eWalletID = data['walletID'];
+    final _name = data['firstName'] + " " + data['lastName'];
+    final _phoneNumber = data['phoneNumber'];
+
+    var response = await http.post(
+      url,
+      headers: {
+        "user_id": _auth.currentUser!.uid,
+        "Content-Type": "application/json"
+      },
+      body: json.encode({
+        "ewallet": _eWalletID,
+        "name": _name,
+        "phoneNumber": _phoneNumber,
+      }),
+    );
+
+    return response;
+  }
+
   Future<http.Response> fetchWalletBalance() async {
     var url = Uri.parse('https://raven.herokuapp.com/gbalance');
 
@@ -54,7 +84,7 @@ class RequestsSingleton {
   }
 
   Future<http.Response> addMoneyToWallet(String amount) async {
-    var url = Uri.parse('https://raven.herokuapp.com/afunds');
+    var url = Uri.parse('https://raven.herokuapp.com/ccheckout');
 
     CollectionReference _userCollection =
         FirebaseFirestore.instance.collection('users');
@@ -65,6 +95,7 @@ class RequestsSingleton {
     final data = snapshot.data() as Map;
 
     final _eWalletID = data['walletID'];
+    final _customerID = data['customerID'];
 
     var response = await http.post(
       url,
@@ -72,8 +103,7 @@ class RequestsSingleton {
       body: json.encode({
         "ewallet": _eWalletID,
         "amount": amount,
-        "currency": "INR",
-        "metadata": {"merchant_defined": true}
+        "customer": _customerID,
       }),
     );
 
