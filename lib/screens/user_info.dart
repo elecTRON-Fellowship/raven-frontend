@@ -95,8 +95,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             style: GoogleFonts.poppins(
               textStyle: TextStyle(
                 color: theme.backgroundColor,
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
+                fontSize: 24,
               ),
             ),
           ),
@@ -105,7 +104,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             style: GoogleFonts.poppins(
               textStyle: TextStyle(
                 color: theme.primaryColorDark,
-                fontSize: 60,
+                fontSize: 48,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -145,10 +144,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 width: size.width * 0.8,
                 child: Text(
                   "Tell us about yourself",
+                  textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
                       textStyle: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
                     color: theme.primaryColorDark,
                   )),
                 ),
@@ -162,7 +161,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 keyboardType: TextInputType.name,
                 textInputAction: TextInputAction.next,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   height: 1,
                   color: theme.accentColor,
                 ),
@@ -207,7 +206,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 keyboardType: TextInputType.name,
                 textInputAction: TextInputAction.next,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   height: 1,
                   color: theme.accentColor,
                 ),
@@ -257,14 +256,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 30,
+                      fontSize: 22,
                     ),
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(
-                    size.width * 0.6,
-                    size.height * 0.08,
+                    size.width * 0.5,
+                    size.height * 0.07,
                   ),
                   onPrimary: theme.backgroundColor,
                   primary: theme.accentColor,

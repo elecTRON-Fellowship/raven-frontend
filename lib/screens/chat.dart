@@ -56,6 +56,21 @@ class _ChatScreenState extends State<ChatScreen> {
     scrollController.dispose();
   }
 
+  void expirePendingInvites() async {
+    final snapshot = await _messagesCollection
+        .where('sender', isEqualTo: _auth.currentUser!.uid)
+        .where('status', isEqualTo: 'PENDING')
+        .get();
+
+    final docs = snapshot.docs;
+
+    docs.forEach((element) async {
+      final id = element.id;
+
+      await _messagesCollection.doc(id).update({'status': 'EXPIRED'});
+    });
+  }
+
   void sendMessage() async {
     FocusScope.of(context).unfocus();
     var textToSend = textController.text;
@@ -110,6 +125,7 @@ class _ChatScreenState extends State<ChatScreen> {
       actions: [
         IconButton(
           onPressed: () {
+            expirePendingInvites();
             Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => RideHistoryScreen(
                 conversationId: widget.conversationId,
@@ -122,6 +138,7 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         IconButton(
           onPressed: () {
+            expirePendingInvites();
             Navigator.of(context).push(MaterialPageRoute(
               builder: (context) =>
                   FriendTransactionsScreen(friendId: widget.friendId),
@@ -134,6 +151,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ],
       leading: IconButton(
         onPressed: () {
+          expirePendingInvites();
           Navigator.of(context).pop();
         },
         icon: Icon(Icons.arrow_back_rounded),
@@ -141,161 +159,172 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
-      appBar: appBar,
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
-        },
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).backgroundColor,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                  ),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                  ),
-                  child: StreamBuilder(
-                    stream: _messagesCollection
-                        .orderBy('time', descending: true)
-                        .snapshots(),
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Container();
-                      }
-                      if (snapshot.hasData) {
-                        final documents = (snapshot.data)!.docs;
-                        return ListView.builder(
-                            key: ValueKey(Uuid().v4()),
-                            controller: scrollController,
-                            reverse: true,
-                            itemCount: documents.length,
-                            itemBuilder: (context, index) {
-                              if (documents[index]['text'] == '/TIMED_CHAT') {
-                                return TimedChatInvite(
-                                  conversationId: widget.conversationId,
-                                  messageId: documents[index].id,
-                                  key: ValueKey(documents[index].id),
-                                  sender: documents[index]['sender'],
-                                  text: documents[index]['text'],
-                                  time: DateTime.parse(documents[index]['time']
-                                      .toDate()
-                                      .toString()),
-                                );
-                              } else if (documents[index]['text'] ==
-                                  '/GROUP_RIDE_INVITE') {
-                                return GroupRideInvite(
-                                  conversationId: widget.conversationId,
-                                  messageId: documents[index].id,
-                                  key: ValueKey(documents[index].id),
-                                  sender: documents[index]['sender'],
-                                  text: documents[index]['text'],
-                                  time: DateTime.parse(documents[index]['time']
-                                      .toDate()
-                                      .toString()),
-                                  originLat: documents[index]['originLat'],
-                                  originLng: documents[index]['originLng'],
-                                  destinationLat: documents[index]
-                                      ['destinationLat'],
-                                  destinationLng: documents[index]
-                                      ['destinationLng'],
-                                  polyline: documents[index]['polyline'],
-                                  bounds: documents[index]['bounds'],
-                                  destinationPlaceName: documents[index]
-                                      ['destinationPlaceName'],
-                                  ticketId: documents[index]['ticketId'],
-                                );
-                              } else {
-                                return MessageBubble(
-                                  conversationId: widget.conversationId,
-                                  messageId: documents[index].id,
-                                  key: ValueKey(documents[index].id),
-                                  sender: documents[index]['sender'],
-                                  text: documents[index]['text'],
-                                  time: DateTime.parse(documents[index]['time']
-                                      .toDate()
-                                      .toString()),
-                                  isRead: documents[index]['read'],
-                                );
-                              }
-                            });
-                      } else {
-                        return Container();
-                      }
-                    },
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-              color: Theme.of(context).backgroundColor,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: textController,
-                      textInputAction: TextInputAction.newline,
-                      minLines: 1,
-                      maxLines: 3,
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
-                          fontSize: 14.0,
-                          color: theme.primaryColorDark,
-                        ),
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                          borderSide: BorderSide(
-                            color: theme.primaryColorDark,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                          borderSide: BorderSide(
-                            color: theme.primaryColorDark,
-                            width: 2,
-                          ),
-                        ),
-                        hintText: 'Write your message here...',
-                      ),
-                      textCapitalization: TextCapitalization.sentences,
+    return WillPopScope(
+      onWillPop: () async {
+        expirePendingInvites();
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).primaryColor,
+        appBar: appBar,
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).backgroundColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
                     ),
                   ),
-                  IconButton(
-                    onPressed: () => sendTimedChatInvitation(),
-                    icon: Icon(Icons.timer_rounded),
-                    color: theme.primaryColorDark,
-                    iconSize: 30.0,
-                    padding: EdgeInsets.only(left: 15),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    ),
+                    child: StreamBuilder(
+                      stream: _messagesCollection
+                          .orderBy('time', descending: true)
+                          .snapshots(),
+                      builder:
+                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Container();
+                        }
+                        if (snapshot.hasData) {
+                          final documents = (snapshot.data)!.docs;
+                          return ListView.builder(
+                              key: ValueKey(Uuid().v4()),
+                              controller: scrollController,
+                              reverse: true,
+                              itemCount: documents.length,
+                              itemBuilder: (context, index) {
+                                if (documents[index]['text'] == '/TIMED_CHAT') {
+                                  return TimedChatInvite(
+                                    conversationId: widget.conversationId,
+                                    messageId: documents[index].id,
+                                    key: ValueKey(documents[index].id),
+                                    sender: documents[index]['sender'],
+                                    text: documents[index]['text'],
+                                    time: DateTime.parse(documents[index]
+                                            ['time']
+                                        .toDate()
+                                        .toString()),
+                                  );
+                                } else if (documents[index]['text'] ==
+                                    '/GROUP_RIDE_INVITE') {
+                                  return GroupRideInvite(
+                                    conversationId: widget.conversationId,
+                                    messageId: documents[index].id,
+                                    key: ValueKey(documents[index].id),
+                                    sender: documents[index]['sender'],
+                                    text: documents[index]['text'],
+                                    time: DateTime.parse(documents[index]
+                                            ['time']
+                                        .toDate()
+                                        .toString()),
+                                    originLat: documents[index]['originLat'],
+                                    originLng: documents[index]['originLng'],
+                                    destinationLat: documents[index]
+                                        ['destinationLat'],
+                                    destinationLng: documents[index]
+                                        ['destinationLng'],
+                                    polyline: documents[index]['polyline'],
+                                    bounds: documents[index]['bounds'],
+                                    destinationPlaceName: documents[index]
+                                        ['destinationPlaceName'],
+                                    ticketId: documents[index]['ticketId'],
+                                  );
+                                } else {
+                                  return MessageBubble(
+                                    conversationId: widget.conversationId,
+                                    messageId: documents[index].id,
+                                    key: ValueKey(documents[index].id),
+                                    sender: documents[index]['sender'],
+                                    text: documents[index]['text'],
+                                    time: DateTime.parse(documents[index]
+                                            ['time']
+                                        .toDate()
+                                        .toString()),
+                                    isRead: documents[index]['read'],
+                                  );
+                                }
+                              });
+                        } else {
+                          return Container();
+                        }
+                      },
+                    ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      if (textController.text.isNotEmpty) {
-                        sendMessage();
-                      }
-                    },
-                    icon: Icon(Icons.send_rounded),
-                    color: theme.primaryColorDark,
-                    iconSize: 30.0,
-                    padding: EdgeInsets.only(left: 15),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                color: Theme.of(context).backgroundColor,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: textController,
+                        textInputAction: TextInputAction.newline,
+                        minLines: 1,
+                        maxLines: 3,
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            fontSize: 14.0,
+                            color: theme.primaryColorDark,
+                          ),
+                        ),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                            borderSide: BorderSide(
+                              color: theme.primaryColorDark,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                            borderSide: BorderSide(
+                              color: theme.primaryColorDark,
+                              width: 2,
+                            ),
+                          ),
+                          hintText: 'Write your message here...',
+                        ),
+                        textCapitalization: TextCapitalization.sentences,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => sendTimedChatInvitation(),
+                      icon: Icon(Icons.timer_rounded),
+                      color: theme.primaryColorDark,
+                      iconSize: 30.0,
+                      padding: EdgeInsets.only(left: 15),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        if (textController.text.isNotEmpty) {
+                          sendMessage();
+                        }
+                      },
+                      icon: Icon(Icons.send_rounded),
+                      color: theme.primaryColorDark,
+                      iconSize: 30.0,
+                      padding: EdgeInsets.only(left: 15),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

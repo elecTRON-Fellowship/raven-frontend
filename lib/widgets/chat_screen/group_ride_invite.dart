@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:raven/screens/ride_details.dart';
 
 class GroupRideInvite extends StatefulWidget {
@@ -94,7 +95,7 @@ class _GroupRideInviteState extends State<GroupRideInvite> {
                 ? Theme.of(context).accentColor
                 : Color.fromRGBO(144, 180, 206, 0.5),
           ),
-          height: size.height * 0.37,
+          height: size.height * 0.39,
           width: size.width * 0.6,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -114,7 +115,7 @@ class _GroupRideInviteState extends State<GroupRideInvite> {
                           topLeft: Radius.circular(5),
                         ),
                   child: Image.network(
-                    "https://maps.googleapis.com/maps/api/staticmap?center=${widget.destinationLat},${widget.destinationLng}&zoom=13&size=${_mapWidth.ceil()}x${_mapHeight.ceil()}&markers=color:red%7C%7C${widget.destinationLat},${widget.destinationLng}&key=AIzaSyA7JDmk8pXuhU5jm4l6YVhGxXk_fWpL2KY",
+                    "https://maps.googleapis.com/maps/api/staticmap?center=${widget.destinationLat},${widget.destinationLng}&zoom=13&size=${_mapWidth.ceil()}x${_mapHeight.ceil()}&markers=size:mid|color:red%7C%7C${widget.destinationLat},${widget.destinationLng}&key=AIzaSyA7JDmk8pXuhU5jm4l6YVhGxXk_fWpL2KY",
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -123,7 +124,7 @@ class _GroupRideInviteState extends State<GroupRideInvite> {
                 height: size.height * 0.01,
               ),
               Container(
-                height: size.height * 0.15,
+                height: size.height * 0.18,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -194,6 +195,22 @@ class _GroupRideInviteState extends State<GroupRideInvite> {
                                 ),
                               ),
                             ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        DateFormat.Hm().format(this.widget.time),
+                        textAlign: TextAlign.end,
+                        style: isSent
+                            ? GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                    fontSize: 12, color: Colors.grey[800]))
+                            : GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                    fontSize: 12, color: Colors.grey[800]),
+                              ),
+                      ),
                     ),
                   ],
                 ),

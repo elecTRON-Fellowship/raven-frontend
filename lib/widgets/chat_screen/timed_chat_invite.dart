@@ -268,7 +268,7 @@ class _TimedChatInviteState extends State<TimedChatInvite> {
               );
             });
             return Container();
-          } else {
+          } else if (status == 'FINISHED') {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 4.0),
               child: Column(
@@ -350,6 +350,93 @@ class _TimedChatInviteState extends State<TimedChatInvite> {
                   ),
                 ],
               ),
+            );
+          } else {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: Column(
+                  crossAxisAlignment: isSent
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
+                  children: [
+                    isSent
+                        ? Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: Text('Your invitation expired',
+                                style: GoogleFonts.poppins(
+                                    textStyle: TextStyle(
+                                        fontSize: 13,
+                                        color: Theme.of(context).accentColor))),
+                          )
+                        : Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: Text('This invitation expired',
+                                style: GoogleFonts.poppins(
+                                    textStyle: TextStyle(
+                                        fontSize: 13,
+                                        color: Theme.of(context).accentColor))),
+                          ),
+                    Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        margin: isSent
+                            ? EdgeInsets.only(right: 10)
+                            : EdgeInsets.only(left: 10),
+                        decoration: BoxDecoration(
+                          color: isSent
+                              ? Theme.of(context).accentColor
+                              : Color.fromRGBO(144, 180, 206, 0.5),
+                          borderRadius: isSent
+                              ? BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  bottomLeft: Radius.circular(16),
+                                  bottomRight: Radius.circular(16),
+                                )
+                              : BorderRadius.only(
+                                  topRight: Radius.circular(16),
+                                  bottomLeft: Radius.circular(16),
+                                  bottomRight: Radius.circular(16),
+                                ),
+                        ),
+                        child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 2, horizontal: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Up for a coffee break?',
+                                  style: GoogleFonts.poppins(
+                                      textStyle: isSent
+                                          ? TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white)
+                                          : TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Theme.of(context)
+                                                  .primaryColorDark)),
+                                ),
+                                isSent
+                                    ? IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.timer_off_rounded,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : IconButton(
+                                        color:
+                                            Theme.of(context).primaryColorDark,
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.timer_off_rounded,
+                                        )),
+                              ],
+                            )))
+                  ]),
             );
           }
         } else {

@@ -129,7 +129,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
                     style: GoogleFonts.poppins(
                         textStyle: TextStyle(
                             fontSize: 18,
-                            color: Theme.of(context).primaryColorDark)),
+                            color: Theme.of(context).primaryColor)),
                   ),
                 );
               }

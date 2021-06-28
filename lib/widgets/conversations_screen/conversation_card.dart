@@ -114,8 +114,7 @@ class _ConversationCardState extends State<ConversationCard> {
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
                       textStyle: TextStyle(
-                          fontSize: 14,
-                          color: Theme.of(context).primaryColorDark)),
+                          fontSize: 14, color: Theme.of(context).primaryColor)),
                 );
               } else {
                 return Text('');

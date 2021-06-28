@@ -92,7 +92,7 @@ class _RideHistoryCardState extends State<RideHistoryCard> {
         ),
         children: [
           Image.network(
-            "https://maps.googleapis.com/maps/api/staticmap?zoom=13&size=${_mapWidth.floor()}x${_mapHeight.floor()}&markers=color:red|${this.widget.destinationLat},${this.widget.destinationLng}&key=AIzaSyA7JDmk8pXuhU5jm4l6YVhGxXk_fWpL2KY",
+            "https://maps.googleapis.com/maps/api/staticmap?zoom=13&size=${_mapWidth.floor()}x${_mapHeight.floor()}&markers=size:mid|color:red|${this.widget.destinationLat},${this.widget.destinationLng}&key=AIzaSyA7JDmk8pXuhU5jm4l6YVhGxXk_fWpL2KY",
             fit: BoxFit.fill,
           ),
         ],
