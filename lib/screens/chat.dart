@@ -129,6 +129,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => RideHistoryScreen(
                 conversationId: widget.conversationId,
+                friendName: fetchedName,
               ),
             ));
           },

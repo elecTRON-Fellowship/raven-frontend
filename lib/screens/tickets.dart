@@ -331,7 +331,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Text(
-                              'Tickets created by contacts who have you as a close friend will apear here.',
+                              'Contacts who have added you as a close friend will apear here.',
                               textAlign: TextAlign.center,
                               style: GoogleFonts.poppins(
                                 textStyle: TextStyle(

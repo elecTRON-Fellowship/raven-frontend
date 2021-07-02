@@ -185,22 +185,35 @@ class _ContactsScreenState extends State<ContactsScreen> {
                     topRight: Radius.circular(30),
                   ),
                   child: hasPermission
-                      ? ListView.builder(
-                          key: ValueKey(Uuid().v4()),
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          itemCount: searchController.text.isEmpty
-                              ? contacts.length
-                              : filteredContacts.length,
-                          itemBuilder: (context, index) {
-                            Contact contact = searchController.text.isEmpty
-                                ? contacts[index]
-                                : filteredContacts[index];
-                            String name = contact.displayName as String;
-                            String number =
-                                contact.phones!.elementAt(0).value as String;
-                            return ContactCard(name: name, number: number);
-                          },
-                        )
+                      ? searchController.text.isNotEmpty &&
+                              filteredContacts.length == 0
+                          ? Center(
+                              child: Text(
+                                'No matching contacts found.',
+                                style: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontSize: 18),
+                                ),
+                              ),
+                            )
+                          : ListView.builder(
+                              key: ValueKey(Uuid().v4()),
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              itemCount: searchController.text.isEmpty
+                                  ? contacts.length
+                                  : filteredContacts.length,
+                              itemBuilder: (context, index) {
+                                Contact contact = searchController.text.isEmpty
+                                    ? contacts[index]
+                                    : filteredContacts[index];
+                                String name = contact.displayName as String;
+                                String number = contact.phones!
+                                    .elementAt(0)
+                                    .value as String;
+                                return ContactCard(name: name, number: number);
+                              },
+                            )
                       : Center(
                           child: Text(
                             'Please provide required permissions.',

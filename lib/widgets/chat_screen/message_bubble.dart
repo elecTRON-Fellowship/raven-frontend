@@ -58,7 +58,7 @@ class _MessageBubbleState extends State<MessageBubble> {
               DateFormat.yMEd().format(this.widget.time),
               style: GoogleFonts.poppins(
                   textStyle: TextStyle(
-                      fontSize: 14, color: Theme.of(context).primaryColorDark)),
+                      fontSize: 12, color: Theme.of(context).primaryColorDark)),
             ),
           ),
         Row(

@@ -6,8 +6,9 @@ import 'package:uuid/uuid.dart';
 
 class RideHistoryScreen extends StatefulWidget {
   final String conversationId;
+  final String friendName;
 
-  RideHistoryScreen({required this.conversationId});
+  RideHistoryScreen({required this.conversationId, required this.friendName});
 
   @override
   _RideHistoryScreenState createState() => _RideHistoryScreenState();
@@ -75,27 +76,40 @@ class _RideHistoryScreenState extends State<RideHistoryScreen> {
               }
               if (snapshot.hasData) {
                 final documents = (snapshot.data)!.docs;
-                return ListView.builder(
-                    padding: EdgeInsets.all(8),
-                    key: ValueKey(Uuid().v4()),
-                    itemCount: documents.length,
-                    itemBuilder: (context, index) {
-                      return RideHistoryCard(
-                        conversationId: widget.conversationId,
-                        sender: documents[index]['sender'],
-                        time: DateTime.parse(
-                            documents[index]['time'].toDate().toString()),
-                        originLat: documents[index]['originLat'],
-                        originLng: documents[index]['originLng'],
-                        destinationLat: documents[index]['destinationLat'],
-                        destinationLng: documents[index]['destinationLng'],
-                        polyline: documents[index]['polyline'],
-                        bounds: documents[index]['bounds'],
-                        destinationPlaceName: documents[index]
-                            ['destinationPlaceName'],
-                        ticketId: documents[index]['ticketId'],
-                      );
-                    });
+                if (documents.isNotEmpty) {
+                  return ListView.builder(
+                      padding: EdgeInsets.all(8),
+                      key: ValueKey(Uuid().v4()),
+                      itemCount: documents.length,
+                      itemBuilder: (context, index) {
+                        return RideHistoryCard(
+                          conversationId: widget.conversationId,
+                          sender: documents[index]['sender'],
+                          time: DateTime.parse(
+                              documents[index]['time'].toDate().toString()),
+                          originLat: documents[index]['originLat'],
+                          originLng: documents[index]['originLng'],
+                          destinationLat: documents[index]['destinationLat'],
+                          destinationLng: documents[index]['destinationLng'],
+                          polyline: documents[index]['polyline'],
+                          bounds: documents[index]['bounds'],
+                          destinationPlaceName: documents[index]
+                              ['destinationPlaceName'],
+                          ticketId: documents[index]['ticketId'],
+                        );
+                      });
+                } else {
+                  return Center(
+                    child: Text(
+                      'Rides you share with ${widget.friendName} will show up here.',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                              fontSize: 18,
+                              color: Theme.of(context).primaryColor)),
+                    ),
+                  );
+                }
               } else {
                 return Container();
               }
