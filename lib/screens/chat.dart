@@ -253,6 +253,19 @@ class _ChatScreenState extends State<ChatScreen> {
                                         .toDate()
                                         .toString()),
                                     isRead: documents[index]['read'],
+                                    isFirstMessageOnNewDate: (index !=
+                                            documents.length - 1)
+                                        ? DateTime.parse(documents[index]
+                                                        ['time']
+                                                    .toDate()
+                                                    .toString())
+                                                .day !=
+                                            DateTime.parse(documents[index + 1]
+                                                        ['time']
+                                                    .toDate()
+                                                    .toString())
+                                                .day
+                                        : true,
                                   );
                                 }
                               });
