@@ -72,6 +72,10 @@ class _CloseFriendActionButtonState extends State<CloseFriendActionButton> {
   }
 
   void addToCloseFriends() async {
+    setState(() {
+      status = CloseFriendStatus.CLOSE_FRIEND;
+    });
+
     String numberToQuery = widget.number.replaceAll(new RegExp(r"\s+"), "");
 
     if (!numberToQuery.startsWith('+91')) {
@@ -95,13 +99,13 @@ class _CloseFriendActionButtonState extends State<CloseFriendActionButton> {
     await _userCollection
         .doc(_auth.currentUser!.uid)
         .update({"closeFriends": closeFriends});
-
-    setState(() {
-      status = CloseFriendStatus.CLOSE_FRIEND;
-    });
   }
 
   void removeFromCloseFriends() async {
+    setState(() {
+      status = CloseFriendStatus.NOT_CLOSE_FRIEND;
+    });
+
     String numberToQuery = widget.number.replaceAll(new RegExp(r"\s+"), "");
 
     if (!numberToQuery.startsWith('+91')) {
@@ -125,10 +129,6 @@ class _CloseFriendActionButtonState extends State<CloseFriendActionButton> {
     await _userCollection
         .doc(_auth.currentUser!.uid)
         .update({"closeFriends": closeFriends});
-
-    setState(() {
-      status = CloseFriendStatus.NOT_CLOSE_FRIEND;
-    });
   }
 
   @override
